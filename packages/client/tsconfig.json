@@ -1,0 +1,35 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Browser environment with DOM APIs
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    // Vite handles bundling, so we can use native modules
+    "moduleResolution": "bundler",
+    // Allow importing from simulation package
+    "paths": {
+      "@fluxpolis/simulation": [
+        "../simulation/src"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ],
+  "references": [
+    {
+      "path": "../simulation"
+    }
+  ]
+}

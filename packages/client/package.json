@@ -1,0 +1,23 @@
+{
+  "name": "@fluxpolis/client",
+  "version": "0.1.0",
+  "description": "Fluxpolis client",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Greg Ballot",
+  "type": "module",
+  "dependencies": {
+    "@fluxpolis/simulation": "*",
+    "phaser": "^3.90.0",
+    "vite": "^7.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.1.0"
+  }
+}

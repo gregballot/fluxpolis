@@ -1,0 +1,15 @@
+{
+  "name": "@fluxpolis/simulation",
+  "version": "0.1.0",
+  "description": "Fluxpolis simulation engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Greg Ballot",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^25.1.0"
+  }
+}

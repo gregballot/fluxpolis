@@ -1,0 +1,22 @@
+{
+  "version": "0.1.0",
+  "author": "Greg Ballot",
+  "name": "fluxpolis",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gregballot/fluxpolis.git"
+  },
+  "homepage": "https://github.com/gregballot/fluxpolis",
+  "scripts": {
+    "dev": "npm run dev -w @fluxpolis/client",
+    "build": "npm run build -w @fluxpolis/simulation && npm run build -w @fluxpolis/client"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

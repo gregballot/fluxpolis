@@ -1,0 +1,7 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/simulation" },
+    { "path": "./packages/client" }
+  ]
+}
