@@ -1,12 +1,13 @@
 {
   "name": "@fluxpolis/client",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Fluxpolis client",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "type-check": "vue-tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -2,23 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Documentation
+## Quick Reference
 
-- **Game Design**: See `docs/gdd.md` for complete game concept and design
-- **Technical Architecture**: See `docs/tech-guidelines.md` for detailed technical specifications
-
-## Project Structure
-
-To fill out later
-
-**Commands**:
+**Commands:**
 
 - `npm run dev` - Start Vite dev server (client package)
 - `npm run build` - Build simulation then client
 
-## Technical Guidelines for Development
-
-### Tech Stack Requirements
+**Tech Stack:**
 
 - **Language**: TypeScript (strict mode)
 - **Platform**: Browser-first, Electron-compatible
@@ -27,12 +18,28 @@ To fill out later
 - **UI Framework**: Vue 3 (integrated with Phaser via official template)
 - **Rendering**: Phaser 3 (Canvas 2D) integrated with Vue 3
 
-### Architectural Guidelines
+## Documentation Index
 
-Fill out later (reference other md files with architecture guidelines)
+### Current Architecture
 
-### Development Approach
+**Start here for understanding the actual implementation:**
 
-- **Pragmatism Over Purity**: Ship working prototype, document trade-offs
-- **Future-Proof Architecture**: Design supports multiplayer/3D renderer without implementing them
-- **Walking Skeleton**: Build minimum viable features end-to-end before adding complexity
+- **`docs/architecture/client/overview.md`** - Big picture: directory structure, layer responsibilities, core vs features organization
+- **`docs/architecture/client/ecs-pattern.md`** - Entity-Component-System fundamentals
+- **`docs/architecture/client/systems-and-components.md`** - Systems and Components: core vs features, ISystem interface
+- **`docs/architecture/client/vue-phaser-integration.md`** - How Vue and Phaser coexist and communicate
+
+### Coding Guidelines
+
+- **`docs/coding-guidelines.md`** - Coding conventions, TypeScript patterns, naming conventions
+
+## Architecture Evolution Process
+
+When the current architecture is challenged or significantly changed:
+
+1. **Document the Decision**: Create an Architecture Decision Record (ADR) in `docs/architecture/decisions.md`
+   - Include: Context, Decision, Consequences, Status
+2. **Update Documentation**: Modify relevant architecture docs to reflect the new approach
+3. **Preserve History**: Don't delete old docs - add disclaimers and move to historical context if needed
+
+**Critical:** Architecture changes must be documented. Code and docs must stay synchronized.

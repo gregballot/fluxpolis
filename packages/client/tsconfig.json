@@ -18,9 +18,8 @@
     }
   },
   "include": [
-    "src/**/*",
-    "App.vue"
-, "src/startGame.ts"  ],
+    "src/**/*"
+  ],
   "exclude": [
     "node_modules",
     "dist",
@@ -31,5 +30,8 @@
     {
       "path": "../simulation"
     }
-  ]
+  ],
+  "vueCompilerOptions": {
+    "strictTemplates": true
+  }
 }

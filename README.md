@@ -13,9 +13,10 @@ npm run dev
 
 # Build for production
 npm run build
-```
 
-The dev server will start at `http://localhost:5173` (default Vite port).
+# Run documentation server
+npm run docs
+```
 
 ## Project Structure
 
@@ -28,8 +29,7 @@ See [CLAUDE.md](./CLAUDE.md) for development guidelines and architecture details
 
 ## Documentation
 
-- [Game Design Document](./docs/gdd.md) - Complete game concept and mechanics
-- [Technical Guidelines](./docs/tech-guidelines.md) - Architecture and implementation details
+- [Tech Doc](./docs) - Coding style, Design patterns, Architecture
 - [CLAUDE.md](./CLAUDE.md) - Development guidelines for AI assistance
 
 ## Tech Stack
@@ -41,4 +41,4 @@ See [CLAUDE.md](./CLAUDE.md) for development guidelines and architecture details
 
 ## License
 
-MIT
+Proprietary

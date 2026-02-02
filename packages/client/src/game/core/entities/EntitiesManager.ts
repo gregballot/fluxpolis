@@ -1,6 +1,6 @@
-import { GameEntity } from './Game';
+import { GameEntity } from './GameEntity';
 
-export class WorldEntity {
+export class EntitiesManager {
   private entities: Map<string, GameEntity> = new Map();
   private nextEntityId: number = 0;
 

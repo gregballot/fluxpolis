@@ -3,6 +3,7 @@
 import type Phaser from "phaser";
 
 import PhaserGame from "./PhaserGame.vue";
+import UI from "./ui/UI.vue";
 
 const onCurrentActiveScene = (scene: Phaser.Scene) => {
   console.log("Current active scene:", scene);
@@ -11,6 +12,7 @@ const onCurrentActiveScene = (scene: Phaser.Scene) => {
 
 <template>
   <div id="app">
+    <UI />
     <PhaserGame @current-active-scene="onCurrentActiveScene" />
   </div>
 </template>

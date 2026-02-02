@@ -1,9 +1,12 @@
 # Technical Guidelines Document
 
-**Project:** Fluxpolis  
-**Version:** 1.0  
-**Date:** January 31, 2026  
-**Status:** V1 Prototype Architecture
+> **IMPORTANT:** This document describes the PLANNED architecture from January 2026.
+> The actual implementation evolved differently during development. See `docs/architecture/client/overview.md` for the CURRENT architecture.
+
+**Project:** Fluxpolis
+**Version:** 1.0
+**Date:** January 31, 2026
+**Status:** V1 Prototype Architecture (Historical Planning Document)
 
 ---
 

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.0.1",
   "author": "Greg Ballot",
   "name": "fluxpolis",
   "private": true,
@@ -14,7 +14,8 @@
   "homepage": "https://github.com/gregballot/fluxpolis",
   "scripts": {
     "dev": "npm run dev -w @fluxpolis/client",
-    "build": "npm run build -w @fluxpolis/simulation && npm run build -w @fluxpolis/client"
+    "build": "npm run build -w @fluxpolis/simulation && npm run build -w @fluxpolis/client",
+    "docs": "npx serve docs -p 3001"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
