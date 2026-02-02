@@ -1,17 +1,16 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // Browser environment with DOM APIs
     "lib": [
       "ES2022",
       "DOM",
       "DOM.Iterable"
     ],
     "outDir": "./dist",
-    "rootDir": "./src",
-    // Vite handles bundling, so we can use native modules
+    "rootDir": ".",
     "moduleResolution": "bundler",
-    // Allow importing from simulation package
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
     "paths": {
       "@fluxpolis/simulation": [
         "../simulation/src"
@@ -19,8 +18,9 @@
     }
   },
   "include": [
-    "src/**/*"
-  ],
+    "src/**/*",
+    "App.vue"
+, "src/startGame.ts"  ],
   "exclude": [
     "node_modules",
     "dist",

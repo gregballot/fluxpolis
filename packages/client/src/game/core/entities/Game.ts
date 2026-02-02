@@ -1,0 +1,28 @@
+export class GameEntity {
+  id: string;
+  private components: Map<string, any> = new Map();
+
+  constructor(id: string) {
+    this.id = id;
+  }
+
+  addComponent<T>(name: string, component: T): void {
+    this.components.set(name, component);
+  }
+
+  getComponent<T>(name: string): T | undefined {
+    return this.components.get(name) as T | undefined;
+  }
+
+  hasComponent(name: string): boolean {
+    return this.components.has(name);
+  }
+
+  removeComponent(name: string): void {
+    this.components.delete(name);
+  }
+
+  getComponentNames(): string[] {
+    return Array.from(this.components.keys());
+  }
+}

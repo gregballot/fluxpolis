@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { EventBus } from '../EventBus';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -16,5 +17,8 @@ export class GameScene extends Phaser.Scene {
       'Phaser Initialized',
       { fontSize: '24px', color: '#ffffff' }
     ).setOrigin(0.5);
+
+    // Emit scene-ready event for Vue component
+    EventBus.emit('current-scene-ready', this);
   }
 }
