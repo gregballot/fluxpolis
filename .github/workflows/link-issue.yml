@@ -1,0 +1,55 @@
+name: Link Branch to Issue
+
+on:
+  push:
+    branches:
+      - "**[0-9]**"
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to link (optional, defaults to current)"
+        required: false
+        default: ""
+
+jobs:
+  link-to-issue:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.created == true
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create Draft PR to Link Issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH_NAME="${{ github.event.inputs.branch }}"
+          if [ -z "$BRANCH_NAME" ]; then
+            BRANCH_NAME="${GITHUB_REF_NAME}"
+          fi
+
+          ISSUE_NUMBER=$(echo "$BRANCH_NAME" | grep -oE '[0-9]+' | head -n 1)
+
+          if [ -z "$ISSUE_NUMBER" ]; then
+            echo "No issue number found in branch name. Skipping."
+            exit 0
+          fi
+
+          # Check if a PR already exists for this branch to avoid duplicates
+          PR_EXISTS=$(gh pr list --head "$BRANCH_NAME" --json number --jq '.[0].number')
+
+          if [ -z "$PR_EXISTS" ]; then
+            echo "Creating draft PR for Issue #$ISSUE_NUMBER..."
+            gh pr create \
+              --title "Work on #$ISSUE_NUMBER" \
+              --body "This PR is linked to issue #$ISSUE_NUMBER" \
+              --draft \
+              --head "$BRANCH_NAME"
+          else
+            echo "PR already exists (#$PR_EXISTS) for branch $BRANCH_NAME. Skipping creation."
+          fi
