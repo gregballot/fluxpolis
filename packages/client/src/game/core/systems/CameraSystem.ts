@@ -1,4 +1,4 @@
-import { EventBus } from '../../EventBus';
+import { EventBus } from '../../../EventBus';
 import type { ISystem } from './ISystem';
 
 interface CameraState {
