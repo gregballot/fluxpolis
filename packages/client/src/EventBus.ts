@@ -17,8 +17,11 @@ if (typeof window !== 'undefined' && import.meta.env.DEV) {
     });
     // Keep for compatibility
     (window as any).setEventLogging = (v: boolean) => { (window as any).logEvents = v; };
-    
-    console.log('%c[EventBus] Type `logEvents = false` to disable event logging', 'color: #ff00dd; border: 1px solid #ff00dd; padding: 2px 5px; border-radius: 3px;');
+
+    console.log(
+        '%c[EventBus] Type `logEvents = false` to disable event logging',
+        'color: #ff00dd; border: 1px solid #ff00dd; padding: 2px 5px; border-radius: 3px;'
+    );
 }
 
 const ignoredEvents: (string | symbol)[] = [

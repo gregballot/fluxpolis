@@ -1,5 +1,6 @@
 import { District } from './District';
 import type { IEventBus, IManager } from '../types';
+import { Logger } from '../Logger';
 
 export class DistrictManager implements IManager {
   private districts = new Map<string, District>();
@@ -10,7 +11,7 @@ export class DistrictManager implements IManager {
       const data = args[0] as { x: number; y: number };
       const district = this.create(data.x, data.y);
       this.events.emit('simulation:districts:new', { district });
-      console.log('[Simulation] District placed', district);
+      Logger.info('District placed', district);
     });
   }
 

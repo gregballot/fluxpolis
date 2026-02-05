@@ -1,19 +1,20 @@
 <script setup lang="ts">
 
-import type Phaser from "phaser";
+// import type Phaser from "phaser";
 
 import PhaserGame from "./PhaserGame.vue";
 import UI from "./ui/UI.vue";
 
-const onCurrentActiveScene = (scene: Phaser.Scene) => {
-  console.log("Current active scene:", scene);
-};
+// const onCurrentActiveScene = (scene: Phaser.Scene) => {
+//   console.log("Current active scene:", scene);
+// };
 </script>
 
 <template>
   <div id="app">
     <UI />
-    <PhaserGame @current-active-scene="onCurrentActiveScene" />
+    <!-- <PhaserGame @current-active-scene="onCurrentActiveScene" /> -->
+    <PhaserGame />
   </div>
 </template>
 

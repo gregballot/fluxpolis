@@ -1,5 +1,6 @@
 import type { IEventBus, IManager } from './types';
 import { DistrictManager } from './districts/DistrictManager';
+import { Logger } from './Logger';
 
 export class Simulation {
   private managers: IManager[] = [];
@@ -7,6 +8,7 @@ export class Simulation {
   constructor(events: IEventBus) {
     this.addManager(new DistrictManager(events));
     events.on('game:simulation-tick', () => this.tick());
+    Logger.info('Simulation started');
   }
 
   private addManager(manager: IManager): void {

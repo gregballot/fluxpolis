@@ -15,6 +15,8 @@ See `docs/architecture/` for detailed implementation patterns.
 
 ## Methodology
 
+If asked to work on an issue, first use `gh cli` to get the issue details.
+
 **Documentation-First:**
 
 - Review relevant project docs before planning based on the task type:
