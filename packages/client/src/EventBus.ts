@@ -2,27 +2,32 @@ import Phaser from 'phaser';
 
 export const EventBus = new Phaser.Events.EventEmitter();
 
-/**
- * Event Debugging Utility
- * To enable in console: setEventLogging(true)
- */
-let isLoggingEnabled = false;
-const originalEmit = EventBus.emit;
+let isLoggingEnabled = true;
 
-// Expose setEventLogging function to window for easy console access during development
+// Direct toggle: logEvents = true
 if (typeof window !== 'undefined' && import.meta.env.DEV) {
-    (window as any).setEventLogging = (enabled: boolean) => {
-        isLoggingEnabled = enabled;
-        console.log(`[EventBus] Logging ${enabled ? 'enabled' : 'disabled'}`);
-    };
+    Object.defineProperty(window, 'logEvents', {
+        get: () => isLoggingEnabled,
+        set: (v) => {
+            isLoggingEnabled = !!v;
+            console.log(`%c[EventBus] Logging ${isLoggingEnabled ? 'ENABLED' : 'DISABLED'}`, 'color: #ff00dd; font-weight: bold');
+        },
+        configurable: true
+    });
+    // Keep for compatibility
+    (window as any).setEventLogging = (v: boolean) => { (window as any).logEvents = v; };
+    
+    console.log('%c[EventBus] Type `logEvents = false` to disable event logging', 'color: #ff00dd; border: 1px solid #ff00dd; padding: 2px 5px; border-radius: 3px;');
 }
 
 const ignoredEvents: (string | symbol)[] = [
+    'game:simulation-tick',
     'game:input:drag',
     'game:input:wheel',
     'game:camera:positionChanged',
 ];
 
+const originalEmit = EventBus.emit;
 EventBus.emit = function (event: string | symbol, ...args: any[]) {
     if (isLoggingEnabled && !ignoredEvents.includes(event)) {
         console.groupCollapsed(
@@ -30,13 +35,9 @@ EventBus.emit = function (event: string | symbol, ...args: any[]) {
             'color: #ff00dd; font-weight: bold',
             'color: inherit'
         );
-        if (args.length > 0) {
-            console.log('Arguments:', args);
-        }
-        console.trace('Emission Trace');
+        if (args.length > 0) console.log('Args:', args);
+        console.trace('Trace');
         console.groupEnd();
     }
-    
     return originalEmit.apply(this, [event, ...args] as [any, ...any[]]);
 };
-

@@ -75,17 +75,15 @@ interface MapGridConfig {
 
 ### Barrel Exports
 
-Use barrel exports (`index.ts`) to define public APIs:
+Barrel exports (`index.ts`) define the **external** public API only. Internal contracts (interfaces used only within the package) stay out of the barrel — they are implementation details, not surface area.
 
 ```typescript
 // packages/simulation/src/index.ts
-export { City } from "./entities/City";
-export { Factory } from "./entities/Factory";
-export type { Position, ResourceType } from "./types";
-export type { GameEvent } from "./events";
+export { Simulation } from "./Simulation";
+// IManager, IEventBus, District — internal, not exported here
 ```
 
-**Benefit:** Clear separation between public API and internal implementation.
+**Rule:** If nothing outside the package imports it, it does not belong in the barrel.
 
 ### Import Order
 
@@ -237,9 +235,3 @@ if (component) {
 // Or with guards
 const value = someValue ?? defaultValue;
 ```
-
-## Testing Guidelines
-
-**To be established:** Testing strategy is currently being developed. Will document framework choice (Vitest/Jest) and patterns once established.
-
-**Principle:** Test simulation logic thoroughly. UI and rendering can have lighter coverage.

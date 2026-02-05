@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Overview
+
+This is a game project that is being developed using Phaser 3 and Vue 3. The game is a city-building style game where the player can build and manage a cyberpunk cities. The game is being developed using a monorepo structure with npm workspaces.
+
 ## Quick Reference
 
 **Commands:**
@@ -43,3 +47,8 @@ When the current architecture is challenged or significantly changed:
 3. **Preserve History**: Don't delete old docs - add disclaimers and move to historical context if needed
 
 **Critical:** Architecture changes must be documented. Code and docs must stay synchronized.
+
+## Documentation guidelines
+
+Docs need to be very concise and to the point. No fluff. When documenting technical details, use code snippets to illustrate the point.
+Prefer linking to other documents instead of repeating information.

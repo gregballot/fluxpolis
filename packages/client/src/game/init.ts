@@ -1,5 +1,7 @@
 import { GameScene } from './scenes/GameScene';
 import { AUTO, Game as PhaserGame, Scale, type Types } from 'phaser';
+import { Simulation } from '@fluxpolis/simulation';
+import { EventBus } from '../EventBus';
 
 const config: Types.Core.GameConfig = {
     type: AUTO,
@@ -17,6 +19,7 @@ const config: Types.Core.GameConfig = {
 };
 
 const StartGame = (parent: string) => {
+    new Simulation(EventBus);
     return new PhaserGame({ ...config, parent });
 }
 

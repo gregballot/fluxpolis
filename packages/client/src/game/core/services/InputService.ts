@@ -22,11 +22,14 @@ export class InputService {
         this.isDragging = true;
         this.dragStartX = pointer.x;
         this.dragStartY = pointer.y;
-        
-        EventBus.emit('game:input:dragStart', { 
+
+        EventBus.emit('game:input:dragStart', {
           x: pointer.x,
           y: pointer.y
         });
+      } else if (pointer.leftButtonDown()) {
+        const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
+        EventBus.emit('game:input:click-on-free-zone', { x: worldPoint.x, y: worldPoint.y });
       }
     });
 

@@ -6,3 +6,4 @@
   - [ECS Pattern](architecture/client/ecs-pattern.md)
   - [Systems & Components](architecture/client/systems-and-components.md)
   - [Vue + Phaser](architecture/client/vue-phaser-integration.md)
+  - [Simulation](architecture/simulation/overview.md)
