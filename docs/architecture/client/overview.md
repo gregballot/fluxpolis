@@ -33,11 +33,23 @@ packages/client/src/
 │   │       └── CameraSystem.ts         # Camera control
 │   │
 │   ├── features/                # Domain-specific game features
-│   │   └── map/
+│   │   ├── map/
+│   │   │   ├── components/
+│   │   │   │   ├── MapGrid.ts          # Domain component
+│   │   │   │   └── MapGridFactory.ts   # Entity creation helper
+│   │   │   └── MapGridRenderSystem.ts  # Domain system
+│   │   ├── build-mode/
+│   │   │   └── BuildModeSystem.ts      # Transient placement mode
+│   │   ├── districts/
+│   │   │   ├── components/
+│   │   │   │   ├── DistrictState.ts    # Domain component
+│   │   │   │   └── DistrictFactory.ts  # Entity creation helper
+│   │   │   ├── DistrictSpawnSystem.ts  # Simulation bridge (event → entity)
+│   │   │   └── DistrictRenderSystem.ts # Pure ECS query renderer
+│   │   └── ...
 │   │       ├── components/
-│   │       │   ├── MapGrid.ts          # Domain component
-│   │       │   └── MapGridFactory.ts   # Entity creation helper
-│   │       └── MapGridRenderSystem.ts  # Domain system
+│   │       │   ├── ...
+│   │       ├── ...
 │   │
 │   └── scenes/
 │       └── GameScene.ts         # Orchestrator (creates entities, systems, services)
@@ -141,6 +153,7 @@ See: [ECS Pattern](/architecture/client/ecs-pattern.md)
 
 - `game:input:drag` - Game layer, input subject, drag action
 - `game:camera:moved` - Game layer, camera subject, moved action
+- `simulation:districts:new` - Simulation layer, districts subject, new district created
 
 - `ui:button:clicked` - UI layer, button subject, clicked action
 

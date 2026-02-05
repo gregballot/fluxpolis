@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import { EventBus } from '../EventBus';
+import { EventBus } from '../../EventBus';
 
 import { EntitiesManager } from '../core/entities/EntitiesManager';
 import { SystemsManager } from '../core/systems/SystemsManager';
@@ -10,6 +10,10 @@ import { MapFactory } from '../features/map/components/MapGridFactory';
 
 import { MapRenderSystem } from '../features/map/MapGridRenderSystem';
 import { CameraSystem } from '../core/systems/CameraSystem';
+import { BuildModeSystem } from '../features/build-mode/BuildModeSystem';
+import { DistrictSpawnSystem } from '../features/districts/DistrictSpawnSystem';
+import { DistrictRenderSystem } from '../features/districts/DistrictRenderSystem';
+import { SimulationSystem } from '../core/systems/SimulationSystem';
 
 export class GameScene extends Phaser.Scene {
   private entitiesManager!: EntitiesManager;
@@ -30,8 +34,15 @@ export class GameScene extends Phaser.Scene {
     MapFactory.createMapGrid(this.entitiesManager);
 
     this.systemManager.addSystems(
-      new MapRenderSystem(this.entitiesManager, this),
+      // core
+      new SimulationSystem(),
       new CameraSystem(this.cameras.main),
+
+      // features
+      new MapRenderSystem(this.entitiesManager, this),
+      new BuildModeSystem(this.entitiesManager, this),
+      new DistrictSpawnSystem(this.entitiesManager),
+      new DistrictRenderSystem(this.entitiesManager, this),
     );
     this.systemManager.init();
 

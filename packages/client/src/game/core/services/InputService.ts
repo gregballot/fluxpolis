@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { EventBus } from '../../EventBus';
+import { EventBus } from '../../../EventBus';
 
 export class InputService {
   private scene: Scene;
@@ -22,11 +22,14 @@ export class InputService {
         this.isDragging = true;
         this.dragStartX = pointer.x;
         this.dragStartY = pointer.y;
-        
-        EventBus.emit('game:input:dragStart', { 
+
+        EventBus.emit('game:input:dragStart', {
           x: pointer.x,
           y: pointer.y
         });
+      } else if (pointer.leftButtonDown()) {
+        const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
+        EventBus.emit('game:input:left-click-on-map', { x: worldPoint.x, y: worldPoint.y });
       }
     });
 

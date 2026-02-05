@@ -2,12 +2,46 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Overview
+
+Fluxpolis is a cyberpunk city-building game built in a monorepo structure. The architecture is separated into two distinct layers:
+
+- **Client Layer** (`@fluxpolis/client`): Handles rendering and UI using an ECS-inspired pattern with Phaser 3 and Vue 3
+- **Simulation Layer** (`@fluxpolis/simulation`): Pure game logic with zero rendering dependencies, using a manager pattern with tick-based updates
+
+Communication between layers is **event-driven via EventBus** - there is zero direct coupling. This separation ensures the simulation can run independently and the client focuses purely on presentation.
+
+See `docs/architecture/` for detailed implementation patterns.
+
+## Methodology
+
+**Documentation-First:**
+
+- Review relevant project docs before planning based on the task type:
+  - Working on client features? Start with `docs/architecture/client/overview.md`
+  - Working on simulation logic? Start with `docs/architecture/simulation/overview.md`
+  - Need TypeScript patterns? Check `docs/coding-guidelines.md`
+- Look for existing implementation examples in the project if more context is needed
+- Search for similar patterns before proposing new approaches
+
+**Ask Questions:**
+
+- When uncertain, ask to clarify intent and help make sound technical choices
+- Suggest approaches to debate when multiple valid solutions exist
+
+**Keep Docs Synchronized:**
+
+- Update relevant docs when introducing new architectural patterns or changes
+- Update docs when creating reusable components that others should know about
+- Keep code examples in docs consistent with actual implementation
+
 ## Quick Reference
 
 **Commands:**
 
 - `npm run dev` - Start Vite dev server (client package)
 - `npm run build` - Build simulation then client
+- `npm run type-check` - Type check simulation and client packages
 
 **Tech Stack:**
 
@@ -20,26 +54,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Documentation Index
 
-### Current Architecture
+**Architecture:**
 
-**Start here for understanding the actual implementation:**
+- **Client Layer** (`docs/architecture/client/`) - ECS pattern, Phaser + Vue integration, systems and components, directory structure
+- **Simulation Layer** (`docs/architecture/simulation/`) - Pure game logic, manager pattern, event-driven updates, tick-based simulation
 
-- **`docs/architecture/client/overview.md`** - Big picture: directory structure, layer responsibilities, core vs features organization
-- **`docs/architecture/client/ecs-pattern.md`** - Entity-Component-System fundamentals
-- **`docs/architecture/client/systems-and-components.md`** - Systems and Components: core vs features, ISystem interface
-- **`docs/architecture/client/vue-phaser-integration.md`** - How Vue and Phaser coexist and communicate
+**Coding:**
 
-### Coding Guidelines
+- **`docs/coding-guidelines.md`** - TypeScript conventions, naming patterns, architectural principles
 
-- **`docs/coding-guidelines.md`** - Coding conventions, TypeScript patterns, naming conventions
+See `docs/_sidebar.md` for complete navigation and all available documentation.
 
-## Architecture Evolution Process
+## Documentation Synchronization
 
-When the current architecture is challenged or significantly changed:
+When making architectural changes:
 
-1. **Document the Decision**: Create an Architecture Decision Record (ADR) in `docs/architecture/decisions.md`
-   - Include: Context, Decision, Consequences, Status
-2. **Update Documentation**: Modify relevant architecture docs to reflect the new approach
-3. **Preserve History**: Don't delete old docs - add disclaimers and move to historical context if needed
+- Update relevant docs in `docs/architecture/` to reflect new patterns
+- Keep code examples in docs consistent with actual implementation
+- Document significant decisions for future context
 
 **Critical:** Architecture changes must be documented. Code and docs must stay synchronized.
+
+## Documentation guidelines
+
+Docs need to be very concise and to the point. No fluff. When documenting technical details, use code snippets to illustrate the point.
+Prefer linking to other documents instead of repeating information.

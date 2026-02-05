@@ -3,7 +3,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 import type Phaser from "phaser";
 
 import StartGame from "./game/init";
-import { EventBus } from "./game/EventBus";
+import { EventBus } from "./EventBus";
 
 const gameRef = ref<HTMLDivElement>();
 const game = ref<Phaser.Game>();

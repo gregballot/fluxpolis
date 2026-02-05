@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import { EventBus } from '../game/EventBus';
+import { EventBus } from '../EventBus';
 
 const x = ref(0);
 const y = ref(0);

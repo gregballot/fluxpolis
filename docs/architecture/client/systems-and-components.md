@@ -177,6 +177,53 @@ export class CameraSystem implements ISystem {
 - Optionally emit events for other layers
 - Deduplication: Only emit events when state actually changes
 
+### Pattern 3: Simulation-Driven Entities
+
+**Use Case:** Entities whose lifecycle is driven by simulation events. Requires two systems: a **SpawnSystem** that bridges simulation events into ECS entities, and a **RenderSystem** that is a pure query renderer. This keeps the simulation bridge and the rendering concern orthogonal — state sync logic added later lives in the SpawnSystem without touching the renderer.
+
+**Example: Districts**
+
+```typescript
+// DistrictSpawnSystem — owns the event listener and entity creation.
+// Future home of state sync (update components from simulation state).
+export class DistrictSpawnSystem implements ISystem {
+  constructor(private entitiesManager: EntitiesManager) {}
+
+  init(): void {
+    EventBus.on('simulation:districts:new', (data: { district: { id, x, y } }) => {
+      DistrictFactory.createDistrict(this.entitiesManager, data.district);
+    });
+  }
+
+  update(): void {
+    // Future: sync component state from simulation updates
+  }
+}
+
+// DistrictRenderSystem — pure ECS query renderer. No event listeners, no sim knowledge.
+export class DistrictRenderSystem implements ISystem {
+  constructor(private entitiesManager: EntitiesManager, scene: Scene) {
+    this.graphics = scene.add.graphics();
+  }
+
+  update(): void {
+    this.graphics.clear();
+    for (const entity of this.entitiesManager.query('DistrictState')) {
+      const d = entity.getComponent<DistrictState>('DistrictState')!;
+      this.graphics.fillStyle(d.color, d.alpha);
+      this.graphics.fillCircle(d.x, d.y, d.radius);
+    }
+  }
+}
+```
+
+**Key Points:**
+
+- SpawnSystem is the simulation bridge: listens for events, creates entities via a factory
+- RenderSystem queries entities by component and draws — it does not care how the data arrived
+- **Registration order matters:** SpawnSystem must be registered before RenderSystem so entities exist before the first render pass
+- When simulation state changes later, only SpawnSystem updates component data; RenderSystem picks it up on the next frame with zero changes
+
 ### Component Guidelines
 
 **Components should be:**

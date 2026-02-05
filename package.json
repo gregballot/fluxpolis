@@ -15,6 +15,7 @@
   "scripts": {
     "dev": "npm run dev -w @fluxpolis/client",
     "build": "npm run build -w @fluxpolis/simulation && npm run build -w @fluxpolis/client",
+    "type-check": "npm run type-check -w @fluxpolis/simulation; npm run type-check -w @fluxpolis/client",
     "docs": "npx serve docs -p 3001"
   },
   "devDependencies": {

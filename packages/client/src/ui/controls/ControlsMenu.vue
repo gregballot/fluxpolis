@@ -10,21 +10,33 @@
 //   EventBus.off('some:event', handleSomeEvent);
 // });
 
+import MenuButton from './MenuButton.vue';
+
 const appVersion = __APP_VERSION__;
 </script>
 
 <template>
-  <div class="hud">
+  <div class="controls-menu">
     <h1 class="headline">Fluxpolis v{{ appVersion }}</h1>
+
+    <MenuButton
+      text="Build District"
+      emitEvent="ui:menu:build-district"
+      confirmEvent="game:build-mode:district-placed"
+    />
   </div>
 </template>
 
 <style scoped>
-.hud {
+.controls-menu {
   position: fixed;
   top: 0px;
   left: 0px;
-  padding: 12px 24px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
 }
 
 .headline {
@@ -32,5 +44,6 @@ const appVersion = __APP_VERSION__;
   color: #b373a3;
   font-size: 24px;
   font-weight: bold;
+  margin-bottom: 20px;
 }
 </style>
