@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 export const EventBus = new Phaser.Events.EventEmitter();
+export const eventStats = { emitCount: 0 };
 
 let isLoggingEnabled = true;
 
@@ -25,10 +26,13 @@ const ignoredEvents: (string | symbol)[] = [
     'game:input:drag',
     'game:input:wheel',
     'game:camera:positionChanged',
+
+    'simulation:districts:update',
 ];
 
 const originalEmit = EventBus.emit;
 EventBus.emit = function (event: string | symbol, ...args: any[]) {
+    eventStats.emitCount++;
     if (isLoggingEnabled && !ignoredEvents.includes(event)) {
         console.groupCollapsed(
             `%c[EventBus]%c ${String(event)}`,

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import ControlsMenu from './controls/ControlsMenu.vue';
 import CameraInfo from './CameraInfo.vue';
+import DebugPanel from './DebugPanel.vue';
 </script>
 
 <template>
   <ControlsMenu />
   <CameraInfo />
+  <DebugPanel />
 </template>
 
 <style>
