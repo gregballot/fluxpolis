@@ -8,9 +8,9 @@ The simulation package (`@fluxpolis/simulation`) owns all game-state logic. It h
 packages/simulation/src/
 ├── index.ts                  — barrel export (Simulation only)
 ├── types.ts                  — IEventBus, IManager interfaces
-├── District.ts               — District domain object
 ├── Simulation.ts             — orchestrator: IManager registry + tick loop
 └── districts/
+    ├── District.ts           — District domain object
     └── DistrictManager.ts    — implements IManager, subscribes to events, owns district state
 ```
 

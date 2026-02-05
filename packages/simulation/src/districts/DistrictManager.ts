@@ -1,4 +1,4 @@
-import { District } from '../District';
+import { District } from './District';
 import type { IEventBus, IManager } from '../types';
 
 export class DistrictManager implements IManager {

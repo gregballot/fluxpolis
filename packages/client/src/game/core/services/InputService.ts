@@ -29,7 +29,7 @@ export class InputService {
         });
       } else if (pointer.leftButtonDown()) {
         const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
-        EventBus.emit('game:input:click-on-free-zone', { x: worldPoint.x, y: worldPoint.y });
+        EventBus.emit('game:input:left-click-on-map', { x: worldPoint.x, y: worldPoint.y });
       }
     });
 
