@@ -57,7 +57,13 @@ Every frame (via SystemsManager)
   → [Simulation Layer] Simulation consumes event:
     → Simulation.tick()
       → DistrictManager.tick()
-        → ...
+        → for each district: district.age++
+        → emit simulation:districts:update  { district: { id, age } }
+  → [Game Layer] DistrictSpawnSystem consumes event:
+    → looks up entity by id (O(1) map)
+    → mutates DistrictState.age
+  → [Game Layer] DistrictRenderSystem.update() (next frame):
+    → reads updated age from component, renders label
 ```
 
 See [Systems & Components](../client/systems-and-components.md) for the `ISystem` contract.
@@ -76,3 +82,18 @@ User left-clicks (build mode active)
     → queries all DistrictState entities
     → draws a filled circle for each
 ```
+
+## Event scaling strategy
+
+**Current approach:** one event per entity per tick. Correct for high-level entities (districts, buildings) that number in the tens or low hundreds. The tick spike from N events at 500 ms intervals is imperceptible at this scale.
+
+**The taxonomy — discrete vs continuous:**
+
+- *Discrete* (rare, meaningful): `districts:new`, `districts:destroyed`, `building:leveledUp`. Keep as individual events. These are the right fit for triggering UI notifications or sounds.
+- *Continuous* (every tick, many entities): position updates, resource counters, age on citizen-scale entities. Switch to batch when entity count makes per-entity events visible as frame stutters.
+
+**The batch pattern (when to apply):** instead of emitting per-entity, collect changes into an array in `tick()` and emit one event: `simulation:tick:completed { changes: [...] }`. The client listener iterates the array. Mechanical change on both sides — no architectural shift. Apply when entities hit low thousands and tick-boundary stutters become visible.
+
+**Polling as an alternative:** would require retaining the Simulation reference in `init.ts` (currently dropped) and exposing a query API on managers. More invasive. Only consider if batch proves insufficient.
+
+**Signal to act:** if a tick boundary causes a frame skip (16.6 ms budget exceeded), profile. If event emission + handling dominates, switch the affected entity type to batch.

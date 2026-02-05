@@ -11,6 +11,7 @@ export class DistrictFactory {
       radius: 25,
       color: 0x00ffff,
       alpha: 0.8,
+      age: 0,
     });
     return entity;
   }

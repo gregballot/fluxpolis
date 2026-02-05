@@ -21,7 +21,10 @@ export class DistrictManager implements IManager {
   }
 
   tick(): void {
-    // no-op now. Future: growth, resource consumption, etc.
+    for (const district of this.districts.values()) {
+      district.age++;
+      this.events.emit('simulation:districts:update', { district });
+    }
   }
 
   getAll(): readonly District[] {
