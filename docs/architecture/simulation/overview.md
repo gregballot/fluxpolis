@@ -51,13 +51,13 @@ The event flow is as follows:
 
 ```
 Every frame (via SystemsManager)
-  → SimulationSystem.update(delta)
-      → accumulator >= TICK_INTERVAL:
-          EventBus.emit('game:simulation-tick')
-      → Simulation consumes event:
-          → Simulation.tick()
-            → DistrictManager.tick()
-            → ...
+  → [Game Layer] SimulationSystem.update(delta)
+    → accumulator >= TICK_INTERVAL:
+      EventBus.emit('game:simulation-tick')
+  → [Simulation Layer] Simulation consumes event:
+    → Simulation.tick()
+      → DistrictManager.tick()
+        → ...
 ```
 
 See [Systems & Components](../client/systems-and-components.md) for the `ISystem` contract.
@@ -66,8 +66,13 @@ See [Systems & Components](../client/systems-and-components.md) for the `ISystem
 
 ```
 User left-clicks (build mode active)
-  → BuildModeSystem emits: game:build-mode:district-placed  { x, y }
-  → DistrictManager consumes event:
-      → DistrictManager creates district and the logic alongside it
-      → DistrictManager emits:  simulation:districts:new  { district }
+  → [Game Layer] BuildModeSystem emits: game:build-mode:district-placed  { x, y }
+  → [Simulation Layer] DistrictManager consumes event:
+    → DistrictManager creates district and the logic alongside it
+    → DistrictManager emits:  simulation:districts:new  { district }
+  → [Game Layer] DistrictSpawnSystem consumes event:
+    → DistrictFactory.createDistrict() adds entity with DistrictState component
+  → [Game Layer] DistrictRenderSystem.update() (next frame):
+    → queries all DistrictState entities
+    → draws a filled circle for each
 ```

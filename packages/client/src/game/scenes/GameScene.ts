@@ -11,6 +11,8 @@ import { MapFactory } from '../features/map/components/MapGridFactory';
 import { MapRenderSystem } from '../features/map/MapGridRenderSystem';
 import { CameraSystem } from '../core/systems/CameraSystem';
 import { BuildModeSystem } from '../features/build-mode/BuildModeSystem';
+import { DistrictSpawnSystem } from '../features/districts/DistrictSpawnSystem';
+import { DistrictRenderSystem } from '../features/districts/DistrictRenderSystem';
 import { SimulationSystem } from '../core/systems/SimulationSystem';
 
 export class GameScene extends Phaser.Scene {
@@ -39,6 +41,8 @@ export class GameScene extends Phaser.Scene {
       // features
       new MapRenderSystem(this.entitiesManager, this),
       new BuildModeSystem(this),
+      new DistrictSpawnSystem(this.entitiesManager),
+      new DistrictRenderSystem(this.entitiesManager, this),
     );
     this.systemManager.init();
 
