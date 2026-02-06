@@ -1,19 +1,16 @@
+import { EventBus } from '@fluxpolis/client/EventBus';
+import { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
+import { InputService } from '@fluxpolis/client/game/core/services/InputService';
+import { CameraSystem } from '@fluxpolis/client/game/core/systems/CameraSystem';
+import { SimulationSystem } from '@fluxpolis/client/game/core/systems/SimulationSystem';
+import { SystemsManager } from '@fluxpolis/client/game/core/systems/SystemsManager';
+import { BuildModeSystem } from '@fluxpolis/client/game/features/build-mode/BuildModeSystem';
+import { DistrictRenderSystem } from '@fluxpolis/client/game/features/districts/DistrictRenderSystem';
+import { DistrictSpawnSystem } from '@fluxpolis/client/game/features/districts/DistrictSpawnSystem';
+import { MapFactory } from '@fluxpolis/client/game/features/map/components/MapGridFactory';
+import { MapRenderSystem } from '@fluxpolis/client/game/features/map/MapGridRenderSystem';
+import { EVENTS } from '@fluxpolis/eventbus';
 import Phaser from 'phaser';
-
-import { EventBus } from '../../EventBus';
-
-import { EntitiesManager } from '../core/entities/EntitiesManager';
-import { SystemsManager } from '../core/systems/SystemsManager';
-import { InputService } from '../core/services/InputService';
-
-import { MapFactory } from '../features/map/components/MapGridFactory';
-
-import { MapRenderSystem } from '../features/map/MapGridRenderSystem';
-import { CameraSystem } from '../core/systems/CameraSystem';
-import { BuildModeSystem } from '../features/build-mode/BuildModeSystem';
-import { DistrictSpawnSystem } from '../features/districts/DistrictSpawnSystem';
-import { DistrictRenderSystem } from '../features/districts/DistrictRenderSystem';
-import { SimulationSystem } from '../core/systems/SimulationSystem';
 
 export class GameScene extends Phaser.Scene {
   private entitiesManager!: EntitiesManager;
@@ -46,7 +43,7 @@ export class GameScene extends Phaser.Scene {
     );
     this.systemManager.init();
 
-    EventBus.emit('current-scene-ready', this);
+    EventBus.emit(EVENTS.CURRENT_SCENE_READY, this);
   }
 
   override update(_time: number, delta: number): void {

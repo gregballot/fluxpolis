@@ -2,9 +2,7 @@
   "compilerOptions": {
     // Language and Environment
     "target": "ES2022",
-    "lib": [
-      "ES2022"
-    ],
+    "lib": ["ES2022"],
     "moduleResolution": "bundler",
     "module": "ESNext",
     // Type Checking - Strict Mode
@@ -40,10 +38,5 @@
     "allowJs": false,
     "skipLibCheck": true
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build",
-    "coverage"
-  ]
+  "exclude": ["node_modules", "dist", "build", "coverage"]
 }

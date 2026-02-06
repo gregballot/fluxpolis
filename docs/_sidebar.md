@@ -2,8 +2,13 @@
 - [Coding Guidelines](coding-guidelines.md)
 
 - **Architecture**
-  - [Overview](architecture/client/overview.md)
-  - [ECS Pattern](architecture/client/ecs-pattern.md)
-  - [Systems & Components](architecture/client/systems-and-components.md)
-  - [Vue + Phaser](architecture/client/vue-phaser-integration.md)
-  - [Simulation](architecture/simulation/overview.md)
+  - **EventBus Layer**
+    - [Overview](architecture/eventbus/overview.md)
+    - [Type-Safe Events](architecture/eventbus/type-safety.md)
+  - **Client Layer**
+    - [Overview](architecture/client/overview.md)
+    - [ECS Pattern](architecture/client/ecs-pattern.md)
+    - [Systems & Components](architecture/client/systems-and-components.md)
+    - [Vue + Phaser](architecture/client/vue-phaser-integration.md)
+  - **Simulation Layer**
+    - [Overview](architecture/simulation/overview.md)

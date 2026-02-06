@@ -1,17 +1,10 @@
-import { EventBus } from '../../../EventBus';
-import { EntitiesManager } from '../../core/entities/EntitiesManager';
-import { GameEntity } from '../../core/entities/GameEntity';
-import type { ISystem } from '../../core/systems/ISystem';
-import { DistrictFactory } from './components/DistrictFactory';
-import type { DistrictState } from './components/DistrictState';
-
-interface DistrictNewPayload {
-  district: { id: string; x: number; y: number };
-}
-
-interface DistrictUpdatePayload {
-  district: { id: string; age: number };
-}
+import { EventBus } from '@fluxpolis/client/EventBus';
+import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
+import type { GameEntity } from '@fluxpolis/client/game/core/entities/GameEntity';
+import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
+import { DistrictFactory } from '@fluxpolis/client/game/features/districts/components/DistrictFactory';
+import type { DistrictState } from '@fluxpolis/client/game/features/districts/components/DistrictState';
+import { EVENTS } from '@fluxpolis/eventbus';
 
 export class DistrictSpawnSystem implements ISystem {
   private entities = new Map<string, GameEntity>();
@@ -19,12 +12,15 @@ export class DistrictSpawnSystem implements ISystem {
   constructor(private entitiesManager: EntitiesManager) {}
 
   init(): void {
-    EventBus.on('simulation:districts:new', (data: DistrictNewPayload) => {
-      const entity = DistrictFactory.createDistrict(this.entitiesManager, data.district);
+    EventBus.on(EVENTS.SIMULATION_DISTRICTS_NEW, (data) => {
+      const entity = DistrictFactory.createDistrict(
+        this.entitiesManager,
+        data.district,
+      );
       this.entities.set(data.district.id, entity);
     });
 
-    EventBus.on('simulation:districts:update', (data: DistrictUpdatePayload) => {
+    EventBus.on(EVENTS.SIMULATION_DISTRICTS_UPDATE, (data) => {
       const entity = this.entities.get(data.district.id);
       if (!entity) return;
       const state = entity.getComponent<DistrictState>('DistrictState')!;

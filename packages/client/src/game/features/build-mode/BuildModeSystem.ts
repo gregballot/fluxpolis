@@ -1,8 +1,9 @@
-import { Scene } from 'phaser';
-import { EventBus } from '../../../EventBus';
-import type { ISystem } from '../../core/systems/ISystem';
-import type { EntitiesManager } from '../../core/entities/EntitiesManager';
-import type { DistrictState } from '../districts/components/DistrictState';
+import { EventBus } from '@fluxpolis/client/EventBus';
+import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
+import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
+import type { DistrictState } from '@fluxpolis/client/game/features/districts/components/DistrictState';
+import { EVENTS } from '@fluxpolis/eventbus';
+import type { Scene } from 'phaser';
 
 const DISTRICT_RADIUS = 25;
 const COLOR_VALID = 0x00ff00;
@@ -13,23 +14,29 @@ export class BuildModeSystem implements ISystem {
   private graphics: Phaser.GameObjects.Graphics;
   private isActive: boolean = false;
 
-  constructor(private entitiesManager: EntitiesManager, scene: Scene) {
+  constructor(
+    private entitiesManager: EntitiesManager,
+    scene: Scene,
+  ) {
     this.scene = scene;
     this.graphics = scene.add.graphics();
   }
 
   init(): void {
-    EventBus.on('ui:menu:build-district', () => {
+    EventBus.on(EVENTS.UI_MENU_BUILD_DISTRICT, () => {
       this.isActive = true;
     });
 
-    EventBus.on('game:input:left-click-on-map', (data: { x: number; y: number }) => {
+    EventBus.on(EVENTS.GAME_INPUT_LEFT_CLICK_ON_MAP, (data) => {
       if (!this.isActive) return;
 
       const hasCollision = this.checkCollision(data.x, data.y);
       if (hasCollision) return;
 
-      EventBus.emit('game:build-mode:district-placed', { x: data.x, y: data.y });
+      EventBus.emit(EVENTS.GAME_BUILD_MODE_DISTRICT_PLACED, {
+        x: data.x,
+        y: data.y,
+      });
       this.graphics.clear();
       this.isActive = false;
     });
@@ -41,7 +48,10 @@ export class BuildModeSystem implements ISystem {
     const pointer = this.scene.input.activePointer;
     if (!pointer) return;
 
-    const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
+    const worldPoint = this.scene.cameras.main.getWorldPoint(
+      pointer.x,
+      pointer.y,
+    );
 
     const isValidPlacement = !this.checkCollision(worldPoint.x, worldPoint.y);
     const color = isValidPlacement ? COLOR_VALID : COLOR_INVALID;

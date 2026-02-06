@@ -10,6 +10,7 @@
 //   EventBus.off('some:event', handleSomeEvent);
 // });
 
+import { EVENTS } from '@fluxpolis/eventbus';
 import MenuButton from './MenuButton.vue';
 
 const appVersion = __APP_VERSION__;
@@ -21,8 +22,8 @@ const appVersion = __APP_VERSION__;
 
     <MenuButton
       text="Build District"
-      emitEvent="ui:menu:build-district"
-      confirmEvent="game:build-mode:district-placed"
+      :emitEvent="EVENTS.UI_MENU_BUILD_DISTRICT"
+      :confirmEvent="EVENTS.GAME_BUILD_MODE_DISTRICT_PLACED"
     />
   </div>
 </template>

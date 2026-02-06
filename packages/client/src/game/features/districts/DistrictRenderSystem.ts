@@ -1,13 +1,16 @@
-import { Scene } from 'phaser';
-import { EntitiesManager } from '../../core/entities/EntitiesManager';
-import type { ISystem } from '../../core/systems/ISystem';
-import type { DistrictState } from './components/DistrictState';
+import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
+import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
+import type { DistrictState } from '@fluxpolis/client/game/features/districts/components/DistrictState';
+import type { Scene } from 'phaser';
 
 export class DistrictRenderSystem implements ISystem {
   private graphics: Phaser.GameObjects.Graphics;
   private labels = new Map<string, Phaser.GameObjects.Text>();
 
-  constructor(private entitiesManager: EntitiesManager, private scene: Scene) {
+  constructor(
+    private entitiesManager: EntitiesManager,
+    private scene: Scene,
+  ) {
     this.graphics = scene.add.graphics();
   }
 

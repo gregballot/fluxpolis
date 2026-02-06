@@ -1,4 +1,4 @@
-import { GameEntity } from './GameEntity';
+import { GameEntity } from '@fluxpolis/client/game/core/entities/GameEntity';
 
 export class EntitiesManager {
   private entities: Map<string, GameEntity> = new Map();
@@ -22,9 +22,9 @@ export class EntitiesManager {
   query(...componentNames: string[]): GameEntity[] {
     const results: GameEntity[] = [];
 
-    this.entities.forEach(entity => {
-      const hasAllComponents = componentNames.every(name => 
-        entity.hasComponent(name)
+    this.entities.forEach((entity) => {
+      const hasAllComponents = componentNames.every((name) =>
+        entity.hasComponent(name),
       );
 
       if (hasAllComponents) {

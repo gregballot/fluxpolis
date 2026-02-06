@@ -1,5 +1,6 @@
-import { EventBus } from '../../../EventBus';
-import type { ISystem } from './ISystem';
+import { EventBus } from '@fluxpolis/client/EventBus';
+import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
+import { EVENTS } from '@fluxpolis/eventbus';
 
 interface CameraState {
   x: number;
@@ -7,7 +8,7 @@ interface CameraState {
   zoom: number;
   scrollX: number;
   scrollY: number;
-};
+}
 
 export class CameraSystem implements ISystem {
   private camera: Phaser.Cameras.Scene2D.Camera;
@@ -19,29 +20,29 @@ export class CameraSystem implements ISystem {
 
   init(): void {
     this.camera.setBackgroundColor('#1a1a2e');
-    
+
     // TODO: find a way to get the map size
     // this.camera.setBounds(0, 0, this.mapWidth, this.mapHeight);
     // this.camera.centerOn(this.mapWidth / 2, this.mapHeight / 2);
-    
+
     this.setupInputListeners();
     this.reset();
   }
 
   private setupInputListeners(): void {
-    EventBus.on('game:input:drag', (data: { deltaX: number; deltaY: number }) => {
+    EventBus.on(EVENTS.GAME_INPUT_DRAG, (data) => {
       this.camera.scrollX -= data.deltaX / this.camera.zoom;
       this.camera.scrollY -= data.deltaY / this.camera.zoom;
     });
 
-    EventBus.on('game:input:wheel', (data: { deltaY: number }) => {
+    EventBus.on(EVENTS.GAME_INPUT_WHEEL, (data) => {
       const zoomFactor = data.deltaY > 0 ? 0.9 : 1.1;
       const newZoom = Phaser.Math.Clamp(this.camera.zoom * zoomFactor, 0.3, 3);
-      
+
       this.camera.setZoom(newZoom);
     });
 
-    EventBus.on('game:input:space', () => {
+    EventBus.on(EVENTS.GAME_INPUT_SPACE, () => {
       this.reset();
     });
   }
@@ -52,7 +53,7 @@ export class CameraSystem implements ISystem {
       y: Math.floor(this.camera.scrollY + this.camera.height / 2),
       zoom: this.camera.zoom,
       scrollX: this.camera.scrollX,
-      scrollY: this.camera.scrollY
+      scrollY: this.camera.scrollY,
     };
 
     if (
@@ -66,7 +67,7 @@ export class CameraSystem implements ISystem {
       return;
     }
 
-    EventBus.emit('game:camera:positionChanged', currentState);
+    EventBus.emit(EVENTS.GAME_CAMERA_POSITION_CHANGED, currentState);
     this.lastEmittedState = currentState;
   }
 

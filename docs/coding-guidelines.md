@@ -10,6 +10,70 @@
 - **Walking Skeleton**: Build minimum viable features end-to-end before adding complexity
 - **No Unnecessary Abstraction**: Only create abstractions when there's proven need
 
+## Import Conventions
+
+**Always use absolute imports via `@fluxpolis/*` aliases:**
+
+```typescript
+// ✅ Good: Absolute imports
+import { EventBus } from '@fluxpolis/client/EventBus';
+import { EVENTS } from '@fluxpolis/eventbus';
+import { Simulation } from '@fluxpolis/simulation';
+
+// ❌ Bad: Parent directory imports
+import { EventBus } from '../../../EventBus';
+import { EVENTS } from '../../events/EventMap';
+
+// ✅ Allowed: Same-level or downward imports
+import { MyComponent } from './MyComponent';
+import { helper } from './utils/helper';
+```
+
+**Why:**
+- Refactor-safe: Moving files doesn't break imports
+- Cleaner: No `../../../` maze
+- IDE-friendly: Better autocomplete and navigation
+- Enforced: Biome linter will catch violations (`npm run lint`)
+
+**Same-level imports (`./`) are allowed** for closely related files in the same directory.
+
+## Code Quality and Linting
+
+**Biome is used for linting and formatting:**
+
+```bash
+npm run lint           # Check for issues
+npm run lint:fix       # Auto-fix issues
+npm run format         # Format code
+```
+
+**Linter configuration (`biome.json`):**
+
+- **Enforced rules:**
+  - `noRestrictedImports`: Blocks parent directory imports (`../`) - must use absolute imports
+  - Uses Node.js import protocol (`node:fs` instead of `fs`) for built-in modules
+
+- **Warnings (intentional patterns allowed):**
+  - `noExplicitAny`: Allow `any` for dynamic types (component storage, Phaser callbacks, etc.)
+  - `noNonNullAssertion`: Allow `!` assertions when safety is guaranteed
+  - `noStaticOnlyClass`: Allow factory classes with static methods
+
+- **Vue-specific overrides:**
+  - `noUnusedImports`: Disabled for `.vue` files (imports used in templates)
+  - `noUnusedVariables`: Disabled for `.vue` files
+
+**When to use `any`:**
+
+Only use `any` when TypeScript cannot express the type (e.g., dynamic component storage, third-party library callbacks). Always add a comment explaining why.
+
+```typescript
+// Good: Explained use of any
+private components: Map<string, any> = new Map(); // Generic component storage
+
+// Bad: Lazy typing
+const data: any = fetchData(); // Should be typed properly
+```
+
 ## TypeScript Conventions
 
 ### Interface vs Type
@@ -180,6 +244,29 @@ class CameraSystem {
 ```
 
 **Benefit:** Layers can evolve independently without breaking each other.
+
+### Type-Safe Events
+
+Use the `@fluxpolis/eventbus` package for inter-layer communication. Import event constants from EventMap for compile-time type safety:
+
+```typescript
+import { EventBus } from "@fluxpolis/client/EventBus";
+import { EVENTS } from "@fluxpolis/eventbus";
+
+// TypeScript validates payload shape automatically
+EventBus.emit(EVENTS.GAME_INPUT_DRAG, { deltaX: 10, deltaY: 20, x: 100, y: 200 });
+
+// Payload type inferred in listeners
+EventBus.on(EVENTS.GAME_INPUT_DRAG, (data) => {
+  console.log(data.deltaX); // ✓ Fully typed
+});
+```
+
+See [EventBus Architecture](architecture/eventbus/overview.md) for complete documentation on:
+- Event naming conventions
+- Adding new events
+- Type safety features
+- Usage patterns
 
 ## File Naming
 

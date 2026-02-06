@@ -1,8 +1,11 @@
-import { EntitiesManager } from '../../../core/entities/EntitiesManager';
-import { GameEntity } from '../../../core/entities/GameEntity';
+import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
+import type { GameEntity } from '@fluxpolis/client/game/core/entities/GameEntity';
 
 export class DistrictFactory {
-  static createDistrict(entitiesManager: EntitiesManager, data: { id: string; x: number; y: number }): GameEntity {
+  static createDistrict(
+    entitiesManager: EntitiesManager,
+    data: { id: string; x: number; y: number },
+  ): GameEntity {
     const entity = entitiesManager.createEntity();
     entity.addComponent('DistrictState', {
       id: data.id,

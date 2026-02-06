@@ -1,1 +1,1 @@
-export { Simulation } from './Simulation';
+export { Simulation } from '@fluxpolis/simulation/Simulation';

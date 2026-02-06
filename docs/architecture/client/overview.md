@@ -147,15 +147,27 @@ See: [ECS Pattern](/architecture/client/ecs-pattern.md)
 
 ### Event-Driven Communication
 
-**EventBus:** Phaser EventEmitter used for pub/sub between layers
+The client communicates with other layers via the `@fluxpolis/eventbus` package. The EventBus provides type-safe, decoupled communication between systems, UI, and simulation.
 
-**Event Naming Convention:** `{layer}:{subject}:{action}`
+**Quick Example:**
+```typescript
+import { EventBus } from '@fluxpolis/client/EventBus';
+import { EVENTS } from '@fluxpolis/eventbus';
 
-- `game:input:drag` - Game layer, input subject, drag action
-- `game:camera:moved` - Game layer, camera subject, moved action
-- `simulation:districts:new` - Simulation layer, districts subject, new district created
+// Systems emit events
+EventBus.emit(EVENTS.GAME_INPUT_DRAG, { deltaX, deltaY, x, y });
 
-- `ui:button:clicked` - UI layer, button subject, clicked action
+// Other systems listen
+EventBus.on(EVENTS.GAME_INPUT_DRAG, (data) => {
+  // TypeScript knows the exact payload shape
+});
+```
+
+See **[EventBus Architecture](../eventbus/overview.md)** for:
+- Event naming conventions
+- Type-safe event patterns
+- Adding new events
+- Debugging tools
 
 ### Vue + Phaser Integration
 

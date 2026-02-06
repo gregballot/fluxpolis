@@ -1,16 +1,17 @@
-import { District } from './District';
-import type { IEventBus, IManager } from '../types';
-import { Logger } from '../Logger';
+import { EVENTS } from '@fluxpolis/eventbus';
+import { District } from '@fluxpolis/simulation/districts/District';
+import { Logger } from '@fluxpolis/simulation/Logger';
+import type { IManager, TypedEventBus } from '@fluxpolis/simulation/types';
 
 export class DistrictManager implements IManager {
   private districts = new Map<string, District>();
   private nextId = 1;
 
-  constructor(private events: IEventBus) {
-    this.events.on('game:build-mode:district-placed', (...args: unknown[]) => {
-      const data = args[0] as { x: number; y: number };
+  constructor(private events: TypedEventBus) {
+    // TypeScript now infers the payload type automatically!
+    this.events.on(EVENTS.GAME_BUILD_MODE_DISTRICT_PLACED, (data) => {
       const district = this.create(data.x, data.y);
-      this.events.emit('simulation:districts:new', { district });
+      this.events.emit(EVENTS.SIMULATION_DISTRICTS_NEW, { district });
       Logger.info('District placed', district);
     });
   }
@@ -24,7 +25,7 @@ export class DistrictManager implements IManager {
   tick(): void {
     for (const district of this.districts.values()) {
       district.age++;
-      this.events.emit('simulation:districts:update', { district });
+      this.events.emit(EVENTS.SIMULATION_DISTRICTS_UPDATE, { district });
     }
   }
 

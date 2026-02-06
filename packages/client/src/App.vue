@@ -1,9 +1,8 @@
 <script setup lang="ts">
-
 // import type Phaser from "phaser";
 
-import PhaserGame from "./PhaserGame.vue";
-import UI from "./ui/UI.vue";
+import PhaserGame from '@fluxpolis/client/PhaserGame.vue';
+import UI from '@fluxpolis/client/ui/UI.vue';
 
 // const onCurrentActiveScene = (scene: Phaser.Scene) => {
 //   console.log("Current active scene:", scene);

@@ -1,5 +1,6 @@
-import { EventBus } from '../../../EventBus';
-import type { ISystem } from './ISystem';
+import { EventBus } from '@fluxpolis/client/EventBus';
+import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
+import { EVENTS } from '@fluxpolis/eventbus';
 
 const TICK_INTERVAL = 500; // ms
 
@@ -12,7 +13,7 @@ export class SimulationSystem implements ISystem {
     this.accumulator += delta;
     if (this.accumulator >= TICK_INTERVAL) {
       this.accumulator = 0;
-      EventBus.emit('game:simulation-tick');
+      EventBus.emit(EVENTS.GAME_SIMULATION_TICK);
     }
   }
 }

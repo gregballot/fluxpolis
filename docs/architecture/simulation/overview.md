@@ -7,23 +7,35 @@ The simulation package (`@fluxpolis/simulation`) owns all game-state logic. It h
 ```
 packages/simulation/src/
 ├── index.ts                  — barrel export (Simulation only)
-├── types.ts                  — IEventBus, IManager interfaces
+├── types.ts                  — IManager interface, TypedEventBus re-exported from @fluxpolis/eventbus
 ├── Simulation.ts             — orchestrator: IManager registry + tick loop
 └── districts/
     ├── District.ts           — District domain object
     └── DistrictManager.ts    — implements IManager, subscribes to events, owns district state
 ```
 
-## IEventBus — the only coupling point
+## EventBus — the only coupling point
+
+The simulation layer communicates through `TypedEventBus` from `@fluxpolis/eventbus`:
 
 ```typescript
-export interface IEventBus {
-  on(event: string, listener: (...args: unknown[]) => void): unknown;
-  emit(event: string, ...args: unknown[]): unknown;
+import type { TypedEventBus } from '@fluxpolis/eventbus';
+import { EVENTS } from '@fluxpolis/eventbus';
+
+// Managers receive the event bus via constructor
+class DistrictManager {
+  constructor(private events: TypedEventBus) {
+    // Fully typed - payload shape inferred automatically!
+    this.events.on(EVENTS.GAME_BUILD_MODE_DISTRICT_PLACED, (data) => {
+      console.log(data.x, data.y); // TypeScript knows the types
+    });
+  }
 }
 ```
 
-Phaser's `EventEmitter` satisfies this structurally. The client passes its singleton `EventBus` into `new Simulation(EventBus)`. No bridge, no adapter, no name translation.
+The client passes its `EventBus` singleton to `new Simulation(EventBus)` - no adapter needed.
+
+See **[EventBus Architecture](../eventbus/overview.md)** for details on event naming, type safety, and adding new events.
 
 ## Simulation (orchestrator)
 

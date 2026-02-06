@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import { EventBus } from '../EventBus';
+import { EventBus } from '@fluxpolis/client/EventBus';
+import { EVENTS } from '@fluxpolis/eventbus';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 const x = ref(0);
 const y = ref(0);
@@ -13,11 +14,11 @@ const handlePositionChange = (data: { x: number; y: number; zoom: number }) => {
 };
 
 onMounted(() => {
-  EventBus.on('game:camera:positionChanged', handlePositionChange);
+  EventBus.on(EVENTS.GAME_CAMERA_POSITION_CHANGED, handlePositionChange);
 });
 
 onUnmounted(() => {
-  EventBus.off('game:camera:positionChanged', handlePositionChange);
+  EventBus.off(EVENTS.GAME_CAMERA_POSITION_CHANGED, handlePositionChange);
 });
 </script>
 

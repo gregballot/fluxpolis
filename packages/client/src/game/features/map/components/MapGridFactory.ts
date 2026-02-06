@@ -1,6 +1,6 @@
-import { EntitiesManager } from '../../../core/entities/EntitiesManager';
-import { GameEntity } from '../../../core/entities/GameEntity';
-import type { MapGrid } from './MapGrid';
+import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
+import type { GameEntity } from '@fluxpolis/client/game/core/entities/GameEntity';
+import type { MapGrid } from '@fluxpolis/client/game/features/map/components/MapGrid';
 
 const MapDefaultConfig: MapGrid = {
   width: 3000,
@@ -11,7 +11,10 @@ const MapDefaultConfig: MapGrid = {
 };
 
 export class MapFactory {
-  static createMapGrid(entitiesManager: EntitiesManager, config: MapGrid = MapDefaultConfig): GameEntity {
+  static createMapGrid(
+    entitiesManager: EntitiesManager,
+    config: MapGrid = MapDefaultConfig,
+  ): GameEntity {
     const mapEntity = entitiesManager.createEntity();
     mapEntity.addComponent('MapGrid', {
       width: config.width,

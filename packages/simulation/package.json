@@ -11,6 +11,9 @@
   "keywords": [],
   "author": "Greg Ballot",
   "type": "module",
+  "dependencies": {
+    "@fluxpolis/eventbus": "*"
+  },
   "devDependencies": {
     "@types/node": "^25.1.0"
   }

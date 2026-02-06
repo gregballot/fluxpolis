@@ -1,4 +1,4 @@
-import type { ISystem } from './ISystem';
+import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
 
 export class SystemsManager {
   private systems: ISystem[] = [];
@@ -8,7 +8,7 @@ export class SystemsManager {
   }
 
   init(): void {
-    this.systems.forEach(system => {
+    this.systems.forEach((system) => {
       if (system.init) {
         system.init();
       }
@@ -16,7 +16,7 @@ export class SystemsManager {
   }
 
   update(delta: number): void {
-    this.systems.forEach(system => {
+    this.systems.forEach((system) => {
       if (system.update) {
         system.update(delta);
       }
@@ -24,7 +24,7 @@ export class SystemsManager {
   }
 
   render(): void {
-    this.systems.forEach(system => {
+    this.systems.forEach((system) => {
       if (system.render) {
         system.render();
       }

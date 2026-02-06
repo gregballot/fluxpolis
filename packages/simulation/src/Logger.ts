@@ -9,22 +9,22 @@ let isLoggingEnabled = true;
 declare const window: any;
 
 if (typeof window !== 'undefined') {
-    Object.defineProperty(window, 'logSimulation', {
-        get: () => isLoggingEnabled,
-        set: (v) => {
-            isLoggingEnabled = !!v;
-            console.log(
-                `%c[Simulation] Logging ${isLoggingEnabled ? 'ENABLED' : 'DISABLED'}`,
-                'color: #00d9ff; font-weight: bold'
-            );
-        },
-        configurable: true
-    });
+  Object.defineProperty(window, 'logSimulation', {
+    get: () => isLoggingEnabled,
+    set: (v) => {
+      isLoggingEnabled = !!v;
+      console.log(
+        `%c[Simulation] Logging ${isLoggingEnabled ? 'ENABLED' : 'DISABLED'}`,
+        'color: #00d9ff; font-weight: bold',
+      );
+    },
+    configurable: true,
+  });
 
-    console.log(
-        '%c[Simulation] Type `logSimulation = false` to disable simulation logging',
-        'color: #00d9ff; border: 1px solid #00d9ff; padding: 2px 5px; border-radius: 3px;'
-    );
+  console.log(
+    '%c[Simulation] Type `logSimulation = false` to disable simulation logging',
+    'color: #00d9ff; border: 1px solid #00d9ff; padding: 2px 5px; border-radius: 3px;',
+  );
 }
 
 /**
@@ -33,25 +33,25 @@ if (typeof window !== 'undefined') {
  * Toggle via console: `logSimulation = false`
  */
 export const Logger = {
-    info(message: string, ...args: unknown[]): void {
-        if (isLoggingEnabled && typeof console !== 'undefined') {
-            console.log(
-                `%c[Simulation]%c ${message}`,
-                'color: #00d9ff; font-weight: bold',
-                'color: inherit',
-                ...args
-            );
-        }
-    },
-
-    warn(message: string, ...args: unknown[]): void {
-        if (isLoggingEnabled && typeof console !== 'undefined') {
-            console.warn(
-                `%c[Simulation]%c ${message}`,
-                'color: #ff9500; font-weight: bold',
-                'color: inherit',
-                ...args
-            );
-        }
+  info(message: string, ...args: unknown[]): void {
+    if (isLoggingEnabled && typeof console !== 'undefined') {
+      console.log(
+        `%c[Simulation]%c ${message}`,
+        'color: #00d9ff; font-weight: bold',
+        'color: inherit',
+        ...args,
+      );
     }
+  },
+
+  warn(message: string, ...args: unknown[]): void {
+    if (isLoggingEnabled && typeof console !== 'undefined') {
+      console.warn(
+        `%c[Simulation]%c ${message}`,
+        'color: #ff9500; font-weight: bold',
+        'color: inherit',
+        ...args,
+      );
+    }
+  },
 };

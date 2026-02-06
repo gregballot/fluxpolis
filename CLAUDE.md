@@ -4,8 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Fluxpolis is a cyberpunk city-building game built in a monorepo structure. The architecture is separated into two distinct layers:
+Fluxpolis is a cyberpunk city-building game built in a monorepo structure. The architecture is separated into three distinct packages:
 
+- **EventBus Layer** (`@fluxpolis/eventbus`): Type-safe event system shared across all layers, defines event contracts via EventMap
 - **Client Layer** (`@fluxpolis/client`): Handles rendering and UI using an ECS-inspired pattern with Phaser 3 and Vue 3
 - **Simulation Layer** (`@fluxpolis/simulation`): Pure game logic with zero rendering dependencies, using a manager pattern with tick-based updates
 
@@ -42,8 +43,8 @@ If asked to work on an issue, first use `gh cli` to get the issue details.
 **Commands:**
 
 - `npm run dev` - Start Vite dev server (client package)
-- `npm run build` - Build simulation then client
-- `npm run type-check` - Type check simulation and client packages
+- `npm run build` - Build eventbus, simulation, then client
+- `npm run type-check` - Type check all packages (eventbus, simulation, client)
 
 **Tech Stack:**
 

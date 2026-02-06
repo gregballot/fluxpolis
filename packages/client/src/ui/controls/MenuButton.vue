@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import { EventBus } from '../../EventBus';
+import { EventBus } from '@fluxpolis/client/EventBus';
+import type { EventMap } from '@fluxpolis/eventbus';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 const props = defineProps<{
   text: string;
-  emitEvent: string;
-  confirmEvent: string;
+  emitEvent: keyof EventMap;
+  confirmEvent: keyof EventMap;
 }>();
 
 const isSelected = ref(false);

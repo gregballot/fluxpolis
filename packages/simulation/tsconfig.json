@@ -3,20 +3,20 @@
   "compilerOptions": {
     // Pure TypeScript - no DOM or Node APIs
     // This ensures the simulation can run in any environment
-    "lib": [
-      "ES2022"
-    ],
+    "lib": ["ES2022"],
     "outDir": "./dist",
     "rootDir": "./src",
-    "composite": true
+    "composite": true,
+    "paths": {
+      "@fluxpolis/simulation/*": ["./src/*"],
+      "@fluxpolis/eventbus": ["../eventbus/src"]
+    }
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts",
-    "**/*.spec.ts"
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],
+  "references": [
+    {
+      "path": "../eventbus"
+    }
   ]
 }
