@@ -147,12 +147,13 @@ See: [ECS Pattern](/architecture/client/ecs-pattern.md)
 
 ### Event-Driven Communication
 
-The client communicates with other layers via the `@fluxpolis/eventbus` package. The EventBus provides type-safe, decoupled communication between systems, UI, and simulation.
+The client communicates with other layers via an EventBus which is instantiated in the client, but its contracts and types are defined in the `@fluxpolis/events` package . The EventBus provides type-safe, decoupled communication between systems, UI, and simulation.
 
 **Quick Example:**
+
 ```typescript
-import { EventBus } from '@fluxpolis/client/EventBus';
-import { EVENTS } from '@fluxpolis/eventbus';
+import { EventBus } from "@fluxpolis/client/EventBus";
+import { EVENTS } from "@fluxpolis/events";
 
 // Systems emit events
 EventBus.emit(EVENTS.GAME_INPUT_DRAG, { deltaX, deltaY, x, y });
@@ -164,6 +165,7 @@ EventBus.on(EVENTS.GAME_INPUT_DRAG, (data) => {
 ```
 
 See **[EventBus Architecture](../eventbus/overview.md)** for:
+
 - Event naming conventions
 - Type-safe event patterns
 - Adding new events

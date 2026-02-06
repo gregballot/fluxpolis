@@ -1,5 +1,5 @@
 import { EventBus } from '@fluxpolis/client/EventBus';
-import { EVENTS } from '@fluxpolis/eventbus';
+import { EVENTS } from '@fluxpolis/events';
 
 import type { ISystem } from './ISystem';
 

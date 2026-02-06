@@ -1,7 +1,7 @@
 import type { Scene } from 'phaser';
 
 import { EventBus } from '@fluxpolis/client/EventBus';
-import { EVENTS } from '@fluxpolis/eventbus';
+import { EVENTS } from '@fluxpolis/events';
 
 export class InputService {
   private scene: Scene;

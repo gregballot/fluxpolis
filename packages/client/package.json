@@ -16,7 +16,7 @@
   "author": "Greg Ballot",
   "type": "module",
   "dependencies": {
-    "@fluxpolis/eventbus": "*",
+    "@fluxpolis/events": "*",
     "@fluxpolis/simulation": "*",
     "phaser": "^3.90.0",
     "vite": "^7.3.1",

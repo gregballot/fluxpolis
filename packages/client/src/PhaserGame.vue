@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type Phaser from 'phaser';
-import { EVENTS } from '@fluxpolis/eventbus';
+import { EVENTS } from '@fluxpolis/events';
 
 import { EventBus } from './EventBus';
 import StartGame from './game/init';

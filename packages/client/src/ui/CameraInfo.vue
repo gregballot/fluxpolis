@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { EventBus } from '@fluxpolis/client/EventBus';
-import { EVENTS } from '@fluxpolis/eventbus';
+import { EVENTS } from '@fluxpolis/events';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 const x = ref(0);

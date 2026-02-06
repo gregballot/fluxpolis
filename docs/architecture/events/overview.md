@@ -1,6 +1,6 @@
 # EventBus Layer
 
-The EventBus layer (`@fluxpolis/eventbus`) is the communication backbone of Fluxpolis. It provides a type-safe, centralized event system that enables decoupled communication between the client and simulation layers.
+The EventBus layer (`@fluxpolis/events`) is the communication backbone of Fluxpolis. It provides a type-safe, centralized event system that enables decoupled communication between the client and simulation layers.
 
 ## Purpose
 
@@ -12,7 +12,7 @@ The EventBus layer serves as the **contract between architectural layers**:
 ## Package Contents
 
 ```
-@fluxpolis/eventbus/
+@fluxpolis/events/
   ├── EventMap.ts         # Central event registry with payload types
   ├── TypedEventBus.ts    # Type-safe interface for all layers
   └── index.ts            # Public API

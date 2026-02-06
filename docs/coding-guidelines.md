@@ -17,7 +17,7 @@
 ```typescript
 // ✅ Good: Absolute imports
 import { EventBus } from '@fluxpolis/client/EventBus';
-import { EVENTS } from '@fluxpolis/eventbus';
+import { EVENTS } from '@fluxpolis/events';
 import { Simulation } from '@fluxpolis/simulation';
 
 // ❌ Bad: Parent directory imports
@@ -247,11 +247,11 @@ class CameraSystem {
 
 ### Type-Safe Events
 
-Use the `@fluxpolis/eventbus` package for inter-layer communication. Import event constants from EventMap for compile-time type safety:
+Use the `@fluxpolis/events` package for inter-layer communication. Import event constants from EventMap for compile-time type safety:
 
 ```typescript
 import { EventBus } from "@fluxpolis/client/EventBus";
-import { EVENTS } from "@fluxpolis/eventbus";
+import { EVENTS } from "@fluxpolis/events";
 
 // TypeScript validates payload shape automatically
 EventBus.emit(EVENTS.GAME_INPUT_DRAG, { deltaX: 10, deltaY: 20, x: 100, y: 200 });
@@ -262,7 +262,7 @@ EventBus.on(EVENTS.GAME_INPUT_DRAG, (data) => {
 });
 ```
 
-See [EventBus Architecture](architecture/eventbus/overview.md) for complete documentation on:
+See [EventBus Architecture](architecture/events/overview.md) for complete documentation on:
 - Event naming conventions
 - Adding new events
 - Type safety features

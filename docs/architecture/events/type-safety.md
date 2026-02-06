@@ -6,7 +6,7 @@ EventBus provides automatic type validation using a central EventMap. TypeScript
 
 ```typescript
 import { EventBus } from '@fluxpolis/client/EventBus';
-import { EVENTS } from '@fluxpolis/eventbus';
+import { EVENTS } from '@fluxpolis/events';
 
 // Emit events - TypeScript validates payload shape
 EventBus.emit(EVENTS.GAME_INPUT_DRAG, {
@@ -68,7 +68,7 @@ export const EVENTS = {
 TypeScript handles type validation automatically:
 
 ```typescript
-import { EVENTS } from '@fluxpolis/eventbus';
+import { EVENTS } from '@fluxpolis/events';
 
 // In client or simulation code:
 EventBus.emit(EVENTS.GAME_MY_FEATURE_ACTION, {
@@ -122,7 +122,7 @@ Both client and simulation layers use `TypedEventBus` for full type safety:
 **Client Layer:**
 ```typescript
 import { EventBus } from '@fluxpolis/client/EventBus';
-import { EVENTS } from '@fluxpolis/eventbus';
+import { EVENTS } from '@fluxpolis/events';
 
 // In systems/services
 EventBus.emit(EVENTS.GAME_INPUT_DRAG_START, { x: 10, y: 20 });
@@ -130,8 +130,8 @@ EventBus.emit(EVENTS.GAME_INPUT_DRAG_START, { x: 10, y: 20 });
 
 **Simulation Layer:**
 ```typescript
-import type { TypedEventBus } from '@fluxpolis/eventbus';
-import { EVENTS } from '@fluxpolis/eventbus';
+import type { TypedEventBus } from '@fluxpolis/events';
+import { EVENTS } from '@fluxpolis/events';
 
 class DistrictManager {
   constructor(private events: TypedEventBus) {
@@ -181,7 +181,7 @@ EventBus.on(EVENTS.UI_MENU_BUILD_DISTRICT, () => {
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
 import { EventBus } from '@fluxpolis/client/EventBus';
-import { EVENTS } from '@fluxpolis/eventbus';
+import { EVENTS } from '@fluxpolis/events';
 
 const handler = (data) => {
   // Handle event

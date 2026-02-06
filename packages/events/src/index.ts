@@ -1,5 +1,5 @@
 /**
- * @fluxpolis/eventbus
+ * @fluxpolis/events
  *
  * Central event system package for Fluxpolis.
  * Provides type-safe event contracts shared across all layers.

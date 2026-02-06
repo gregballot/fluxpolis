@@ -24,8 +24,8 @@ Fluxpolis is organized into three architectural layers:
 
 **EventBus Layer** - Communication backbone
 
-- **[Overview](architecture/eventbus/overview.md)** - Event system architecture
-- **[Type-Safe Events](architecture/eventbus/type-safety.md)** - Usage guide and examples
+- **[Overview](architecture/events/overview.md)** - Events usage and pattern
+- **[Type-Safe Events](architecture/events/type-safety.md)** - Usage guide and examples
 
 ## Getting Started
 

@@ -9,14 +9,14 @@
     "composite": true,
     "paths": {
       "@fluxpolis/simulation/*": ["./src/*"],
-      "@fluxpolis/eventbus": ["../eventbus/src"]
+      "@fluxpolis/events": ["../events/src"]
     }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],
   "references": [
     {
-      "path": "../eventbus"
+      "path": "../events"
     }
   ]
 }

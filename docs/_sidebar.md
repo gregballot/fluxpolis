@@ -3,8 +3,8 @@
 
 - **Architecture**
   - **EventBus Layer**
-    - [Overview](architecture/eventbus/overview.md)
-    - [Type-Safe Events](architecture/eventbus/type-safety.md)
+    - [Overview](architecture/events/overview.md)
+    - [Type-Safe Events](architecture/events/type-safety.md)
   - **Client Layer**
     - [Overview](architecture/client/overview.md)
     - [ECS Pattern](architecture/client/ecs-pattern.md)

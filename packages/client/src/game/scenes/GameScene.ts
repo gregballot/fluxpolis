@@ -5,11 +5,12 @@ import { CameraSystem } from '@fluxpolis/client/game/core/systems/CameraSystem';
 import { SimulationSystem } from '@fluxpolis/client/game/core/systems/SimulationSystem';
 import { SystemsManager } from '@fluxpolis/client/game/core/systems/SystemsManager';
 import { BuildModeSystem } from '@fluxpolis/client/game/features/build-mode/BuildModeSystem';
+import { DistrictInteractionSystem } from '@fluxpolis/client/game/features/districts/DistrictInteractionSystem';
 import { DistrictRenderSystem } from '@fluxpolis/client/game/features/districts/DistrictRenderSystem';
 import { DistrictSpawnSystem } from '@fluxpolis/client/game/features/districts/DistrictSpawnSystem';
 import { MapFactory } from '@fluxpolis/client/game/features/map/components/MapGridFactory';
 import { MapRenderSystem } from '@fluxpolis/client/game/features/map/MapGridRenderSystem';
-import { EVENTS } from '@fluxpolis/eventbus';
+import { EVENTS } from '@fluxpolis/events';
 import Phaser from 'phaser';
 
 export class GameScene extends Phaser.Scene {
@@ -39,6 +40,7 @@ export class GameScene extends Phaser.Scene {
       new MapRenderSystem(this.entitiesManager, this),
       new BuildModeSystem(this.entitiesManager, this),
       new DistrictSpawnSystem(this.entitiesManager),
+      new DistrictInteractionSystem(this.entitiesManager),
       new DistrictRenderSystem(this.entitiesManager, this),
     );
     this.systemManager.init();
