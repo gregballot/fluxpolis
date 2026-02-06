@@ -6,6 +6,8 @@
   "scripts": {
     "build": "tsc",
     "type-check": "tsc --noEmit",
+    "lint": "biome lint src",
+    "lint:fix": "biome lint --write src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

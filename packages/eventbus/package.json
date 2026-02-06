@@ -6,7 +6,9 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "lint": "biome lint src",
+    "lint:fix": "biome lint --write src"
   },
   "devDependencies": {
     "typescript": "^5.7.2"

@@ -1,7 +1,9 @@
-import { EventBus } from '@fluxpolis/client/EventBus';
-import { GameScene } from '@fluxpolis/client/game/scenes/GameScene';
-import { Simulation } from '@fluxpolis/simulation';
 import { AUTO, Game as PhaserGame, Scale, type Types } from 'phaser';
+
+import { EventBus } from '@fluxpolis/client/EventBus';
+import { Simulation } from '@fluxpolis/simulation';
+
+import { GameScene } from './scenes/GameScene';
 
 const config: Types.Core.GameConfig = {
   type: AUTO,

@@ -1,6 +1,14 @@
 import type { TypedEventBus } from '@fluxpolis/eventbus';
 import Phaser from 'phaser';
 
+// Extend Window interface for dev tools
+declare global {
+  interface Window {
+    logEvents: boolean;
+    setEventLogging: (enabled: boolean) => void;
+  }
+}
+
 const EventBusInstance = new Phaser.Events.EventEmitter();
 export const eventStats = { emitCount: 0 };
 
@@ -20,8 +28,8 @@ if (typeof window !== 'undefined' && import.meta.env.DEV) {
     configurable: true,
   });
   // Keep for compatibility
-  (window as any).setEventLogging = (v: boolean) => {
-    (window as any).logEvents = v;
+  window.setEventLogging = (v: boolean) => {
+    window.logEvents = v;
   };
 
   console.log(
@@ -40,7 +48,7 @@ const ignoredEvents: (string | symbol)[] = [
 ];
 
 const originalEmit = EventBusInstance.emit.bind(EventBusInstance);
-EventBusInstance.emit = function (event: string | symbol, ...args: any[]) {
+EventBusInstance.emit = function (event: string | symbol, ...args: unknown[]) {
   eventStats.emitCount++;
   if (isLoggingEnabled && !ignoredEvents.includes(event)) {
     console.groupCollapsed(
@@ -52,7 +60,7 @@ EventBusInstance.emit = function (event: string | symbol, ...args: any[]) {
     console.trace('Trace');
     console.groupEnd();
   }
-  return originalEmit.apply(this, [event, ...args] as [any, ...any[]]);
+  return originalEmit.apply(this, [event, ...args] as [string | symbol, ...unknown[]]);
 };
 
 // Export with TypedEventBus interface for compile-time type safety

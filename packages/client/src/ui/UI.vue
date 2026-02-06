@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import CameraInfo from '@fluxpolis/client/ui/CameraInfo.vue';
-import ControlsMenu from '@fluxpolis/client/ui/controls/ControlsMenu.vue';
-import DebugPanel from '@fluxpolis/client/ui/DebugPanel.vue';
+import CameraInfo from './CameraInfo.vue';
+import DebugPanel from './DebugPanel.vue';
+import ControlsMenu from './controls/ControlsMenu.vue';
 </script>
 
 <template>

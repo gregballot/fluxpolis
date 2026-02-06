@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { eventStats } from '@fluxpolis/client/EventBus';
 import { onMounted, onUnmounted, ref } from 'vue';
+
+import { eventStats } from '@fluxpolis/client/EventBus';
 
 const fps = ref(0);
 const eventsPerSec = ref(0);
@@ -15,11 +16,13 @@ const onFrame = (now: number) => {
   timestamps.push(now);
   if (timestamps.length > 60) timestamps.shift();
   if (timestamps.length > 1) {
-    fps.value = Math.round(
-      ((timestamps.length - 1) /
-        (timestamps[timestamps.length - 1]! - timestamps[0]!)) *
-        1000,
-    );
+    const lastTimestamp = timestamps[timestamps.length - 1];
+    const firstTimestamp = timestamps[0];
+    if (lastTimestamp !== undefined && firstTimestamp !== undefined) {
+      fps.value = Math.round(
+        ((timestamps.length - 1) / (lastTimestamp - firstTimestamp)) * 1000,
+      );
+    }
   }
   rafId = requestAnimationFrame(onFrame);
 };

@@ -1,7 +1,9 @@
+import type { Scene } from 'phaser';
+
 import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
-import type { MapGrid } from '@fluxpolis/client/game/features/map/components/MapGrid';
-import type { Scene } from 'phaser';
+
+import type { MapGrid } from './components/MapGrid';
 
 export class MapRenderSystem implements ISystem {
   private entitiesManager: EntitiesManager;

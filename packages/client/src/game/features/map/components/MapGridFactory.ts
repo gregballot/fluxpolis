@@ -1,6 +1,7 @@
 import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
 import type { GameEntity } from '@fluxpolis/client/game/core/entities/GameEntity';
-import type { MapGrid } from '@fluxpolis/client/game/features/map/components/MapGrid';
+
+import type { MapGrid } from './MapGrid';
 
 const MapDefaultConfig: MapGrid = {
   width: 3000,

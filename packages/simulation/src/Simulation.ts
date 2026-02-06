@@ -1,7 +1,8 @@
+import { Logger } from './Logger';
 import { EVENTS } from '@fluxpolis/eventbus';
-import { DistrictManager } from '@fluxpolis/simulation/districts/DistrictManager';
-import { Logger } from '@fluxpolis/simulation/Logger';
-import type { IManager, TypedEventBus } from '@fluxpolis/simulation/types';
+import type { IManager, TypedEventBus } from './types';
+
+import { DistrictManager } from './districts/DistrictManager';
 
 export class Simulation {
   private managers: IManager[] = [];

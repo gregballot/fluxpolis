@@ -1,10 +1,11 @@
 import { EventBus } from '@fluxpolis/client/EventBus';
+import { EVENTS } from '@fluxpolis/eventbus';
+
 import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
 import type { GameEntity } from '@fluxpolis/client/game/core/entities/GameEntity';
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
-import { DistrictFactory } from '@fluxpolis/client/game/features/districts/components/DistrictFactory';
-import type { DistrictState } from '@fluxpolis/client/game/features/districts/components/DistrictState';
-import { EVENTS } from '@fluxpolis/eventbus';
+import type { DistrictState } from './components/DistrictState';
+import { DistrictFactory } from './components/DistrictFactory';
 
 export class DistrictSpawnSystem implements ISystem {
   private entities = new Map<string, GameEntity>();
@@ -23,7 +24,10 @@ export class DistrictSpawnSystem implements ISystem {
     EventBus.on(EVENTS.SIMULATION_DISTRICTS_UPDATE, (data) => {
       const entity = this.entities.get(data.district.id);
       if (!entity) return;
-      const state = entity.getComponent<DistrictState>('DistrictState')!;
+
+      const state = entity.getComponent<DistrictState>('DistrictState');
+      if (!state) return;
+
       state.age = data.district.age;
     });
   }

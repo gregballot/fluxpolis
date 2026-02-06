@@ -1,4 +1,4 @@
-import { GameEntity } from '@fluxpolis/client/game/core/entities/GameEntity';
+import { GameEntity } from './GameEntity';
 
 export class EntitiesManager {
   private entities: Map<string, GameEntity> = new Map();

@@ -1,6 +1,6 @@
 export class GameEntity {
   id: string;
-  private components: Map<string, any> = new Map();
+  private components: Map<string, unknown> = new Map();
 
   constructor(id: string) {
     this.id = id;

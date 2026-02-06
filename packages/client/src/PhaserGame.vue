@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { EventBus } from '@fluxpolis/client/EventBus';
-import StartGame from '@fluxpolis/client/game/init';
-import { EVENTS } from '@fluxpolis/eventbus';
 import type Phaser from 'phaser';
+import { EVENTS } from '@fluxpolis/eventbus';
+
+import { EventBus } from './EventBus';
+import StartGame from './game/init';
+
 import { onMounted, onUnmounted, ref } from 'vue';
 
 const gameRef = ref<HTMLDivElement>();
@@ -18,8 +20,9 @@ onMounted(() => {
     game.value = StartGame(gameRef.value.id);
 
     EventBus.on(EVENTS.CURRENT_SCENE_READY, (currentScene) => {
-      scene.value = currentScene;
-      emit('current-active-scene', currentScene);
+      const phaserScene = currentScene as Phaser.Scene;
+      scene.value = phaserScene;
+      emit('current-active-scene', phaserScene);
     });
   }
 });

@@ -1,6 +1,7 @@
 import { EventBus } from '@fluxpolis/client/EventBus';
-import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
 import { EVENTS } from '@fluxpolis/eventbus';
+
+import type { ISystem } from './ISystem';
 
 const TICK_INTERVAL = 500; // ms
 

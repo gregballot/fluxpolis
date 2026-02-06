@@ -1,6 +1,7 @@
+import type { Scene } from 'phaser';
+
 import { EventBus } from '@fluxpolis/client/EventBus';
 import { EVENTS } from '@fluxpolis/eventbus';
-import type { Scene } from 'phaser';
 
 export class InputService {
   private scene: Scene;
@@ -68,7 +69,7 @@ export class InputService {
       'wheel',
       (
         pointer: Phaser.Input.Pointer,
-        _gameObjects: any[],
+        _gameObjects: Phaser.GameObjects.GameObject[],
         _deltaX: number,
         deltaY: number,
       ) => {

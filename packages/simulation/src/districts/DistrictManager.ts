@@ -1,7 +1,8 @@
-import { EVENTS } from '@fluxpolis/eventbus';
-import { District } from '@fluxpolis/simulation/districts/District';
-import { Logger } from '@fluxpolis/simulation/Logger';
 import type { IManager, TypedEventBus } from '@fluxpolis/simulation/types';
+import { EVENTS } from '@fluxpolis/eventbus';
+import { Logger } from '@fluxpolis/simulation/Logger';
+
+import { District } from './District';
 
 export class DistrictManager implements IManager {
   private districts = new Map<string, District>();

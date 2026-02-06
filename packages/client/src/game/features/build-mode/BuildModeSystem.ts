@@ -1,9 +1,11 @@
+import type { Scene } from 'phaser';
+
 import { EventBus } from '@fluxpolis/client/EventBus';
+import { EVENTS } from '@fluxpolis/eventbus';
+
 import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
 import type { DistrictState } from '@fluxpolis/client/game/features/districts/components/DistrictState';
-import { EVENTS } from '@fluxpolis/eventbus';
-import type { Scene } from 'phaser';
 
 const DISTRICT_RADIUS = 25;
 const COLOR_VALID = 0x00ff00;
@@ -65,7 +67,9 @@ export class BuildModeSystem implements ISystem {
     const districts = this.entitiesManager.query('DistrictState');
 
     for (const entity of districts) {
-      const district = entity.getComponent<DistrictState>('DistrictState')!;
+      const district = entity.getComponent<DistrictState>('DistrictState');
+      if (!district) continue;
+
       const dx = district.x - x;
       const dy = district.y - y;
       const distance = Math.sqrt(dx * dx + dy * dy);

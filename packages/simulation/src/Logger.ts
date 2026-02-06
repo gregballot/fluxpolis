@@ -1,15 +1,20 @@
 // Internal utility - NOT exported from index.ts
 // Pure simulation logging with minimal styling to differentiate from EventBus
 
+// Minimal window interface for dev tools (browser environment only)
+interface WindowWithLogger {
+  logSimulation?: boolean;
+}
+
 let isLoggingEnabled = true;
 
-// Runtime toggle: logSimulation = true/false
-// Using type assertion since ES2022 lib doesn't include Window/console types
-// but they exist at runtime in browser environment
-declare const window: any;
+// Check for browser environment and add dev tools
+// Using globalThis which is available in ES2022
+const globalWindow = globalThis as unknown as WindowWithLogger;
 
-if (typeof window !== 'undefined') {
-  Object.defineProperty(window, 'logSimulation', {
+// Only add dev tools in browser environment (not Node.js)
+if (typeof (globalThis as { document?: unknown }).document !== 'undefined') {
+  Object.defineProperty(globalWindow, 'logSimulation', {
     get: () => isLoggingEnabled,
     set: (v) => {
       isLoggingEnabled = !!v;

@@ -1,4 +1,4 @@
-import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
+import type { ISystem } from './ISystem';
 
 export class SystemsManager {
   private systems: ISystem[] = [];
