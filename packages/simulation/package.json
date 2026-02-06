@@ -4,7 +4,7 @@
   "description": "Fluxpolis simulation engine",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --build",
     "type-check": "tsc --noEmit",
     "lint": "biome lint src",
     "lint:fix": "biome lint --write src",

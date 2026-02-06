@@ -1,5 +1,7 @@
 # Fluxpolis
 
+[![CI](https://github.com/gregballot/fluxpolis/actions/workflows/ci.yml/badge.svg)](https://github.com/gregballot/fluxpolis/actions/workflows/ci.yml)
+
 A browser-based economic simulation game where players manage supply chains, optimize production networks, and balance market dynamics.
 
 ## Quick Start
@@ -24,6 +26,7 @@ This is a monorepo using npm workspaces with two packages:
 
 - **`@fluxpolis/simulation`** - Pure TypeScript simulation engine (environment-agnostic)
 - **`@fluxpolis/client`** - Browser client with Phaser renderer and UI
+- **`@fluxpolis/eventbus`** - Event bus for communication between packages
 
 See [CLAUDE.md](./CLAUDE.md) for development guidelines and architecture details.
 
