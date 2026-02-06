@@ -10,14 +10,14 @@
     "paths": {
       "@fluxpolis/client/*": ["./src/*"],
       "@fluxpolis/simulation": ["../simulation/src"],
-      "@fluxpolis/eventbus": ["../eventbus/src"]
+      "@fluxpolis/events": ["../events/src"]
     }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],
   "references": [
     {
-      "path": "../eventbus"
+      "path": "../events"
     },
     {
       "path": "../simulation"

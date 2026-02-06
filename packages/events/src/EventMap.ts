@@ -27,6 +27,9 @@ export interface EventMap {
   // Build mode events
   'game:build-mode:district-placed': { x: number; y: number };
 
+  // District events
+  'game:districts:clicked': { districtId: string; x: number; y: number };
+
   // UI events
   'ui:menu:build-district': undefined;
 
@@ -55,6 +58,7 @@ export const EVENTS = {
   GAME_INPUT_SPACE: 'game:input:space',
   GAME_CAMERA_POSITION_CHANGED: 'game:camera:positionChanged',
   GAME_BUILD_MODE_DISTRICT_PLACED: 'game:build-mode:district-placed',
+  GAME_DISTRICTS_CLICKED: 'game:districts:clicked',
   UI_MENU_BUILD_DISTRICT: 'ui:menu:build-district',
   GAME_SIMULATION_TICK: 'game:simulation-tick',
   SIMULATION_DISTRICTS_NEW: 'simulation:districts:new',

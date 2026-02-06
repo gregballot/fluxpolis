@@ -7,7 +7,7 @@ The simulation package (`@fluxpolis/simulation`) owns all game-state logic. It h
 ```
 packages/simulation/src/
 ├── index.ts                  — barrel export (Simulation only)
-├── types.ts                  — IManager interface, TypedEventBus re-exported from @fluxpolis/eventbus
+├── types.ts                  — IManager interface, TypedEventBus re-exported from @fluxpolis/events
 ├── Simulation.ts             — orchestrator: IManager registry + tick loop
 └── districts/
     ├── District.ts           — District domain object
@@ -16,11 +16,11 @@ packages/simulation/src/
 
 ## EventBus — the only coupling point
 
-The simulation layer communicates through `TypedEventBus` from `@fluxpolis/eventbus`:
+The simulation layer communicates through `TypedEventBus` from `@fluxpolis/events`:
 
 ```typescript
-import type { TypedEventBus } from '@fluxpolis/eventbus';
-import { EVENTS } from '@fluxpolis/eventbus';
+import type { TypedEventBus } from '@fluxpolis/events';
+import { EVENTS } from '@fluxpolis/events';
 
 // Managers receive the event bus via constructor
 class DistrictManager {

@@ -16,7 +16,7 @@ export default defineConfig({
     alias: {
       '@fluxpolis/client': path.resolve(__dirname, './src'),
       '@fluxpolis/simulation': path.resolve(__dirname, '../simulation/src'),
-      '@fluxpolis/eventbus': path.resolve(__dirname, '../eventbus/src'),
+      '@fluxpolis/events': path.resolve(__dirname, '../events/src'),
     },
   },
   server: {

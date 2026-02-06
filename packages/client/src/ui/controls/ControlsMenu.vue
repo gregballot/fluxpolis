@@ -10,7 +10,7 @@
 //   EventBus.off('some:event', handleSomeEvent);
 // });
 
-import { EVENTS } from '@fluxpolis/eventbus';
+import { EVENTS } from '@fluxpolis/events';
 import MenuButton from './MenuButton.vue';
 
 const appVersion = __APP_VERSION__;

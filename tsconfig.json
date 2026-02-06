@@ -2,6 +2,7 @@
   "files": [],
   "references": [
     { "path": "./packages/simulation" },
-    { "path": "./packages/client" }
+    { "path": "./packages/client" },
+    { "path": "./packages/events" }
   ]
 }

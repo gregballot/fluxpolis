@@ -26,7 +26,7 @@ This is a monorepo using npm workspaces with two packages:
 
 - **`@fluxpolis/simulation`** - Pure TypeScript simulation engine (environment-agnostic)
 - **`@fluxpolis/client`** - Browser client with Phaser renderer and UI
-- **`@fluxpolis/eventbus`** - Event bus for communication between packages
+- **`@fluxpolis/events`** - Event contracts for communication between packages (types and event bus interface)
 
 See [CLAUDE.md](./CLAUDE.md) for development guidelines and architecture details.
 

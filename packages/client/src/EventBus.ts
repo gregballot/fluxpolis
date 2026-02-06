@@ -1,4 +1,4 @@
-import type { TypedEventBus } from '@fluxpolis/eventbus';
+import type { TypedEventBus } from '@fluxpolis/events';
 import Phaser from 'phaser';
 
 // Extend Window interface for dev tools

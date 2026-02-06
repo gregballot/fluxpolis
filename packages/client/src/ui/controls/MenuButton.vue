@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { EventBus } from '@fluxpolis/client/EventBus';
-import type { EventMap } from '@fluxpolis/eventbus';
+import type { EventMap } from '@fluxpolis/events';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 const props = defineProps<{
