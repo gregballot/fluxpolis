@@ -1,6 +1,7 @@
 import { Logger } from './Logger';
+import type { TypedEventBus } from '@fluxpolis/events';
 import { EVENTS } from '@fluxpolis/events';
-import type { IManager, TypedEventBus } from './types';
+import type { IManager } from './types';
 
 import { DistrictManager } from './districts/DistrictManager';
 

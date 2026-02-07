@@ -2,7 +2,9 @@
   "name": "@fluxpolis/simulation",
   "version": "0.0.1",
   "description": "Fluxpolis simulation engine",
-  "main": "index.js",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc --build",
     "type-check": "tsc --noEmit",
@@ -12,9 +14,9 @@
   },
   "keywords": [],
   "author": "Greg Ballot",
-  "type": "module",
   "dependencies": {
-    "@fluxpolis/events": "*"
+    "@fluxpolis/events": "*",
+    "@fluxpolis/types": "*"
   },
   "devDependencies": {
     "@types/node": "^25.1.0"

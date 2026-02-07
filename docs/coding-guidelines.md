@@ -12,34 +12,20 @@
 
 ## Import Conventions
 
-**Always use absolute imports via `@fluxpolis/*` aliases:**
+**Always use absolute imports via `@fluxpolis/*` aliases. Same-level imports (`./`) are allowed.**
 
 ```typescript
-// ✅ Good: Absolute imports
+// ✅ Good
 import { EventBus } from '@fluxpolis/client/EventBus';
-import { EVENTS } from '@fluxpolis/events';
-import { Simulation } from '@fluxpolis/simulation';
-
-// ❌ Bad: Parent directory imports
-import { EventBus } from '../../../EventBus';
-import { EVENTS } from '../../events/EventMap';
-
-// ✅ Allowed: Same-level or downward imports
 import { MyComponent } from './MyComponent';
-import { helper } from './utils/helper';
+
+// ❌ Bad
+import { EventBus } from '../../../EventBus';
 ```
 
-**Why:**
-- Refactor-safe: Moving files doesn't break imports
-- Cleaner: No `../../../` maze
-- IDE-friendly: Better autocomplete and navigation
-- Enforced: Biome linter will catch violations (`npm run lint`)
+Enforced by Biome linter (`npm run lint`).
 
-**Same-level imports (`./`) are allowed** for closely related files in the same directory.
-
-## Code Quality and Linting
-
-**Biome is used for linting and formatting:**
+## Linting
 
 ```bash
 npm run lint           # Check for issues
@@ -47,278 +33,134 @@ npm run lint:fix       # Auto-fix issues
 npm run format         # Format code
 ```
 
-**Linter configuration (`biome.json`):**
-
-- **Enforced rules:**
-  - `noRestrictedImports`: Blocks parent directory imports (`../`) - must use absolute imports
-  - Uses Node.js import protocol (`node:fs` instead of `fs`) for built-in modules
-
-- **Warnings (intentional patterns allowed):**
-  - `noExplicitAny`: Allow `any` for dynamic types (component storage, Phaser callbacks, etc.)
-  - `noNonNullAssertion`: Allow `!` assertions when safety is guaranteed
-  - `noStaticOnlyClass`: Allow factory classes with static methods
-
-- **Vue-specific overrides:**
-  - `noUnusedImports`: Disabled for `.vue` files (imports used in templates)
-  - `noUnusedVariables`: Disabled for `.vue` files
-
-**When to use `any`:**
-
-Only use `any` when TypeScript cannot express the type (e.g., dynamic component storage, third-party library callbacks). Always add a comment explaining why.
+**Using `any`:** Only when TypeScript cannot express the type. Always add a comment explaining why.
 
 ```typescript
-// Good: Explained use of any
 private components: Map<string, any> = new Map(); // Generic component storage
-
-// Bad: Lazy typing
-const data: any = fetchData(); // Should be typed properly
 ```
+
+See `biome.json` for full configuration.
 
 ## TypeScript Conventions
 
 ### Interface vs Type
 
-**Use `interface` for object shapes and contracts:**
+- **`interface`** for object shapes and contracts
+- **`type`** for unions, utility types, and primitives
 
 ```typescript
-interface CityData {
-  id: string;
-  population: number;
-}
-
-interface GameEvent {
-  type: string;
-  timestamp?: number;
-}
-```
-
-**Use `type` for unions, utility types, and primitives:**
-
-```typescript
+interface CityData { id: string; population: number; }
 type ResourceType = "food" | "materials" | "energy";
-type Nullable<T> = T | null;
-type Position = { x: number; y: number };
 ```
 
-**Guideline:** Default to `interface` for object shapes. Use `type` when you need features interfaces don't support (unions, mapped types, conditional types).
+**Default to `interface` for objects.** Use `type` when you need unions, mapped types, or conditional types.
+
+### Type Ownership
+
+**CRITICAL: Never duplicate type definitions across packages.** Shared types live in `@fluxpolis/types`.
+
+```typescript
+// ❌ WRONG - duplicating DistrictState in events AND simulation
+
+// ✅ CORRECT
+// packages/types/src/DistrictState.ts
+export interface DistrictState { id: string; x: number; y: number; age: number; }
+
+// All other packages import from @fluxpolis/types
+import type { DistrictState } from '@fluxpolis/types';
+```
+
+**Rules:**
+1. Types used by 2+ packages → `@fluxpolis/types`
+2. Internal types used by 1 package → keep local
+3. Never copy-paste type definitions
 
 ### Classes vs Interfaces
 
-**Domain entities should be classes with behavior:**
+**Has behavior (methods, state mutations)?** Use a class.
+**Just data?** Use interface/type.
 
 ```typescript
-// Good: Class with behavior
+// Class with behavior
 export class City {
-  private resources: Map<string, number> = new Map();
-
-  consumeResource(type: string, amount: number): boolean {
-    const current = this.resources.get(type) || 0;
-    if (current >= amount) {
-      this.resources.set(type, current - amount);
-      return true;
-    }
-    return false;
-  }
+  consumeResource(type: string, amount: number): boolean { /* ... */ }
 }
-```
 
-**Plain data should use interfaces or types:**
-
-```typescript
-// Good: Just data
-interface MapGridConfig {
-  width: number;
-  height: number;
-  tileSize: number;
-}
-```
-
-**Rule:** If it has behavior (methods that mutate state or perform logic), use a class. If it's just data, use interface/type.
-
-## Import/Export Patterns
-
-### Barrel Exports
-
-Barrel exports (`index.ts`) define the **external** public API only. Internal contracts (interfaces used only within the package) stay out of the barrel — they are implementation details, not surface area.
-
-```typescript
-// packages/simulation/src/index.ts
-export { Simulation } from "./Simulation";
-// IManager, IEventBus, District — internal, not exported here
-```
-
-**Rule:** If nothing outside the package imports it, it does not belong in the barrel.
-
-### Import Order
-
-Organize imports by category:
-
-```typescript
-// 1. External libraries
-import Phaser from "phaser";
-
-// 2. Internal cross-package imports
-import { EventBus } from "../EventBus";
-
-// 3. Core layer imports
-import { EntitiesManager } from "../core/entities/EntitiesManager";
-import { SystemsManager } from "../core/systems/SystemsManager";
-
-// 4. Feature imports
-import { MapFactory } from "../features/map/components/MapGridFactory";
-import { MapRenderSystem } from "../features/map/MapGridRenderSystem";
+// Plain data
+interface MapGridConfig { width: number; height: number; tileSize: number; }
 ```
 
 ## Architecture Principles
 
+### Barrel Exports
+
+`index.ts` defines the **public API only**. Internal contracts stay private.
+
+```typescript
+// packages/simulation/src/index.ts
+export { Simulation } from "./Simulation";
+// IManager, District — internal, not exported
+```
+
 ### No Unnecessary Abstraction
 
-**Don't create interfaces for single implementations:**
+Don't create interfaces for single implementations. Add abstraction when you have proven need (multiple implementations, testing), not speculation.
 
-```typescript
-// Unnecessary
-interface ISimulation {
-  getCities(): City[];
-}
+### State Management
 
-class Simulation implements ISimulation {
-  getCities(): City[] {}
-}
-
-// Better - just use the class
-export class Simulation {
-  getCities(): City[] {}
-}
-```
-
-**Principle:** Add abstraction when you have proven need (multiple implementations, testing), not speculation.
-
-### No State in Renderer
-
-**Never store game state in Phaser objects:**
-
-```typescript
-// Wrong: State in Phaser sprite
-const entity = entitiesManager.createEntity();
-entity.addComponent("mapGrid", {
-  width: 10,
-  height: 10,
-  tileSize: 32,
-  population: 1000, // don't do this
-});
-
-// Right: State in simulation and passed through presentation layer
-const city = simulationState.getCity(id); // Not what we actually do but you get the idea
-```
-
-**Rule:** Phaser is only for presentation. State lives in simulation.
+- **Phaser is presentation only** - never store game state in Phaser objects
+- **State lives in simulation** - passed to renderer for display
 
 ### Event-Driven Communication
 
-**Layers communicate via EventBus, not direct calls:**
-
-```typescript
-// Wrong: Direct coupling
-class UIComponent {
-  constructor(private camera: Phaser.Camera) {}
-
-  resetCamera(): void {
-    this.camera.setPosition(0, 0); // Tight coupling
-  }
-}
-
-// Right: Event-driven
-class UIComponent {
-  resetCamera(): void {
-    EventBus.emit("ui:camera:reset"); // Loose coupling
-  }
-}
-
-class CameraSystem {
-  init(): void {
-    EventBus.on("ui:camera:reset", () => {
-      this.camera.reset();
-    });
-  }
-}
-```
-
-**Benefit:** Layers can evolve independently without breaking each other.
-
-### Type-Safe Events
-
-Use the `@fluxpolis/events` package for inter-layer communication. Import event constants from EventMap for compile-time type safety:
+Layers communicate via EventBus, not direct calls. Use `@fluxpolis/events` for type-safe events:
 
 ```typescript
 import { EventBus } from "@fluxpolis/client/EventBus";
 import { EVENTS } from "@fluxpolis/events";
 
-// TypeScript validates payload shape automatically
 EventBus.emit(EVENTS.GAME_INPUT_DRAG, { deltaX: 10, deltaY: 20, x: 100, y: 200 });
-
-// Payload type inferred in listeners
-EventBus.on(EVENTS.GAME_INPUT_DRAG, (data) => {
-  console.log(data.deltaX); // ✓ Fully typed
-});
+EventBus.on(EVENTS.GAME_INPUT_DRAG, (data) => console.log(data.deltaX)); // ✓ Fully typed
 ```
 
-See [EventBus Architecture](architecture/events/overview.md) for complete documentation on:
-- Event naming conventions
-- Adding new events
-- Type safety features
-- Usage patterns
+See [EventBus Architecture](architecture/events/overview.md) for details.
 
 ## File Naming
 
-**Convention:** Use PascalCase for files containing classes, camelCase for utilities:
+PascalCase for classes, camelCase for utilities:
 
 ```
-GameEntity.ts        (contains GameEntity class)
-EntitiesManager.ts   (contains EntitiesManager class)
-MapGrid.ts           (contains MapGrid interface)
-EventBus.ts          (contains EventBus constant)
-init.ts              (utility/config file)
+GameEntity.ts        (class)
+EntitiesManager.ts   (class)
+init.ts              (utility)
 ```
 
-## Comments and Documentation
+## Comments
 
-**Avoid obvious comments:**
+Only comment when logic isn't self-evident. Document architectural decisions in markdown, not code.
 
-```typescript
-// Bad
-// Create entity
-const entity = entitiesManager.createEntity();
+## TypeScript Configuration
 
-// Good (only comment when logic isn't self-evident)
-// Query entities that have both MapGrid and Renderable components
-const entities = entitiesManager.query("mapGrid", "renderable");
+### Strict Mode
+
+All packages use strict mode. Handle null/undefined explicitly with optional chaining (`?.`) and nullish coalescing (`??`).
+
+### Composite Projects
+
+All packages use `composite: true` for incremental builds and project references. This enables:
+- Fast incremental rebuilds (only changed packages rebuild)
+- Better IDE performance
+- Proper dependency tracking
+
+**Project reference graph:**
+```
+types → events → simulation → client
 ```
 
-**Document architectural decisions in markdown files, not code comments.**
-
-## TypeScript Strict Mode
-
-**All packages use strict mode:**
-
+Each package references its dependencies in `tsconfig.json`:
 ```json
 {
-  "compilerOptions": {
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true
-  }
+  "compilerOptions": { "composite": true },
+  "references": [{ "path": "../types" }]
 }
-```
-
-**Handle null/undefined explicitly:**
-
-```typescript
-// Use optional chaining and nullish coalescing
-const component = entity.getComponent<MapGrid>("mapGrid");
-if (component) {
-  // Process component
-}
-
-// Or with guards
-const value = someValue ?? defaultValue;
 ```
