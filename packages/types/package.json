@@ -1,6 +1,7 @@
 {
-  "name": "@fluxpolis/events",
+  "name": "@fluxpolis/types",
   "version": "0.0.1",
+  "description": "Shared type definitions for Fluxpolis",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,9 +10,6 @@
     "type-check": "tsc --noEmit",
     "lint": "biome lint src",
     "lint:fix": "biome lint --write src"
-  },
-  "dependencies": {
-    "@fluxpolis/types": "*"
   },
   "devDependencies": {
     "typescript": "^5.7.2"

@@ -4,24 +4,20 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "outDir": "./dist",
     "rootDir": ".",
+    "composite": true,
     "moduleResolution": "bundler",
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "paths": {
-      "@fluxpolis/client/*": ["./src/*"],
-      "@fluxpolis/simulation": ["../simulation/src"],
-      "@fluxpolis/events": ["../events/src"]
+      "@fluxpolis/client/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],
   "references": [
-    {
-      "path": "../events"
-    },
-    {
-      "path": "../simulation"
-    }
+    { "path": "../types" },
+    { "path": "../events" },
+    { "path": "../simulation" }
   ],
   "vueCompilerOptions": {
     "strictTemplates": true

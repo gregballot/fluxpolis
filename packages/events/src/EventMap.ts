@@ -1,3 +1,5 @@
+import type { DistrictState } from '@fluxpolis/types';
+
 /**
  * Central registry of all events and their payload types.
  * When adding a new event:
@@ -32,6 +34,13 @@ export interface EventMap {
 
   // UI events
   'ui:menu:build-district': undefined;
+  'ui:query:district': { districtId: string };
+
+  // Query response events
+  'simulation:district:response': {
+    districtId: string;
+    data: DistrictState;
+  };
 
   // Simulation events
   'game:simulation-tick': undefined;
@@ -60,7 +69,9 @@ export const EVENTS = {
   GAME_BUILD_MODE_DISTRICT_PLACED: 'game:build-mode:district-placed',
   GAME_DISTRICTS_CLICKED: 'game:districts:clicked',
   UI_MENU_BUILD_DISTRICT: 'ui:menu:build-district',
+  UI_QUERY_DISTRICT: 'ui:query:district',
   GAME_SIMULATION_TICK: 'game:simulation-tick',
+  SIMULATION_DISTRICT_RESPONSE: 'simulation:district:response',
   SIMULATION_DISTRICTS_NEW: 'simulation:districts:new',
   SIMULATION_DISTRICTS_UPDATE: 'simulation:districts:update',
   CURRENT_SCENE_READY: 'current-scene-ready',

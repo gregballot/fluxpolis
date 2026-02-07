@@ -14,8 +14,8 @@
   "homepage": "https://github.com/gregballot/fluxpolis",
   "scripts": {
     "dev": "npm run dev -w @fluxpolis/client",
-    "build": "npm run build -w @fluxpolis/events && npm run build -w @fluxpolis/simulation && npm run build -w @fluxpolis/client",
-    "type-check": "npm run type-check -w @fluxpolis/events; npm run type-check -w @fluxpolis/simulation; npm run type-check -w @fluxpolis/client",
+    "build": "npm run build -w @fluxpolis/types && npm run build -w @fluxpolis/events && npm run build -w @fluxpolis/simulation && npm run build -w @fluxpolis/client",
+    "type-check": "npm run type-check -w @fluxpolis/types; npm run type-check -w @fluxpolis/events; npm run type-check -w @fluxpolis/simulation; npm run type-check -w @fluxpolis/client",
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
     "format": "biome format --write .",
