@@ -10,7 +10,7 @@ import { DistrictFactory } from './components/DistrictFactory';
 export class DistrictSpawnSystem implements ISystem {
   private entities = new Map<string, GameEntity>();
 
-  constructor(private entitiesManager: EntitiesManager) {}
+  constructor(private entitiesManager: EntitiesManager) { }
 
   init(): void {
     EventBus.on(EVENTS.SIMULATION_DISTRICTS_NEW, (data) => {
@@ -28,7 +28,7 @@ export class DistrictSpawnSystem implements ISystem {
       const state = entity.getComponent<DistrictState>('DistrictState');
       if (!state) return;
 
-      state.age = data.district.age;
+      Object.assign(state, data.district);
     });
   }
 }
