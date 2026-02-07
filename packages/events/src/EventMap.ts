@@ -47,7 +47,7 @@ export interface EventMap {
   'simulation:districts:new': {
     district: { id: string; x: number; y: number };
   };
-  'simulation:districts:update': { district: { id: string; age: number } };
+  'simulation:districts:update': { district: DistrictState };
 
   // Scene events (using unknown to avoid Phaser dependency in this package)
   'current-scene-ready': unknown;
