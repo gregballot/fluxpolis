@@ -1,5 +1,6 @@
 import { EventBus } from '@fluxpolis/client/EventBus';
 import { EVENTS } from '@fluxpolis/events';
+import { renderToWorld } from '@fluxpolis/types';
 
 import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
@@ -18,7 +19,7 @@ export class DistrictInteractionSystem implements ISystem {
       this.buildModeActive = true;
     });
 
-    EventBus.on(EVENTS.GAME_BUILD_MODE_DISTRICT_PLACED, () => {
+    EventBus.on(EVENTS.SIMULATION_DISTRICTS_NEW, () => {
       this.buildModeActive = false;
     });
 
@@ -26,12 +27,16 @@ export class DistrictInteractionSystem implements ISystem {
     EventBus.on(EVENTS.GAME_INPUT_LEFT_CLICK_ON_MAP, (data) => {
       if (this.buildModeActive) return;
 
-      const clickedDistrict = this.findDistrictAtPoint(data.x, data.y);
+      // Convert render coordinates to world coordinates
+      const worldX = renderToWorld(data.x);
+      const worldY = renderToWorld(data.y);
+
+      const clickedDistrict = this.findDistrictAtPoint(worldX, worldY);
       if (clickedDistrict) {
         EventBus.emit(EVENTS.GAME_DISTRICTS_CLICKED, {
           districtId: clickedDistrict.id,
-          x: data.x,
-          y: data.y,
+          x: worldX,
+          y: worldY,
         });
       }
     });

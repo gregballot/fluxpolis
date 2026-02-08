@@ -19,7 +19,7 @@ export class MapGenerator {
     count: number = DEFAULT_RESOURCE_NODE_COUNT,
   ): GeneratedResourceNode[] {
     const nodes: GeneratedResourceNode[] = [];
-    const minDistance = 200;
+    const minDistance = 10000; // 10 km spacing
     const positions: { x: number; y: number }[] = [];
 
     for (let i = 0; i < count; i++) {

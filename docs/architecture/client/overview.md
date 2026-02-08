@@ -171,6 +171,24 @@ See **[EventBus Architecture](../eventbus/overview.md)** for:
 - Adding new events
 - Debugging tools
 
+### Coordinate Conversion
+
+The client renders in pixels while simulation operates in meters:
+
+```typescript
+import { worldToRender, renderToWorld } from '@fluxpolis/types';
+
+// Receiving world coordinates from events:
+const renderX = worldToRender(worldX); // meters → pixels
+
+// Sending click coordinates to simulation:
+const worldX = renderToWorld(renderX); // pixels → meters
+```
+
+**Scale:** 50 meters = 1 pixel (districts at 1500m render as 30px).
+
+See **[Coordinate System](../coordinate-system.md)** for complete details on world/render space separation.
+
 ### Vue + Phaser Integration
 
 **Separate Layers:**

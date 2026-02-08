@@ -9,3 +9,5 @@ export type { DistrictState } from './DistrictState';
 export type { ResourceNodeState, ResourceType } from './ResourceNodeState';
 export type { PlaceState } from './PlaceState';
 export type { PlaceType } from './PlaceType';
+export { PLACE_RADIUS } from './PlaceTypeConfig';
+export { METERS_TO_PIXELS, PIXELS_TO_METERS, worldToRender, renderToWorld } from './SpatialConfig';

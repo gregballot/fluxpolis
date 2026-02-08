@@ -2,6 +2,7 @@ import type { Scene } from 'phaser';
 
 import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
+import { worldToRender } from '@fluxpolis/types';
 
 import type { MapGrid } from './components/MapGrid';
 
@@ -35,14 +36,18 @@ export class MapRenderSystem implements ISystem {
     this.graphics.clear();
     this.graphics.lineStyle(1, mapGrid.gridColor, mapGrid.gridAlpha);
 
+    const renderWidth = worldToRender(mapGrid.width);
+    const renderHeight = worldToRender(mapGrid.height);
+    const renderGridSize = worldToRender(mapGrid.gridSize);
+
     // Draw vertical lines
-    for (let x = 0; x <= mapGrid.width; x += mapGrid.gridSize) {
-      this.graphics.lineBetween(x, 0, x, mapGrid.height);
+    for (let x = 0; x <= renderWidth; x += renderGridSize) {
+      this.graphics.lineBetween(x, 0, x, renderHeight);
     }
 
     // Draw horizontal lines
-    for (let y = 0; y <= mapGrid.height; y += mapGrid.gridSize) {
-      this.graphics.lineBetween(0, y, mapGrid.width, y);
+    for (let y = 0; y <= renderHeight; y += renderGridSize) {
+      this.graphics.lineBetween(0, y, renderWidth, y);
     }
   }
 }

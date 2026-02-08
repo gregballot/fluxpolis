@@ -59,10 +59,38 @@ Map config lives in the simulation layer (`MapConfig.ts`). `MapGenerator` genera
 
 **Place** is the abstract base class for spatial entities that can be connected by Fluxes (resource/worker transfer links). Districts and ResourceNodes both extend `Place<TState>`.
 
-**PlaceRegistry** provides spatial queries without manager cross-dependencies:
+**PlaceState includes radius:** All places have an intrinsic `radius` property defined in `@fluxpolis/types`. This is game state (affects collision, placement rules, influence) and is mirrored by the client for rendering.
+
+**Spatial Measurements:** The simulation operates in world space using meters:
+- District radius: 1500 meters (1.5 km)
+- Resource node radius: 1000 meters (1 km)
+- Map size: 150,000 × 150,000 meters (150 km × 150 km)
+- Default influence radius: 25,000 meters (25 km)
+
+All positions, distances, and radii use meters. The simulation has no knowledge of pixels. See [Coordinate System](../coordinate-system.md) for details on world-to-render conversion.
+
+**Radius configuration** lives in `@fluxpolis/types/PlaceTypeConfig.ts`:
 
 ```typescript
-// In DistrictManager.ts
+export const PLACE_RADIUS: Record<PlaceType, number> = {
+  'district': 1500,        // 1.5 km
+  'resource-node': 1000,   // 1 km
+} as const;
+```
+
+**Single source of truth:** Simulation entities (District, ResourceNode) read from `PLACE_RADIUS` in their constructors. Client systems import from types package, never hardcode values.
+
+**PlaceRegistry** provides spatial queries and collision detection:
+
+```typescript
+// Collision detection uses proper circle-circle math
+const hasCollision = this.placeRegistry.checkCollisionStrict(
+  x, y,
+  PLACE_RADIUS['district'] // Pass the entity's radius being placed
+);
+// Returns true if distance < radius1 + radius2
+
+// Nearby place queries
 const nearby = this.placeRegistry.getNearbyPlaces(district, DEFAULT_INFLUENCE_RADIUS);
 // Returns both Districts and ResourceNodes within radius
 ```

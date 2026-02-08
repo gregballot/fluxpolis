@@ -4,9 +4,9 @@ import type { GameEntity } from '@fluxpolis/client/game/core/entities/GameEntity
 import type { MapGrid } from './MapGrid';
 
 const MapDefaultConfig: MapGrid = {
-  width: 3000,
-  height: 3000,
-  gridSize: 100,
+  width: 150000,   // 150 km (world space)
+  height: 150000,  // 150 km (world space)
+  gridSize: 5000,  // 5 km grid cells (world space)
   gridColor: 0x696969,
   gridAlpha: 0.5,
 };

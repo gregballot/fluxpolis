@@ -1,4 +1,5 @@
 import type { DistrictState } from '@fluxpolis/types';
+import { PLACE_RADIUS } from '@fluxpolis/types';
 import { Place } from '../places/Place';
 
 export class District extends Place<DistrictState> {
@@ -9,6 +10,7 @@ export class District extends Place<DistrictState> {
 			y,
 			age: 0,
 			placeType: 'district',
+			radius: PLACE_RADIUS['district'],
 		});
 	}
 

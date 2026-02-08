@@ -2,9 +2,9 @@ import type { DistrictState, ResourceNodeState } from '@fluxpolis/types';
 
 /**
  * Helper to define event payload types.
- * Use `payload<T>()` for events with data, `payload()` for events without data.
+ * Use `payload<T>()` for events with data, `payload<void>()` for events without data.
  */
-const payload = <T = undefined>() => ({} as T);
+const payload = <T = Record<string, unknown>>() => ({} as T);
 
 /**
  * Central registry of all events and their payload types.
@@ -24,10 +24,10 @@ const eventMap = {
     x: number;
     y: number;
   }>(),
-  'game:input:dragEnd': payload(),
+  'game:input:dragEnd': payload<void>(),
   'game:input:left-click-on-map': payload<{ x: number; y: number }>(),
   'game:input:wheel': payload<{ deltaY: number; x: number; y: number }>(),
-  'game:input:space': payload(),
+  'game:input:space': payload<void>(),
 
   // Camera events
   'game:camera:positionChanged': payload<{
@@ -39,7 +39,7 @@ const eventMap = {
   }>(),
 
   // Build mode events
-  'game:build-mode:district-placed': payload<{ x: number; y: number }>(),
+  'game:build-mode:district-placement-requested': payload<{ x: number; y: number }>(),
 
   // Map events
   'game:map:loaded': payload<{ resourceNodes: ResourceNodeState[] }>(),
@@ -59,7 +59,7 @@ const eventMap = {
   }>(),
 
   // UI query events
-  'ui:menu:build-district': payload(),
+  'ui:menu:build-district': payload<void>(),
   'ui:query:district': payload<{ requestId: string; districtId: string }>(),
   'ui:query:resource-node': payload<{
     requestId: string;
@@ -79,11 +79,14 @@ const eventMap = {
   }>(),
 
   // Simulation events
-  'game:simulation-tick': payload(),
-  'simulation:districts:new': payload<{
-    district: { id: string; x: number; y: number };
-  }>(),
+  'game:simulation-tick': payload<void>(),
+  'simulation:districts:new': payload<{ district: DistrictState }>(),
   'simulation:districts:update': payload<{ district: DistrictState }>(),
+  'simulation:placement:rejected': payload<{
+    x: number;
+    y: number;
+    reason: string;
+  }>(),
 
   // Scene events (using unknown to avoid Phaser dependency)
   'current-scene-ready': payload<unknown>(),

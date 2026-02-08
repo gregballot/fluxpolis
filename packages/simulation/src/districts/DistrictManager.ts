@@ -1,6 +1,7 @@
 import type { IManager } from '../types';
 import type { TypedEventBus } from '@fluxpolis/events';
 import { EVENTS } from '@fluxpolis/events';
+import { PLACE_RADIUS } from '@fluxpolis/types';
 import { Logger } from '../Logger';
 
 import { District } from './District';
@@ -15,25 +16,50 @@ export class DistrictManager implements IManager {
 		private events: TypedEventBus,
 		private placeRegistry: PlaceRegistry,
 	) {
-    // TypeScript now infers the payload type automatically!
-    this.events.on(EVENTS.GAME_BUILD_MODE_DISTRICT_PLACED, (data) => {
-      const district = this.create(data.x, data.y);
-      this.events.emit(EVENTS.SIMULATION_DISTRICTS_NEW, { district: district.state });
-      Logger.info('District placed', district);
-    });
+		// Handle placement requests with authoritative validation
+		this.events.on(
+			EVENTS.GAME_BUILD_MODE_DISTRICT_PLACEMENT_REQUESTED,
+			(data) => {
+				// Validate collision using PlaceRegistry
+				const hasCollision = this.placeRegistry.checkCollisionStrict(
+					data.x,
+					data.y,
+					PLACE_RADIUS['district'],
+				);
 
-    // Handle UI queries for district data
-    this.events.on(EVENTS.UI_QUERY_DISTRICT, (data) => {
-      const district = this.districts.get(data.districtId);
-      if (district) {
-        this.events.emit(EVENTS.SIMULATION_DISTRICT_RESPONSE, {
-          requestId: data.requestId,
-          districtId: data.districtId,
-          data: district.state,
-        });
-      }
-    });
-  }
+				if (hasCollision) {
+					this.events.emit(EVENTS.SIMULATION_PLACEMENT_REJECTED, {
+						x: data.x,
+						y: data.y,
+						reason: 'collision',
+					});
+					Logger.warn(
+						`District placement rejected at (${data.x}, ${data.y}): collision`,
+					);
+					return;
+				}
+
+				// Valid placement - create district
+				const district = this.create(data.x, data.y);
+				this.events.emit(EVENTS.SIMULATION_DISTRICTS_NEW, {
+					district: district.state,
+				});
+				Logger.info('District placed', district);
+			},
+		);
+
+		// Handle UI queries for district data
+		this.events.on(EVENTS.UI_QUERY_DISTRICT, (data) => {
+			const district = this.districts.get(data.districtId);
+			if (district) {
+				this.events.emit(EVENTS.SIMULATION_DISTRICT_RESPONSE, {
+					requestId: data.requestId,
+					districtId: data.districtId,
+					data: district.state,
+				});
+			}
+		});
+	}
 
 	private create(x: number, y: number): District {
 		const district = new District(`district-${this.nextId++}`, x, y);
@@ -53,7 +79,7 @@ export class DistrictManager implements IManager {
 			);
 			for (const place of nearby) {
 				const distance = district.distanceTo(place);
-				Logger.info(`  - ${place.id} (distance: ${distance.toFixed(1)}px)`);
+				Logger.info(`  - ${place.id} (distance: ${distance.toFixed(1)}m)`);
 			}
 		} else {
 			Logger.info(`District ${district.id} has no nearby places`);
@@ -62,14 +88,14 @@ export class DistrictManager implements IManager {
 		return district;
 	}
 
-  tick(): void {
-    for (const district of this.districts.values()) {
-      district.age++;
-      this.events.emit(EVENTS.SIMULATION_DISTRICTS_UPDATE, { district: district.state });
-    }
-  }
+	tick(): void {
+		for (const district of this.districts.values()) {
+			district.age++;
+			this.events.emit(EVENTS.SIMULATION_DISTRICTS_UPDATE, { district: district.state });
+		}
+	}
 
-  getAll(): readonly District[] {
-    return [...this.districts.values()];
-  }
+	getAll(): readonly District[] {
+		return [...this.districts.values()];
+	}
 }

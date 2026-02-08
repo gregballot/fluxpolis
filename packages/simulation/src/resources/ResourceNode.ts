@@ -1,4 +1,5 @@
 import type { ResourceNodeState, ResourceType } from '@fluxpolis/types';
+import { PLACE_RADIUS } from '@fluxpolis/types';
 import { Place } from '../places/Place';
 
 export class ResourceNode extends Place<ResourceNodeState> {
@@ -9,6 +10,7 @@ export class ResourceNode extends Place<ResourceNodeState> {
 			y,
 			type,
 			placeType: 'resource-node',
+			radius: PLACE_RADIUS['resource-node'],
 		});
 	}
 

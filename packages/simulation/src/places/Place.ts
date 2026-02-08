@@ -29,6 +29,10 @@ export abstract class Place<TState extends PlaceState = PlaceState> {
 		return this.state.placeType;
 	}
 
+	get radius(): number {
+		return this.state.radius;
+	}
+
 	/**
 	 * Calculate Euclidean distance to another place
 	 */

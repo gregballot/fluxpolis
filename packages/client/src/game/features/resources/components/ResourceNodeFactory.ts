@@ -9,7 +9,7 @@ const RESOURCE_COLORS: Record<ResourceType, number> = {
 export class ResourceNodeFactory {
   static createResourceNode(
     entitiesManager: EntitiesManager,
-    data: { id: string; x: number; y: number; type: ResourceType },
+    data: { id: string; x: number; y: number; type: ResourceType; radius: number },
   ): GameEntity {
     const entity = entitiesManager.createEntity();
     entity.addComponent('ResourceNodeState', {
@@ -17,7 +17,7 @@ export class ResourceNodeFactory {
       x: data.x,
       y: data.y,
       type: data.type,
-      radius: 20,
+      radius: data.radius,
       color: RESOURCE_COLORS[data.type],
       alpha: 0.9,
     });

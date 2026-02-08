@@ -33,7 +33,7 @@ export class PlaceRegistry {
 	 * Uses linear O(n) scan - acceptable for current scale (<200 places).
 	 *
 	 * @param place - The center place to query from
-	 * @param radius - Maximum distance in pixels
+	 * @param radius - Maximum distance in meters
 	 * @returns Array of places within radius, sorted by distance (nearest first)
 	 */
 	getNearbyPlaces(place: Place, radius: number): Place[] {
@@ -53,5 +53,29 @@ export class PlaceRegistry {
 		nearby.sort((a, b) => a.distance - b.distance);
 
 		return nearby.map((entry) => entry.place);
+	}
+
+	/**
+	 * Check if a circle at (x, y) with given radius collides with any registered place.
+	 * Uses proper circle-circle collision: distance < radius1 + radius2
+	 *
+	 * @param x - X coordinate of new placement
+	 * @param y - Y coordinate of new placement
+	 * @param radius - Radius of entity being placed
+	 * @returns true if collision detected, false if placement is valid
+	 */
+	checkCollisionStrict(x: number, y: number, radius: number): boolean {
+		for (const place of this.places.values()) {
+			const dx = place.x - x;
+			const dy = place.y - y;
+			const distance = Math.hypot(dx, dy);
+
+			// Proper circle-circle collision
+			if (distance < radius + place.radius) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

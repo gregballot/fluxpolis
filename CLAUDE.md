@@ -28,6 +28,13 @@ If asked to work on an issue, first use `gh cli` to get the issue details.
 - Look for existing implementation examples in the project if more context is needed
 - Search for similar patterns before proposing new approaches
 
+**Check Architectural Tradeoffs:**
+
+- **IMPORTANT**: Review `docs/tradeoffs.md` before making architectural decisions that deviate from simple patterns
+- Tradeoffs must make strong, measurable sense - avoid premature complexity
+- When proposing new tradeoffs, explain the problem, alternatives considered, and clear reasoning
+- Document significant tradeoffs in `docs/tradeoffs.md` for future reference
+
 **Ask Questions:**
 
 - When uncertain, ask to clarify intent and help make sound technical choices
@@ -62,6 +69,7 @@ If asked to work on an issue, first use `gh cli` to get the issue details.
 
 - **Client Layer** (`docs/architecture/client/`) - ECS pattern, Phaser + Vue integration, systems and components, directory structure
 - **Simulation Layer** (`docs/architecture/simulation/`) - Pure game logic, manager pattern, event-driven updates, tick-based simulation
+- **`docs/tradeoffs.md`** - Architectural tradeoffs and design decisions (review before deviating from simple patterns)
 
 **Coding:**
 

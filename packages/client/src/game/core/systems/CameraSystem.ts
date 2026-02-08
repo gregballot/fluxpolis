@@ -1,5 +1,6 @@
 import { EventBus } from '@fluxpolis/client/EventBus';
 import { EVENTS } from '@fluxpolis/events';
+import { worldToRender } from '@fluxpolis/types';
 
 import type { ISystem } from './ISystem';
 
@@ -22,9 +23,15 @@ export class CameraSystem implements ISystem {
   init(): void {
     this.camera.setBackgroundColor('#1a1a2e');
 
-    // TODO: find a way to get the map size
-    // this.camera.setBounds(0, 0, this.mapWidth, this.mapHeight);
-    // this.camera.centerOn(this.mapWidth / 2, this.mapHeight / 2);
+    // Set camera bounds with 500px padding outside world borders
+    const mapRenderSize = worldToRender(150000); // 3000px
+    const padding = 500;
+    this.camera.setBounds(
+      -padding,
+      -padding,
+      mapRenderSize + padding * 2,
+      mapRenderSize + padding * 2
+    );
 
     this.setupInputListeners();
     this.reset();
@@ -38,7 +45,7 @@ export class CameraSystem implements ISystem {
 
     EventBus.on(EVENTS.GAME_INPUT_WHEEL, (data) => {
       const zoomFactor = data.deltaY > 0 ? 0.9 : 1.1;
-      const newZoom = Phaser.Math.Clamp(this.camera.zoom * zoomFactor, 0.3, 3);
+      const newZoom = Phaser.Math.Clamp(this.camera.zoom * zoomFactor, 0.3, 5);
 
       this.camera.setZoom(newZoom);
     });
@@ -75,8 +82,10 @@ export class CameraSystem implements ISystem {
   // Utility methods
   reset(): void {
     this.camera.setZoom(1);
-    // TODO: find a way to get the map size
-    this.camera.centerOn(1500, 1500);
+    // Center on 75km world space (75000m) = 1500px render space
+    const centerWorld = 75000; // 75 km = center of 150 km map
+    const centerRender = worldToRender(centerWorld); // 1500px
+    this.camera.centerOn(centerRender, centerRender);
   }
 
   panTo(x: number, y: number, duration: number = 1000): void {

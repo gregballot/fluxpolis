@@ -1,7 +1,9 @@
 - [Home](/)
 - [Coding Guidelines](coding-guidelines.md)
+- [Architectural Tradeoffs](tradeoffs.md)
 
 - **Architecture**
+  - [Coordinate System](architecture/coordinate-system.md)
   - **EventBus Layer**
     - [Overview](architecture/events/overview.md)
     - [Type-Safe Events](architecture/events/type-safety.md)

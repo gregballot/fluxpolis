@@ -5,6 +5,7 @@ Welcome to the Fluxpolis documentation. This site contains all technical documen
 ## Quick Links
 
 - **[Coding Guidelines](coding-guidelines.md)** - Coding conventions and patterns
+- **[Architectural Tradeoffs](tradeoffs.md)** - Design decisions and tradeoffs (important: review before deviating from simple patterns)
 - **[Architecture Overview](architecture/client/overview.md)** - Start here for understanding the codebase
 
 ## Architecture Documentation

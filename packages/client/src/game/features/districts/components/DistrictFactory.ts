@@ -4,14 +4,14 @@ import type { GameEntity } from '@fluxpolis/client/game/core/entities/GameEntity
 export class DistrictFactory {
   static createDistrict(
     entitiesManager: EntitiesManager,
-    data: { id: string; x: number; y: number },
+    data: { id: string; x: number; y: number; radius: number },
   ): GameEntity {
     const entity = entitiesManager.createEntity();
     entity.addComponent('DistrictState', {
       id: data.id,
       x: data.x,
       y: data.y,
-      radius: 25,
+      radius: data.radius,
       color: 0x00ffff,
       alpha: 0.8,
       age: 0,

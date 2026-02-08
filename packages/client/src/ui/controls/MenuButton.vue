@@ -14,7 +14,7 @@ const isSelected = ref(false);
 const handleClick = () => {
   if (isSelected.value) return;
   isSelected.value = true;
-  EventBus.emit(props.emitEvent);
+  EventBus.emit(props.emitEvent, {});
 };
 
 const handleConfirm = () => {

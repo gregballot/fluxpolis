@@ -23,7 +23,7 @@ const appVersion = __APP_VERSION__;
     <MenuButton
       text="Build District"
       :emitEvent="EVENTS.UI_MENU_BUILD_DISTRICT"
-      :confirmEvent="EVENTS.GAME_BUILD_MODE_DISTRICT_PLACED"
+      :confirmEvent="EVENTS.SIMULATION_DISTRICTS_NEW"
     />
   </div>
 </template>

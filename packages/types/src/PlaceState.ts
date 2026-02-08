@@ -8,4 +8,5 @@ export interface PlaceState {
   x: number;
   y: number;
   placeType: PlaceType;
+  radius: number;
 }

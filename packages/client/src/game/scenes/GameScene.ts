@@ -41,7 +41,7 @@ export class GameScene extends Phaser.Scene {
 
       // features
       new MapRenderSystem(this.entitiesManager, this),
-      new BuildModeSystem(this.entitiesManager, this),
+      new BuildModeSystem(this),
       new DistrictSpawnSystem(this.entitiesManager),
       new DistrictInteractionSystem(this.entitiesManager),
       new DistrictRenderSystem(this.entitiesManager, this),

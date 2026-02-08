@@ -50,14 +50,9 @@ export class Simulation {
     this.resourceNodeManager.loadNodes(resourceNodes);
 
     // Emit map loaded event with all entities
+    // Get full state from manager (includes radius from ResourceNode constructor)
     events.emit(EVENTS.GAME_MAP_LOADED, {
-      resourceNodes: resourceNodes.map((node) => ({
-        id: node.id,
-        x: node.x,
-        y: node.y,
-        type: node.type,
-        placeType: 'resource-node' as const,
-      })),
+      resourceNodes: this.resourceNodeManager.getAll().map((node) => node.state),
     });
   }
 

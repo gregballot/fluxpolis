@@ -2,6 +2,7 @@ import type { Scene } from 'phaser';
 
 import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
+import { worldToRender } from '@fluxpolis/types';
 
 import type { DistrictState } from './components/DistrictState';
 
@@ -26,8 +27,12 @@ export class DistrictRenderSystem implements ISystem {
       const district = entity.getComponent<DistrictState>('DistrictState');
       if (!district) continue;
 
+      const renderX = worldToRender(district.x);
+      const renderY = worldToRender(district.y);
+      const renderRadius = worldToRender(district.radius);
+
       this.graphics.fillStyle(district.color, district.alpha);
-      this.graphics.fillCircle(district.x, district.y, district.radius);
+      this.graphics.fillCircle(renderX, renderY, renderRadius);
 
       let label = this.labels.get(district.id);
       if (!label) {
@@ -35,7 +40,7 @@ export class DistrictRenderSystem implements ISystem {
         this.labels.set(district.id, label);
       }
       label.setText(String(district.age));
-      label.setPosition(district.x, district.y);
+      label.setPosition(renderX, renderY);
     }
   }
 }
