@@ -8,18 +8,25 @@ import { ResourceNodeManager } from './resources/ResourceNodeManager';
 import { MapGenerator } from './map/MapGenerator';
 import { DEFAULT_MAP_CONFIG } from './map/MapConfig';
 import type { MapConfig } from './map/MapConfig';
+import { PlaceRegistry } from './places/PlaceRegistry';
 
 export class Simulation {
-  private managers: IManager[] = [];
-  private mapConfig: MapConfig;
-  private resourceNodeManager: ResourceNodeManager;
+	private managers: IManager[] = [];
+	private mapConfig: MapConfig;
+	private resourceNodeManager: ResourceNodeManager;
+	private placeRegistry: PlaceRegistry;
 
-  constructor(events: TypedEventBus) {
-    this.mapConfig = DEFAULT_MAP_CONFIG;
+	constructor(events: TypedEventBus) {
+		this.mapConfig = DEFAULT_MAP_CONFIG;
+		this.placeRegistry = new PlaceRegistry();
 
-    this.resourceNodeManager = new ResourceNodeManager(events);
-    this.addManager(this.resourceNodeManager);
-    this.addManager(new DistrictManager(events));
+		// Pass PlaceRegistry to managers via constructor
+		this.resourceNodeManager = new ResourceNodeManager(
+			events,
+			this.placeRegistry,
+		);
+		this.addManager(this.resourceNodeManager);
+		this.addManager(new DistrictManager(events, this.placeRegistry));
 
     events.on(EVENTS.GAME_SIMULATION_TICK, () => this.tick());
 
@@ -49,6 +56,7 @@ export class Simulation {
         x: node.x,
         y: node.y,
         type: node.type,
+        placeType: 'resource-node' as const,
       })),
     });
   }

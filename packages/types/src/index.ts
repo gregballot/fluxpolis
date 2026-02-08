@@ -7,3 +7,5 @@
 
 export type { DistrictState } from './DistrictState';
 export type { ResourceNodeState, ResourceType } from './ResourceNodeState';
+export type { PlaceState } from './PlaceState';
+export type { PlaceType } from './PlaceType';

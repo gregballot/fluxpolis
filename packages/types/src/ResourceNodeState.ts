@@ -1,8 +1,8 @@
+import type { PlaceState } from './PlaceState';
+
 export type ResourceType = 'food';
 
-export interface ResourceNodeState {
-  id: string;
-  x: number;
-  y: number;
+export interface ResourceNodeState extends PlaceState {
+  placeType: 'resource-node';
   type: ResourceType;
 }

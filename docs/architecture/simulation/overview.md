@@ -12,11 +12,15 @@ packages/simulation/src/
 ├── map/
 │   ├── MapConfig.ts          — map dimensions config
 │   └── MapGenerator.ts       — procedural generation of resource nodes
+├── places/
+│   ├── Place.ts              — abstract base class for spatial entities
+│   ├── PlaceRegistry.ts      — central spatial query registry
+│   └── PlaceConfig.ts        — influence zone configuration
 ├── districts/
-│   ├── District.ts           — District domain object
+│   ├── District.ts           — District domain object (extends Place)
 │   └── DistrictManager.ts    — implements IManager, subscribes to events, owns district state
 └── resources/
-    ├── ResourceNode.ts       — ResourceNode domain object
+    ├── ResourceNode.ts       — ResourceNode domain object (extends Place)
     └── ResourceNodeManager.ts — implements IManager, handles resource node queries
 ```
 
@@ -50,6 +54,22 @@ Receives the event bus as an injected dependency and passes it to domain manager
 ## Map ownership and generation
 
 Map config lives in the simulation layer (`MapConfig.ts`). `MapGenerator` generates entities (e.g., resource nodes) at world initialization. After generation, the simulation emits `game:map:loaded` with all static entities. Client systems listen to this event and spawn corresponding visual entities.
+
+## Places and Spatial Queries
+
+**Place** is the abstract base class for spatial entities that can be connected by Fluxes (resource/worker transfer links). Districts and ResourceNodes both extend `Place<TState>`.
+
+**PlaceRegistry** provides spatial queries without manager cross-dependencies:
+
+```typescript
+// In DistrictManager.ts
+const nearby = this.placeRegistry.getNearbyPlaces(district, DEFAULT_INFLUENCE_RADIUS);
+// Returns both Districts and ResourceNodes within radius
+```
+
+**Why PlaceRegistry?** Managers are domain-isolated (DistrictManager only knows districts). Spatial queries need to search ALL place types. PlaceRegistry maintains single responsibility: managers handle domain logic, registry handles spatial indexing.
+
+**Foundation for Flux system:** When a district is placed, `getNearbyPlaces()` identifies connection candidates. Future task will use this to auto-create Fluxes between nearby places.
 
 ## Adding a new domain
 
