@@ -125,6 +125,27 @@ EventBus.on(EVENTS.GAME_INPUT_DRAG, (data) => console.log(data.deltaX)); // ✓ 
 
 See [EventBus Architecture](architecture/events/overview.md) for details.
 
+### Query/Response Pattern
+
+Queries use request IDs to prevent race conditions:
+
+```typescript
+// UI queries simulation
+const requestId = crypto.randomUUID();
+EventBus.emit(EVENTS.UI_QUERY_DISTRICT, { requestId, districtId });
+
+// Simulation responds
+EventBus.on(EVENTS.SIMULATION_DISTRICT_RESPONSE, (data) => {
+  if (data.requestId === requestId) {
+    // Handle response - guaranteed to match our request
+  }
+});
+```
+
+**Event naming convention:** `layer:domain:event`
+- UI queries: `ui:query:{entity}` (e.g., `ui:query:district`)
+- Simulation responses: `simulation:{entity}:response` (e.g., `simulation:district:response`)
+
 ## File Naming
 
 PascalCase for classes, camelCase for utilities:

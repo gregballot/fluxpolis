@@ -1,0 +1,174 @@
+// For AI agents/Claude code : Do not read this file unless explicitly told to
+
+interface Commodity {
+    supply: number;
+    demand: number;
+};
+
+type DistrictType = "residential" | "commercial" | "industrial";
+
+// the idea is not to manage individual citizens, but groups of them.
+// the ideq is to have enough data and metrics for the game to feel organic
+// and for the player to have meaningful choices to make.
+// If I push this idea, I could say there would be basically no constants in the simulation
+type DistrictState = {
+    id: string;
+    metadata: {
+        // level of the district.
+        // tdb: how does a district levels up ?
+        level: number;
+
+        // Population property
+        // first noation : capacity is total possible population for a district,
+        // could be influenced by level and base metrics at first,
+        // then with upgrades, political or research choices
+        // capacity is divided by population types
+        // active and inactive for now as a simple example
+        // later: workers, unemployed, students, tourists, retired, etc.
+        // each population type could have its own needs, effects, behaviors, etc.
+        // those numbers are not static, they change over time based on events, policies, etc.
+        // each type stays within capacity
+        // types don't necessarily grow at the same pace
+        // mechanic that makes people move into a district is tbd
+        population: {
+            total: { capacity: number, current: number };
+            active: { capacity: number, current: number };
+            inactive: { capacity: number, current: number };
+        }
+
+        districtType: DistrictType;
+    },
+    // could find a better name for metrics
+    metrics: {
+        // key metrics
+        primary: {
+            happiness: number;
+            // could imagine much more in the future
+            // health, safety, employment, wealth
+            // land value could be an important metric (lots of effects on the rest)
+        };
+
+        // derived metrics from primary for finer simulation possibilities
+        inferred: {
+            // worker efficiency
+            // influenced by all primary metrics
+            // Might need more or less than amount needed depending on this
+            workerEfficiency: number;
+
+            // could imagine much more in the future
+            // attractiveness,
+            // 
+        };
+
+    },
+    // needs are not static, they change over time based on events, policies, etc.
+    // they depend on the kind of district (residential, commercial, industrial, etc.)
+    // they are also influenced by the population types and their needs.
+    // we store supply and demand for easier metric healthcheck, so we use commodity type
+    needs: {
+        // basic needs
+        energy: Commodity;
+        water: Commodity; // for example, 1 for each capacity + extra for industry, details tbd
+        food: Commodity; // for example, workers need 2 food for 1, inactive just 1
+
+        // More needs for the future
+        // education
+    },
+    jobs: {
+        // let's say a districts needs the equivalent 20% of its population (not capacity) to function
+        // they don't have to be filled by the district's population
+        // they can be filled by people from other districts with transportation
+        // right now for simplicity, we only have the "active" population type that can work
+        // When we add more population types depending on the district sepecifics
+        // commodity type here too
+        active: Commodity;
+    },
+}
+
+const districts: DistrictState[] = [
+    {
+        id: "district-1",
+        metadata: {
+            level: 3,
+            population: {
+                total: { capacity: 3000, current: 2500 },
+                active: { capacity: 2100, current: 1750 },
+                inactive: { capacity: 900, current: 750 }
+            },
+            districtType: "residential"
+        },
+        metrics: {
+            primary: {
+                happiness: 50,
+            },
+            inferred: {
+                workerEfficiency: 50, // for now worker efficiency = happiness
+            }
+        },
+        needs: {
+            energy: { demand: 7500, supply: 7500 }, // say 3 units per population (later, add other factors)
+            water: { demand: 6750, supply: 6750 }, // say 3 per active, 2 per inactive (might also add factors here)
+            food: { demand: 4250, supply: 4250 }, // say 2 per active, 1 per inactive
+        },
+        jobs: {
+            active: { demand: 500, supply: 500 } // 20% of population
+        }
+    },
+    {
+        id: 'district-2',
+        metadata: {
+            level: 1,
+            population: {
+                total: { capacity: 500, current: 500 },
+                active: { capacity: 400, current: 400 },
+                inactive: { capacity: 100, current: 100 }
+            },
+            districtType: "commercial"
+        },
+        metrics: {
+            primary: {
+                happiness: 50,
+            },
+            inferred: {
+                workerEfficiency: 50, // for now worker efficiency = happiness
+            }
+        },
+        needs: {
+            energy: { demand: 1500, supply: 1500 }, // say 3 units per population (later, add other factors)
+            water: { demand: 1400, supply: 1400 }, // say 3 per active, 2 per inactive (might also add factors here)
+            food: { demand: 900, supply: 900 }, // say 2 per active, 1 per inactive
+        },
+        jobs: {
+            active: { demand: 100, supply: 100 } // 20% of population
+        }
+    },
+    //...
+];
+
+/*
+
+Further thinking :
+I'd like to dig the idea of making a "Flux" entity (reference to the game's name)
+A Flux would represent a single relation of any kind between any two entities
+For example if a district is near another district,
+they have flux for people or goods flowing between them
+I feel we could make anything with an entity like that.
+Some Flux would exist automatically, like the one between districts
+Some Flux would be created manually created for longer routes
+
+Also we need some kind of Resource Node entity
+That way, if we place a district on it, it becomes an industrial district
+The resource would be the one produced by the district
+That way we have a way to produce food and send it to other districts
+
+For energy, easy, we can place energy production buildings
+The most basic ones have no resource requirement
+More advanced ones might require resource nodes, or supply
+
+For water, i'm not sure. Same pattern as energy ?
+Or a different approach ? Might be simpler for now to use the same mechanic
+Later we can have lakes, rivers to build pumps or dams
+We could even do sea water desalination
+Rainwater district upgrades might be a thing too
+
+*/

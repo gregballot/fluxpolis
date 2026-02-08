@@ -22,6 +22,7 @@ export class DistrictManager implements IManager {
       const district = this.districts.get(data.districtId);
       if (district) {
         this.events.emit(EVENTS.SIMULATION_DISTRICT_RESPONSE, {
+          requestId: data.requestId,
           districtId: data.districtId,
           data: district.state,
         });

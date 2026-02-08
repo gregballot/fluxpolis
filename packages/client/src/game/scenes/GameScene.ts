@@ -10,6 +10,9 @@ import { DistrictRenderSystem } from '@fluxpolis/client/game/features/districts/
 import { DistrictSpawnSystem } from '@fluxpolis/client/game/features/districts/DistrictSpawnSystem';
 import { MapFactory } from '@fluxpolis/client/game/features/map/components/MapGridFactory';
 import { MapRenderSystem } from '@fluxpolis/client/game/features/map/MapGridRenderSystem';
+import { ResourceNodeSpawnSystem } from '@fluxpolis/client/game/features/resources/ResourceNodeSpawnSystem';
+import { ResourceNodeRenderSystem } from '@fluxpolis/client/game/features/resources/ResourceNodeRenderSystem';
+import { ResourceNodeInteractionSystem } from '@fluxpolis/client/game/features/resources/ResourceNodeInteractionSystem';
 import { EVENTS } from '@fluxpolis/events';
 import Phaser from 'phaser';
 
@@ -42,6 +45,10 @@ export class GameScene extends Phaser.Scene {
       new DistrictSpawnSystem(this.entitiesManager),
       new DistrictInteractionSystem(this.entitiesManager),
       new DistrictRenderSystem(this.entitiesManager, this),
+      // Resource nodes
+      new ResourceNodeSpawnSystem(this.entitiesManager),
+      new ResourceNodeInteractionSystem(this.entitiesManager),
+      new ResourceNodeRenderSystem(this.entitiesManager, this),
     );
     this.systemManager.init();
 

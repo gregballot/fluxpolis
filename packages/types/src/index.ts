@@ -6,3 +6,4 @@
  */
 
 export type { DistrictState } from './DistrictState';
+export type { ResourceNodeState, ResourceType } from './ResourceNodeState';

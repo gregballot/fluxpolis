@@ -8,10 +8,16 @@ The simulation package (`@fluxpolis/simulation`) owns all game-state logic. It h
 packages/simulation/src/
 ├── index.ts                  — barrel export (Simulation only)
 ├── types.ts                  — IManager interface, TypedEventBus re-exported from @fluxpolis/events
-├── Simulation.ts             — orchestrator: IManager registry + tick loop
-└── districts/
-    ├── District.ts           — District domain object
-    └── DistrictManager.ts    — implements IManager, subscribes to events, owns district state
+├── Simulation.ts             — orchestrator: IManager registry + tick loop + world initialization
+├── map/
+│   ├── MapConfig.ts          — map dimensions config
+│   └── MapGenerator.ts       — procedural generation of resource nodes
+├── districts/
+│   ├── District.ts           — District domain object
+│   └── DistrictManager.ts    — implements IManager, subscribes to events, owns district state
+└── resources/
+    ├── ResourceNode.ts       — ResourceNode domain object
+    └── ResourceNodeManager.ts — implements IManager, handles resource node queries
 ```
 
 ## EventBus — the only coupling point
@@ -40,6 +46,10 @@ See **[EventBus Architecture](../eventbus/overview.md)** for details on event na
 ## Simulation (orchestrator)
 
 Receives the event bus as an injected dependency and passes it to domain managers via a private `managers: IManager[]` array. Each manager is registered in the constructor through the private `addManager` method. `tick()` iterates the array and calls `tick()` on every registered manager. Contains no event subscriptions or domain logic itself.
+
+## Map ownership and generation
+
+Map config lives in the simulation layer (`MapConfig.ts`). `MapGenerator` generates entities (e.g., resource nodes) at world initialization. After generation, the simulation emits `game:map:loaded` with all static entities. Client systems listen to this event and spawn corresponding visual entities.
 
 ## Adding a new domain
 
