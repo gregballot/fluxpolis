@@ -39,6 +39,6 @@ export abstract class Place<TState extends PlaceState = PlaceState> {
 	distanceTo(other: Place): number {
 		const dx = this.x - other.x;
 		const dy = this.y - other.y;
-		return Math.hypot(dx, dy);
+		return Math.round(Math.hypot(dx, dy));
 	}
 }

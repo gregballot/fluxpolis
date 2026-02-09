@@ -35,7 +35,7 @@ export class ResourceNodeInteractionSystem implements ISystem {
       const node = entity.getComponent<ResourceNodeState>('ResourceNodeState');
       if (!node) continue;
 
-      const distance = Math.hypot(node.x - x, node.y - y);
+      const distance = Math.round(Math.hypot(node.x - x, node.y - y));
 
       if (distance < node.radius * 1.5) {
         return node;

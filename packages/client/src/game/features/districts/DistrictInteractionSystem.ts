@@ -51,7 +51,7 @@ export class DistrictInteractionSystem implements ISystem {
 
       const dx = district.x - x;
       const dy = district.y - y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
+      const distance = Math.round(Math.hypot(dx, dy));
 
       if (distance < district.radius) {
         return district;

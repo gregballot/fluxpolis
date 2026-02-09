@@ -30,7 +30,7 @@ export class ResourceNode extends Place<ResourceNodeState> {
 	 */
 	calculateProduction(): number {
 		const workerRatio = this.state.workerNeeds.supply / this.state.workerNeeds.demand;
-		return this.state.throughput * workerRatio;
+		return Math.floor(this.state.throughput * workerRatio);
 	}
 
 	/**

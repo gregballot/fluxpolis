@@ -76,7 +76,7 @@ export class PlaceRegistry {
 		for (const place of this.places.values()) {
 			const dx = place.x - x;
 			const dy = place.y - y;
-			const distance = Math.hypot(dx, dy);
+			const distance = Math.round(Math.hypot(dx, dy));
 
 			// Proper circle-circle collision
 			if (distance < radius + place.radius) {

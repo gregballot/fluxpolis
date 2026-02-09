@@ -90,6 +90,60 @@ export class City {
 interface MapGridConfig { width: number; height: number; tileSize: number; }
 ```
 
+## Integer-Only Numbers
+
+**All numeric values in the project are stored and calculated as integers. Never use or store floating-point numbers.**
+
+```typescript
+// ✅ Good - integers only
+interface DistrictState {
+  x: number;                  // Integer meters
+  y: number;                  // Integer meters
+  radius: number;             // Integer meters
+  population: number;         // Integer count
+  foodSupply: number;         // Integer units
+}
+
+const distance = Math.round(Math.hypot(dx, dy));     // Round distance
+const production = Math.floor(throughput * ratio);    // Floor production
+const surplus = Math.ceil(demand * 0.1);              // Ceil when rounding up
+
+// ❌ Bad - floating-point numbers
+const x = 1500.5;                        // Don't store decimals
+const distance = Math.hypot(dx, dy);     // Missing Math.round()
+const production = throughput * 0.85;    // Missing Math.floor()
+```
+
+**Rationale:**
+- **Cleaner display** - No need for `toFixed()`, `ceil()`, or `round()` in UI
+- **Performance** - Integer arithmetic is faster and more predictable
+- **Consistency** - All calculations use same precision across the codebase
+- **Simplicity** - Easier to reason about game state without decimal precision
+
+**Rounding rules:**
+- **Distances/measurements**: Use `Math.round()` for symmetric rounding
+- **Production/gains**: Use `Math.floor()` to round down (conservative)
+- **Costs/buffers**: Use `Math.ceil()` to round up when needed
+- **Ratios**: Calculate with division, then immediately floor/round the result
+
+```typescript
+// Distance calculations
+distanceTo(other: Place): number {
+  const dx = this.x - other.x;
+  const dy = this.y - other.y;
+  return Math.round(Math.hypot(dx, dy));
+}
+
+// Production calculations (floor to be conservative)
+calculateProduction(): number {
+  const ratio = this.workerSupply / this.workerDemand;
+  return Math.floor(this.throughput * ratio);
+}
+
+// Buffer calculations (ceil to ensure minimum)
+const surplus = Math.max(1, Math.ceil(demand * 0.1));
+```
+
 ## Architecture Principles
 
 ### Barrel Exports

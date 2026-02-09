@@ -101,7 +101,7 @@ export class FluxManager implements IManager {
 				);
 
 				Logger.info(
-					`Bidirectional fluxes created between District ${district.id} ↔ ResourceNode ${resourceNode.id} (distance: ${distance.toFixed(1)}m)`,
+					`Fluxes created between District ${district.id} ↔ ResourceNode ${resourceNode.id} (distance: ${distance}m)`,
 				);
 			}
 		}
@@ -188,11 +188,29 @@ export class FluxManager implements IManager {
 		if (source.placeType !== 'resource-node') return 0;
 
 		const nodeState = source.state as ResourceNodeState;
-		const production = nodeState.throughput * (nodeState.workerNeeds.supply / nodeState.workerNeeds.demand);
+		const production = Math.floor(nodeState.throughput * (nodeState.workerNeeds.supply / nodeState.workerNeeds.demand));
 
 		if (production <= 0) return 0;
 
-		return flux.addContent(production);
+		// Query destination demand to cap filling
+		const destination = this.placeRegistry.getById(flux.destinationId);
+		if (!destination || destination.placeType !== 'district') return 0;
+
+		const districtState = destination.state as DistrictState;
+		const need = districtState.needs.food;
+
+		// Calculate target with surplus (10% buffer, minimum 1)
+		const surplus = Math.max(1, Math.ceil(need.demand * 0.1));
+		const targetSupply = need.demand + surplus;
+
+		// Stop if surplus is full (accounting for food already in transit)
+		if (need.supply + flux.content >= targetSupply) return 0;
+
+		// Cap filling to destination capacity (subtract both current supply and flux content)
+		const destinationCapacity = targetSupply - (need.supply + flux.content);
+		const toFill = Math.min(production, destinationCapacity);
+
+		return flux.addContent(toFill);
 	}
 
 	/**
@@ -208,10 +226,26 @@ export class FluxManager implements IManager {
 
 		if (availableWorkers <= 0) return 0;
 
-		// Flow rate: 10% of capacity per tick, with distance penalty
-		const distanceFactor = Math.max(0.5, 1 - (flux.distance / 50000));
-		const flowRate = Math.floor(DEFAULT_WORKER_FLUX_CAPACITY * 0.1 * distanceFactor);
-		const toAdd = Math.min(flowRate, availableWorkers);
+		// Query destination demand to cap filling
+		const destination = this.placeRegistry.getById(flux.destinationId);
+		if (!destination || destination.placeType !== 'resource-node') return 0;
+
+		const nodeState = destination.state as ResourceNodeState;
+		const workerNeeds = nodeState.workerNeeds;
+
+		// Calculate target with surplus (10% buffer, minimum 1)
+		const surplus = Math.max(1, Math.ceil(workerNeeds.demand * 0.1));
+		const targetSupply = workerNeeds.demand + surplus;
+
+		// Stop if surplus is full (accounting for workers already in transit)
+		if (workerNeeds.supply + flux.content >= targetSupply) return 0;
+
+		// Cap filling to destination capacity (subtract both current supply and flux content)
+		const destinationCapacity = targetSupply - (workerNeeds.supply + flux.content);
+
+		// Flow rate: 10% of capacity per tick
+		const flowRate = Math.floor(DEFAULT_WORKER_FLUX_CAPACITY * 0.1);
+		const toAdd = Math.min(flowRate, availableWorkers, destinationCapacity);
 
 		// Mark workers as busy (assigned to flux)
 		districtState.population.workers.busy += toAdd;
@@ -237,8 +271,8 @@ export class FluxManager implements IManager {
 
 		if (availableWorkers <= 0) return 0;
 
-		// Check how many local jobs still need to be filled
-		const jobsNeeded = districtState.jobs.workers.demand - districtState.jobs.workers.supply;
+		// Check how many local jobs still need to be filled (accounting for workers already in transit)
+		const jobsNeeded = districtState.jobs.workers.demand - (districtState.jobs.workers.supply + flux.content);
 		if (jobsNeeded <= 0) return 0;
 
 		// Flow rate: 20% of capacity per tick (faster than external since it's local)

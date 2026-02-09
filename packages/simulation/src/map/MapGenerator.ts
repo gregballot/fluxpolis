@@ -29,13 +29,13 @@ export class MapGenerator {
       const maxAttempts = 100;
 
       do {
-        x = Math.random() * mapConfig.width;
-        y = Math.random() * mapConfig.height;
+        x = Math.round(Math.random() * mapConfig.width);
+        y = Math.round(Math.random() * mapConfig.height);
         attempts++;
       } while (
         attempts < maxAttempts &&
         positions.some(
-          (pos) => Math.hypot(pos.x - x, pos.y - y) < minDistance,
+          (pos) => Math.round(Math.hypot(pos.x - x, pos.y - y)) < minDistance,
         )
       );
 

@@ -79,7 +79,7 @@ export class DistrictManager implements IManager {
 			);
 			for (const place of nearby) {
 				const distance = district.distanceTo(place);
-				Logger.info(`  - ${place.id} (distance: ${distance.toFixed(1)}m)`);
+				Logger.info(`  - ${place.id} (distance: ${distance}m)`);
 			}
 		} else {
 			Logger.info(`District ${district.id} has no nearby places`);

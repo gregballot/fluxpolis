@@ -127,7 +127,7 @@ export class BuildModeSystem implements ISystem {
 		for (const place of this.places.values()) {
 			const dx = place.x - x;
 			const dy = place.y - y;
-			const distance = Math.hypot(dx, dy);
+			const distance = Math.round(Math.hypot(dx, dy));
 
 			// Check if placement would collide
 			if (distance < DISTRICT_RADIUS + place.radius) {

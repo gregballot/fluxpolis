@@ -26,5 +26,5 @@ export function worldToRender(worldUnits: number): number {
  * Convert render space (pixels) to world space (meters).
  */
 export function renderToWorld(renderUnits: number): number {
-  return renderUnits * PIXELS_TO_METERS;
+  return Math.round(renderUnits * PIXELS_TO_METERS);
 }

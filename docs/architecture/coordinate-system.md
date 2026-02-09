@@ -2,6 +2,24 @@
 
 Fluxpolis separates world space (simulation) from render space (client).
 
+## Integer Meters
+
+**All spatial values (coordinates, distances, radius) are stored as integer meters.**
+
+Note: This is part of the project-wide guideline to use integers for all numeric values. See [Coding Guidelines](../coding-guidelines.md#integer-only-numbers).
+
+At the project scale (50m = 1px), sub-meter precision provides no visual benefit:
+
+```typescript
+// All distance calculations round to integers
+const distance = Math.round(Math.hypot(dx, dy));
+
+// Coordinate conversions round to integers
+export function renderToWorld(renderUnits: number): number {
+  return Math.round(renderUnits * PIXELS_TO_METERS);
+}
+```
+
 ## Scale Factor
 
 **50 meters = 1 pixel**
