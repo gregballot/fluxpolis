@@ -97,7 +97,66 @@ const nearby = this.placeRegistry.getNearbyPlaces(district, DEFAULT_INFLUENCE_RA
 
 **Why PlaceRegistry?** Managers are domain-isolated (DistrictManager only knows districts). Spatial queries need to search ALL place types. PlaceRegistry maintains single responsibility: managers handle domain logic, registry handles spatial indexing.
 
-**Foundation for Flux system:** When a district is placed, `getNearbyPlaces()` identifies connection candidates. Future task will use this to auto-create Fluxes between nearby places.
+**Foundation for Flux system:** When a district is placed, `getNearbyPlaces()` identifies connection candidates. FluxManager auto-creates bidirectional fluxes between nearby districts and resource nodes.
+
+## Flux System
+
+**Flux** represents a flow connection between two places. Fluxes are unidirectional and support different flow types:
+
+**FlowType:** `'food' | 'workers'` - defines what flows through the flux
+- `'food'`: Resources flowing from ResourceNode → District
+- `'workers'`: Workers flowing from District → ResourceNode
+
+**Bidirectional Pattern:** District-ResourceNode connections create TWO separate Flux objects:
+```typescript
+// Food flux: ResourceNode → District (capacity: 100)
+// Worker flux: District → ResourceNode (capacity: 50)
+```
+
+Each flux has independent capacity, content, and flow direction. This pattern is simpler than bidirectional state and naturally extends to future commodity types.
+
+**FluxManager** listens to district placement events and auto-creates fluxes to nearby resource nodes within `DEFAULT_INFLUENCE_RADIUS` (25 km).
+
+## Districts and Population
+
+**District** represents a settlement with population and economic activity.
+
+**Population Structure:**
+```typescript
+interface PopulationSegment {
+  capacity: number;  // Maximum population this segment can hold
+  current: number;   // Current population in this segment
+}
+
+interface Population {
+  total: PopulationSegment;    // All residents
+  workers: PopulationSegment;  // Working population (70% of total)
+  inactive: PopulationSegment; // Non-working population (30% of total)
+}
+```
+
+**Jobs Tracking:** Districts track worker employment using Commodity supply/demand:
+```typescript
+jobs: {
+  workers: Commodity;  // supply: employed workers, demand: job openings
+}
+```
+
+**Needs Tracking:** Districts consume commodities using supply/demand tracking:
+```typescript
+needs: Record<ResourceType, Commodity>;  // e.g., food consumption
+```
+
+## Resource Nodes and Workers
+
+**ResourceNode** produces resources and requires workers to operate.
+
+**Worker Needs:** Resource nodes declare worker requirements using Commodity:
+```typescript
+workerNeeds: Commodity;  // supply: assigned workers, demand: workers needed
+```
+
+Workers flow from districts through worker fluxes. Resource production depends on worker supply meeting demand (future implementation).
 
 ## Adding a new domain
 

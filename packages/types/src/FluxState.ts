@@ -1,13 +1,13 @@
-import type { ResourceType } from './ResourceNodeState';
+export type FlowType = 'food' | 'workers';
 
 /**
  * Represents a flow connection between two places
  */
 export interface FluxState {
 	id: string;
-	sourceId: string; // Place ID (resource node for now)
-	destinationId: string; // Place ID (district for now)
-	resourceType: ResourceType;
+	sourceId: string; // Place ID (source of the flow)
+	destinationId: string; // Place ID (destination of the flow)
+	flowType: FlowType;
 	capacity: number; // Max units that can flow
 	content: number; // Current units in transit
 	distance: number; // Cached distance in meters

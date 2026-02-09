@@ -6,8 +6,8 @@
  */
 
 export type { Commodity } from './Commodity';
-export type { DistrictState } from './DistrictState';
-export type { FluxState } from './FluxState';
+export type { DistrictState, Population, PopulationSegment } from './DistrictState';
+export type { FluxState, FlowType } from './FluxState';
 export type { ResourceNodeState, ResourceType } from './ResourceNodeState';
 export type { PlaceState } from './PlaceState';
 export type { PlaceType } from './PlaceType';

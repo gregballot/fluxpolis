@@ -1,4 +1,4 @@
-import type { FluxState, ResourceType } from '@fluxpolis/types';
+import type { FluxState, FlowType } from '@fluxpolis/types';
 import { DEFAULT_FLUX_CAPACITY } from './FluxConfig';
 
 /**
@@ -11,15 +11,16 @@ export class Flux {
 		id: string,
 		sourceId: string,
 		destinationId: string,
-		resourceType: ResourceType,
+		flowType: FlowType,
 		distance: number,
+		capacity: number = DEFAULT_FLUX_CAPACITY,
 	) {
 		this.state = {
 			id,
 			sourceId,
 			destinationId,
-			resourceType,
-			capacity: DEFAULT_FLUX_CAPACITY,
+			flowType,
+			capacity,
 			content: 0,
 			distance,
 		};
@@ -37,8 +38,8 @@ export class Flux {
 		return this.state.destinationId;
 	}
 
-	get resourceType(): ResourceType {
-		return this.state.resourceType;
+	get flowType(): FlowType {
+		return this.state.flowType;
 	}
 
 	get capacity(): number {
