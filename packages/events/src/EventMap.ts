@@ -1,4 +1,8 @@
-import type { DistrictState, ResourceNodeState } from '@fluxpolis/types';
+import type {
+	DistrictState,
+	FluxState,
+	ResourceNodeState,
+} from '@fluxpolis/types';
 
 /**
  * Helper to define event payload types.
@@ -57,6 +61,10 @@ const eventMap = {
     x: number;
     y: number;
   }>(),
+
+  // Flux events
+  'simulation:flux:new': payload<{ flux: FluxState }>(),
+  'simulation:flux:update': payload<{ flux: FluxState }>(),
 
   // UI query events
   'ui:menu:build-district': payload<void>(),

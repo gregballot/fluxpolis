@@ -5,6 +5,7 @@ import type { IManager } from './types';
 
 import { DistrictManager } from './districts/DistrictManager';
 import { ResourceNodeManager } from './resources/ResourceNodeManager';
+import { FluxManager } from './flux/FluxManager';
 import { MapGenerator } from './map/MapGenerator';
 import { DEFAULT_MAP_CONFIG } from './map/MapConfig';
 import type { MapConfig } from './map/MapConfig';
@@ -27,6 +28,7 @@ export class Simulation {
 		);
 		this.addManager(this.resourceNodeManager);
 		this.addManager(new DistrictManager(events, this.placeRegistry));
+		this.addManager(new FluxManager(events, this.placeRegistry));
 
     events.on(EVENTS.GAME_SIMULATION_TICK, () => this.tick());
 
