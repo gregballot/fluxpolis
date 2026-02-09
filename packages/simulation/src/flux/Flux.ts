@@ -53,4 +53,39 @@ export class Flux {
 	get distance(): number {
 		return this.state.distance;
 	}
+
+	/**
+	 * Add content to the flux from source (up to capacity)
+	 * Returns amount actually added
+	 */
+	addContent(amount: number): number {
+		const available = this.capacity - this.content;
+		const toAdd = Math.min(amount, available);
+		this.state.content += toAdd;
+		return toAdd;
+	}
+
+	/**
+	 * Remove content from flux (delivery to destination)
+	 * Returns amount removed
+	 */
+	removeContent(amount: number): number {
+		const toRemove = Math.min(amount, this.content);
+		this.state.content -= toRemove;
+		return toRemove;
+	}
+
+	/**
+	 * Check if flux has content to deliver
+	 */
+	hasContent(): boolean {
+		return this.content > 0;
+	}
+
+	/**
+	 * Check if flux has room for more content
+	 */
+	hasCapacity(): boolean {
+		return this.content < this.capacity;
+	}
 }

@@ -1,3 +1,4 @@
+import type { PlaceState } from '@fluxpolis/types';
 import { Place } from './Place';
 
 /**
@@ -26,6 +27,13 @@ export class PlaceRegistry {
 	 */
 	getAll(): readonly Place[] {
 		return Array.from(this.places.values());
+	}
+
+	/**
+	 * Get place by ID
+	 */
+	getById(id: string): Place<PlaceState> | undefined {
+		return this.places.get(id);
 	}
 
 	/**

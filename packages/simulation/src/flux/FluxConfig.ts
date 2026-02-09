@@ -23,16 +23,16 @@ export const DEFAULT_DISTRICT_NEEDS: Record<ResourceType, Commodity> = {
 
 /** Default population for new districts */
 export const DEFAULT_DISTRICT_POPULATION: Population = {
-	total: { capacity: 500, current: 250 },
-	workers: { capacity: 350, current: 175 }, // 70% of total
-	inactive: { capacity: 150, current: 75 },  // 30% of total
+	total: { capacity: 500, current: 250, busy: 0 },
+	workers: { capacity: 350, current: 175, busy: 0 }, // 70% of total
+	inactive: { capacity: 150, current: 75, busy: 0 },  // 30% of total
 };
 
-/** Default jobs for districts (20% of current population) */
+/** Default jobs for districts - local employment needs (e.g., administration, services) */
 export const DEFAULT_DISTRICT_JOBS = {
 	workers: {
-		supply: 0,  // Initially no local workers employed
-		demand: 50, // 20% of 250 current population
+		supply: 0,  // Initially no local jobs filled
+		demand: 50, // Need 50 workers for district operations (20% of 250 population)
 	},
 };
 

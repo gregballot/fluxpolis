@@ -5,6 +5,7 @@ import type { ResourceType } from './ResourceNodeState';
 export interface PopulationSegment {
 	capacity: number;
 	current: number;
+	busy: number; // Citizens currently assigned to fluxes
 }
 
 export interface Population {

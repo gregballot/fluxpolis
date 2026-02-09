@@ -61,6 +61,7 @@ const eventMap = {
     x: number;
     y: number;
   }>(),
+  'simulation:resource-node:update': payload<{ resourceNode: ResourceNodeState }>(),
 
   // Flux events
   'simulation:flux:new': payload<{ flux: FluxState }>(),

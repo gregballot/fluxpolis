@@ -8,6 +8,8 @@ import { BuildModeSystem } from '@fluxpolis/client/game/features/build-mode/Buil
 import { DistrictInteractionSystem } from '@fluxpolis/client/game/features/districts/DistrictInteractionSystem';
 import { DistrictRenderSystem } from '@fluxpolis/client/game/features/districts/DistrictRenderSystem';
 import { DistrictSpawnSystem } from '@fluxpolis/client/game/features/districts/DistrictSpawnSystem';
+import { FluxSpawnSystem } from '@fluxpolis/client/game/features/fluxes/FluxSpawnSystem';
+import { FluxRenderSystem } from '@fluxpolis/client/game/features/fluxes/FluxRenderSystem';
 import { MapFactory } from '@fluxpolis/client/game/features/map/components/MapGridFactory';
 import { MapRenderSystem } from '@fluxpolis/client/game/features/map/MapGridRenderSystem';
 import { ResourceNodeSpawnSystem } from '@fluxpolis/client/game/features/resources/ResourceNodeSpawnSystem';
@@ -44,10 +46,14 @@ export class GameScene extends Phaser.Scene {
       new BuildModeSystem(this),
       new DistrictSpawnSystem(this.entitiesManager),
       new DistrictInteractionSystem(this.entitiesManager),
-      new DistrictRenderSystem(this.entitiesManager, this),
       // Resource nodes
       new ResourceNodeSpawnSystem(this.entitiesManager),
       new ResourceNodeInteractionSystem(this.entitiesManager),
+      // Fluxes (render before districts/resource nodes so lines appear behind circles)
+      new FluxSpawnSystem(this.entitiesManager),
+      new FluxRenderSystem(this.entitiesManager, this),
+      // Render systems (districts and resource nodes last so they appear on top)
+      new DistrictRenderSystem(this.entitiesManager, this),
       new ResourceNodeRenderSystem(this.entitiesManager, this),
     );
     this.systemManager.init();

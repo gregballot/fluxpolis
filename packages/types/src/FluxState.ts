@@ -1,4 +1,4 @@
-export type FlowType = 'food' | 'workers';
+export type FlowType = 'food' | 'workers' | 'local-jobs';
 
 /**
  * Represents a flow connection between two places
