@@ -10,6 +10,12 @@ export const METERS_TO_PIXELS = 1 / 50; // 0.02
 export const PIXELS_TO_METERS = 50;
 
 /**
+ * Map dimensions (source of truth).
+ */
+export const MAP_SIZE_METERS = 150000;  // 150 km
+export const MAP_CENTER_METERS = MAP_SIZE_METERS / 2;  // 75 km
+
+/**
  * Convert world space (meters) to render space (pixels).
  */
 export function worldToRender(worldUnits: number): number {

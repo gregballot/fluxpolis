@@ -1,8 +1,23 @@
 import { EventBus } from '@fluxpolis/client/EventBus';
 import { EVENTS } from '@fluxpolis/events';
-import { worldToRender } from '@fluxpolis/types';
+import { MAP_SIZE_METERS, MAP_CENTER_METERS, worldToRender } from '@fluxpolis/types';
 
 import type { ISystem } from './ISystem';
+
+// Derived render dimensions (from shared constants)
+const MAP_SIZE_PIXELS = worldToRender(MAP_SIZE_METERS);
+const MAP_CENTER_PIXELS = worldToRender(MAP_CENTER_METERS);
+
+// Camera-specific constants
+const CAMERA_PADDING = 500;
+const CAMERA_BG_COLOR = '#1a1a2e';
+const ZOOM_STEP_IN = 1.1;
+const ZOOM_STEP_OUT = 0.9;
+const ZOOM_MIN = 0.3;
+const ZOOM_MAX = 5;
+const ZOOM_DEFAULT = 1;
+const PAN_DURATION_MS = 1000;
+const ZOOM_DURATION_MS = 500;
 
 interface CameraState {
   x: number;
@@ -21,16 +36,14 @@ export class CameraSystem implements ISystem {
   }
 
   init(): void {
-    this.camera.setBackgroundColor('#1a1a2e');
+    this.camera.setBackgroundColor(CAMERA_BG_COLOR);
 
-    // Set camera bounds with 500px padding outside world borders
-    const mapRenderSize = worldToRender(150000); // 3000px
-    const padding = 500;
+    // Set camera bounds with padding outside world borders
     this.camera.setBounds(
-      -padding,
-      -padding,
-      mapRenderSize + padding * 2,
-      mapRenderSize + padding * 2
+      -CAMERA_PADDING,
+      -CAMERA_PADDING,
+      MAP_SIZE_PIXELS + CAMERA_PADDING * 2,
+      MAP_SIZE_PIXELS + CAMERA_PADDING * 2
     );
 
     this.setupInputListeners();
@@ -44,8 +57,8 @@ export class CameraSystem implements ISystem {
     });
 
     EventBus.on(EVENTS.GAME_INPUT_WHEEL, (data) => {
-      const zoomFactor = data.deltaY > 0 ? 0.9 : 1.1;
-      const newZoom = Phaser.Math.Clamp(this.camera.zoom * zoomFactor, 0.3, 5);
+      const zoomFactor = data.deltaY > 0 ? ZOOM_STEP_OUT : ZOOM_STEP_IN;
+      const newZoom = Phaser.Math.Clamp(this.camera.zoom * zoomFactor, ZOOM_MIN, ZOOM_MAX);
 
       this.camera.setZoom(newZoom);
     });
@@ -81,18 +94,15 @@ export class CameraSystem implements ISystem {
 
   // Utility methods
   reset(): void {
-    this.camera.setZoom(1);
-    // Center on 75km world space (75000m) = 1500px render space
-    const centerWorld = 75000; // 75 km = center of 150 km map
-    const centerRender = worldToRender(centerWorld); // 1500px
-    this.camera.centerOn(centerRender, centerRender);
+    this.camera.setZoom(ZOOM_DEFAULT);
+    this.camera.centerOn(MAP_CENTER_PIXELS, MAP_CENTER_PIXELS);
   }
 
-  panTo(x: number, y: number, duration: number = 1000): void {
+  panTo(x: number, y: number, duration: number = PAN_DURATION_MS): void {
     this.camera.pan(x, y, duration, 'Power2');
   }
 
-  zoomTo(level: number, duration: number = 500): void {
+  zoomTo(level: number, duration: number = ZOOM_DURATION_MS): void {
     this.camera.zoomTo(level, duration, 'Power2');
   }
 

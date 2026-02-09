@@ -1,14 +1,20 @@
+import { MAP_SIZE_METERS } from '@fluxpolis/types';
 import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
 import type { GameEntity } from '@fluxpolis/client/game/core/entities/GameEntity';
 
 import type { MapGrid } from './MapGrid';
 
+// Grid-specific constants
+const GRID_SIZE_METERS = 5000;  // 5 km grid cells
+const GRID_COLOR = 0x696969;
+const GRID_ALPHA = 0.5;
+
 const MapDefaultConfig: MapGrid = {
-  width: 150000,   // 150 km (world space)
-  height: 150000,  // 150 km (world space)
-  gridSize: 5000,  // 5 km grid cells (world space)
-  gridColor: 0x696969,
-  gridAlpha: 0.5,
+  width: MAP_SIZE_METERS,
+  height: MAP_SIZE_METERS,
+  gridSize: GRID_SIZE_METERS,
+  gridColor: GRID_COLOR,
+  gridAlpha: GRID_ALPHA,
 };
 
 export class MapFactory {
