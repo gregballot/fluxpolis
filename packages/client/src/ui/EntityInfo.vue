@@ -54,7 +54,8 @@ const handleDistrictUpdate = (data: { district: DistrictState }) => {
     entityType.value === 'district' &&
     selectedEntityId.value === data.district.id
   ) {
-    entityData.value = { ...data.district };
+    // Deep clone to prevent shared references and enable Vue reactivity
+    entityData.value = structuredClone(data.district);
   }
 };
 
@@ -83,6 +84,16 @@ const handleResourceNodeResponse = (data: {
   }
 };
 
+const handleResourceNodeUpdate = (data: { resourceNode: ResourceNodeState }) => {
+  if (
+    entityType.value === 'resource-node' &&
+    selectedEntityId.value === data.resourceNode.id
+  ) {
+    // Deep clone for resource nodes too
+    entityData.value = structuredClone(data.resourceNode);
+  }
+};
+
 onMounted(() => {
   EventBus.on(EVENTS.GAME_DISTRICTS_CLICKED, handleDistrictClicked);
   EventBus.on(EVENTS.SIMULATION_DISTRICTS_NEW, handleDistrictCreated);
@@ -93,6 +104,7 @@ onMounted(() => {
     EVENTS.SIMULATION_RESOURCE_NODE_RESPONSE,
     handleResourceNodeResponse,
   );
+  EventBus.on(EVENTS.SIMULATION_RESOURCE_NODE_UPDATE, handleResourceNodeUpdate);
 });
 
 onUnmounted(() => {
@@ -105,6 +117,7 @@ onUnmounted(() => {
     EVENTS.SIMULATION_RESOURCE_NODE_RESPONSE,
     handleResourceNodeResponse,
   );
+  EventBus.off(EVENTS.SIMULATION_RESOURCE_NODE_UPDATE, handleResourceNodeUpdate);
 });
 </script>
 

@@ -3,7 +3,8 @@ import { EVENTS } from '@fluxpolis/events';
 import { renderToWorld } from '@fluxpolis/types';
 import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
-import type { ResourceNodeState } from './components/ResourceNodeState';
+import type { ResourceNodeComponent } from './components/ResourceNodeComponent';
+import { RESOURCE_NODE_COMPONENT } from './components/ResourceNodeComponent';
 
 export class ResourceNodeInteractionSystem implements ISystem {
   constructor(private entitiesManager: EntitiesManager) {}
@@ -28,11 +29,11 @@ export class ResourceNodeInteractionSystem implements ISystem {
   private findResourceNodeAtPoint(
     x: number,
     y: number,
-  ): ResourceNodeState | null {
-    const nodes = this.entitiesManager.query('ResourceNodeState');
+  ): ResourceNodeComponent | null {
+    const nodes = this.entitiesManager.query(RESOURCE_NODE_COMPONENT);
 
     for (const entity of nodes) {
-      const node = entity.getComponent<ResourceNodeState>('ResourceNodeState');
+      const node = entity.getComponent<ResourceNodeComponent>(RESOURCE_NODE_COMPONENT);
       if (!node) continue;
 
       const distance = Math.round(Math.hypot(node.x - x, node.y - y));

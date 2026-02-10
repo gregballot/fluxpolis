@@ -1,5 +1,4 @@
 import type { FluxState, FlowType } from '@fluxpolis/types';
-import { DEFAULT_FLUX_CAPACITY } from './FluxConfig';
 
 /**
  * Flux represents a flow connection between two places (e.g., resource node → district)
@@ -13,7 +12,7 @@ export class Flux {
 		destinationId: string,
 		flowType: FlowType,
 		distance: number,
-		capacity: number = DEFAULT_FLUX_CAPACITY,
+		capacity: number,
 	) {
 		this.state = {
 			id,

@@ -89,10 +89,8 @@ export class DistrictManager implements IManager {
 	}
 
 	tick(): void {
-		for (const district of this.districts.values()) {
-			district.age++;
-			this.events.emit(EVENTS.SIMULATION_DISTRICTS_UPDATE, { district: district.state });
-		}
+		// Empty: DistrictManager has no per-tick logic
+		// FluxManager handles all state mutations via flux delivery
 	}
 
 	getAll(): readonly District[] {

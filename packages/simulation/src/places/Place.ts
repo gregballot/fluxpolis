@@ -1,4 +1,4 @@
-import type { PlaceState } from '@fluxpolis/types';
+import type { PlaceState, PlaceType } from '@fluxpolis/types';
 
 /**
  * Abstract base class for spatial entities that can be connected by Fluxes.
@@ -25,7 +25,7 @@ export abstract class Place<TState extends PlaceState = PlaceState> {
 		return this.state.y;
 	}
 
-	get placeType(): string {
+	get placeType(): PlaceType {
 		return this.state.placeType;
 	}
 

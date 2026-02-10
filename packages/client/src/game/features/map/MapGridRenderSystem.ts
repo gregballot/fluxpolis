@@ -4,7 +4,8 @@ import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/Entit
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
 import { worldToRender } from '@fluxpolis/types';
 
-import type { MapGrid } from './components/MapGrid';
+import type { MapGridComponent } from './components/MapGridComponent';
+import { MAP_GRID_COMPONENT } from './components/MapGridComponent';
 
 export class MapRenderSystem implements ISystem {
   private entitiesManager: EntitiesManager;
@@ -21,13 +22,13 @@ export class MapRenderSystem implements ISystem {
   }
 
   render(): void {
-    const [map] = this.entitiesManager.query('MapGrid');
+    const [map] = this.entitiesManager.query(MAP_GRID_COMPONENT);
     if (!map) {
       console.error('No map found');
       return;
     }
 
-    const mapGrid = map.getComponent<MapGrid>('MapGrid');
+    const mapGrid = map.getComponent<MapGridComponent>(MAP_GRID_COMPONENT);
     if (!mapGrid) {
       console.error('No grid found');
       return;

@@ -10,7 +10,6 @@ defineProps<{
   <div>
     <div class="entity-title">District {{ data.id }}</div>
     <div class="entity-property">Position: {{ data.x }}, {{ data.y }}</div>
-    <div class="entity-property">Age: {{ data.age }}</div>
 
     <div class="section-heading">Population</div>
     <div class="entity-property">Total: {{ data.population.total.current }} / {{ data.population.total.capacity }}</div>

@@ -2,7 +2,8 @@ import type { Scene } from 'phaser';
 import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
 import { worldToRender } from '@fluxpolis/types';
-import type { ResourceNodeState } from './components/ResourceNodeState';
+import type { ResourceNodeComponent } from './components/ResourceNodeComponent';
+import { RESOURCE_NODE_COMPONENT } from './components/ResourceNodeComponent';
 
 export class ResourceNodeRenderSystem implements ISystem {
   private entitiesManager: EntitiesManager;
@@ -21,10 +22,16 @@ export class ResourceNodeRenderSystem implements ISystem {
   update(): void {
     this.graphics.clear();
 
-    const entities = this.entitiesManager.query('ResourceNodeState');
+    const entities = this.entitiesManager.query(RESOURCE_NODE_COMPONENT);
     for (const entity of entities) {
-      const node = entity.getComponent<ResourceNodeState>('ResourceNodeState');
+      const node = entity.getComponent<ResourceNodeComponent>(RESOURCE_NODE_COMPONENT);
       if (!node) continue;
+
+      // Defensive guard - skip if essential fields missing
+      if (node.x === undefined || node.y === undefined || node.radius === undefined) {
+        console.warn(`ResourceNode ${node.id} missing essential fields, skipping render`);
+        continue;
+      }
 
       const renderX = worldToRender(node.x);
       const renderY = worldToRender(node.y);

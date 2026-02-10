@@ -101,21 +101,22 @@ const nearby = this.placeRegistry.getNearbyPlaces(district, DEFAULT_INFLUENCE_RA
 
 ## Flux System
 
-**Flux** represents a flow connection between two places. Fluxes are unidirectional and support different flow types:
+**Flux** represents a flow connection between two places. The system uses a handler-based architecture to support multiple flow types (food, workers, etc.) with minimal coupling.
 
-**FlowType:** `'food' | 'workers'` - defines what flows through the flux
-- `'food'`: Resources flowing from ResourceNode → District
-- `'workers'`: Workers flowing from District → ResourceNode
+**Key Architecture:**
+- **Handler pattern**: `IFluxHandler` implementations define type-specific fill/delivery logic
+- **Registry dispatch**: `FluxHandlerRegistry` provides O(1) handler lookup
+- **Three-layer config**: Simulation (capacity), client (colors), and creation rules (place-type pairs)
+- **Event-driven**: Complete separation between simulation and client layers
 
-**Bidirectional Pattern:** District-ResourceNode connections create TWO separate Flux objects:
+**Example flow types:**
 ```typescript
-// Food flux: ResourceNode → District (capacity: 100)
-// Worker flux: District → ResourceNode (capacity: 50)
+FlowType = 'food' | 'workers'
+// Food: ResourceNode → District
+// Workers: District → ResourceNode (and District → District for local jobs)
 ```
 
-Each flux has independent capacity, content, and flow direction. This pattern is simpler than bidirectional state and naturally extends to future commodity types.
-
-**FluxManager** listens to district placement events and auto-creates fluxes to nearby resource nodes within `DEFAULT_INFLUENCE_RADIUS` (25 km).
+See **[Flux System Documentation](./flux-system.md)** for complete architecture, handler implementation, and how to add new flow types.
 
 ## Districts and Population
 

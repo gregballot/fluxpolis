@@ -1,14 +1,17 @@
 import type { IManager } from '../types';
 import type { TypedEventBus } from '@fluxpolis/events';
-import type { ResourceNodeState, FlowType, PlaceState, DistrictState } from '@fluxpolis/types';
+import type { FlowType } from '@fluxpolis/types';
 import { EVENTS } from '@fluxpolis/events';
 import { Logger } from '../Logger';
 
 import { Flux } from './Flux';
 import type { PlaceRegistry } from '../places/PlaceRegistry';
-import type { Place } from '../places/Place';
 import { DEFAULT_INFLUENCE_RADIUS } from '../places/PlaceConfig';
-import { DEFAULT_FLUX_CAPACITY, DEFAULT_WORKER_FLUX_CAPACITY } from './FluxConfig';
+import { getFluxTypeConfig } from './FluxTypeConfig';
+import { getFluxCreationRules } from './FluxCreationRules';
+import { FluxHandlerRegistry } from './handlers/FluxHandlerRegistry';
+import { FoodFluxHandler } from './handlers/FoodFluxHandler';
+import { WorkerFluxHandler } from './handlers/WorkerFluxHandler';
 
 /**
  * Manages Flux entities that represent resource/worker flows between places.
@@ -17,11 +20,16 @@ import { DEFAULT_FLUX_CAPACITY, DEFAULT_WORKER_FLUX_CAPACITY } from './FluxConfi
 export class FluxManager implements IManager {
 	private fluxes = new Map<string, Flux>();
 	private nextId = 1;
+	private handlerRegistry: FluxHandlerRegistry;
 
 	constructor(
 		private events: TypedEventBus,
 		private placeRegistry: PlaceRegistry,
 	) {
+		// Initialize handler registry
+		this.handlerRegistry = new FluxHandlerRegistry();
+		this.registerHandlers();
+
 		// Listen to district creation to auto-create fluxes
 		this.events.on(EVENTS.SIMULATION_DISTRICTS_NEW, (data) => {
 			this.createFluxesForNewPlace(data.district.id);
@@ -32,32 +40,33 @@ export class FluxManager implements IManager {
 	}
 
 	/**
+	 * Register all flux handlers.
+	 * Adding a new flow type only requires adding a handler here.
+	 */
+	private registerHandlers(): void {
+		this.handlerRegistry.register('food', new FoodFluxHandler(this.events));
+		this.handlerRegistry.register('workers', new WorkerFluxHandler(this.events));
+	}
+
+	/**
 	 * Create fluxes linking a newly placed place to nearby places within influence radius.
-	 * Creates bidirectional fluxes between ResourceNodes and Districts:
-	 * - Food flux: ResourceNode → District
-	 * - Worker flux: District → ResourceNode
-	 * For districts, also creates a self-flux for local job filling:
-	 * - Local jobs flux: District → District
+	 * Uses declarative rules from FluxCreationRules to determine which fluxes to create.
 	 */
 	private createFluxesForNewPlace(placeId: string): void {
-		// Get the place from registry
-		const allPlaces = this.placeRegistry.getAll();
-		const newPlace = allPlaces.find((p) => p.id === placeId);
+		const newPlace = this.placeRegistry.getById(placeId);
 
 		if (!newPlace) {
 			Logger.warn(`FluxManager: Place ${placeId} not found in registry`);
 			return;
 		}
 
-		// Create self-flux for local jobs if this is a district
-		if (newPlace.placeType === 'district') {
-			this.createFlux(
-				newPlace.id,
-				newPlace.id,
-				'local-jobs',
-				0, // Zero distance for self-flux
+		// Create self-fluxes based on rules
+		const selfRules = getFluxCreationRules(newPlace.placeType, newPlace.placeType, true);
+		for (const rule of selfRules) {
+			this.createFlux(newPlace.id, newPlace.id, rule.flowType, 0);
+			Logger.info(
+				`Self-flux created for ${newPlace.placeType} ${newPlace.id} (${rule.flowType})`,
 			);
-			Logger.info(`Self-flux created for District ${newPlace.id} (local jobs)`);
 		}
 
 		// Find nearby places within influence radius
@@ -71,37 +80,35 @@ export class FluxManager implements IManager {
 			return;
 		}
 
-		// Create fluxes based on place types
+		// Create fluxes to/from nearby places based on rules
 		for (const nearbyPlace of nearbyPlaces) {
-			// Create bidirectional fluxes between ResourceNode and District
-			if (
-				nearbyPlace.placeType === 'resource-node' &&
-				newPlace.placeType === 'district'
-			) {
-				// Type assertion safe because we checked placeType above
-				const resourceNode = nearbyPlace.state as ResourceNodeState;
-				const district = newPlace;
+			const distance = newPlace.distanceTo(nearbyPlace);
 
-				const distance = newPlace.distanceTo(nearbyPlace);
+			// Forward direction: newPlace → nearbyPlace
+			const forwardRules = getFluxCreationRules(
+				newPlace.placeType,
+				nearbyPlace.placeType,
+				false,
+			);
 
-				// Food flux: ResourceNode → District
-				this.createFlux(
-					resourceNode.id,
-					district.id,
-					'food',
-					distance,
-				);
-
-				// Worker flux: District → ResourceNode
-				this.createFlux(
-					district.id,
-					resourceNode.id,
-					'workers',
-					distance,
-				);
-
+			for (const rule of forwardRules) {
+				this.createFlux(newPlace.id, nearbyPlace.id, rule.flowType, distance);
 				Logger.info(
-					`Fluxes created between District ${district.id} ↔ ResourceNode ${resourceNode.id} (distance: ${distance}m)`,
+					`Flux created: ${newPlace.placeType} ${newPlace.id} → ${nearbyPlace.placeType} ${nearbyPlace.id} (${rule.flowType}, ${distance}m)`,
+				);
+			}
+
+			// Reverse direction: nearbyPlace → newPlace
+			const reverseRules = getFluxCreationRules(
+				nearbyPlace.placeType,
+				newPlace.placeType,
+				false,
+			);
+
+			for (const rule of reverseRules) {
+				this.createFlux(nearbyPlace.id, newPlace.id, rule.flowType, distance);
+				Logger.info(
+					`Flux created: ${nearbyPlace.placeType} ${nearbyPlace.id} → ${newPlace.placeType} ${newPlace.id} (${rule.flowType}, ${distance}m)`,
 				);
 			}
 		}
@@ -116,10 +123,8 @@ export class FluxManager implements IManager {
 		flowType: FlowType,
 		distance: number,
 	): Flux {
-		// Determine capacity based on flow type
-		const capacity = (flowType === 'workers' || flowType === 'local-jobs')
-			? DEFAULT_WORKER_FLUX_CAPACITY
-			: DEFAULT_FLUX_CAPACITY;
+		// Get capacity from config
+		const config = getFluxTypeConfig(flowType);
 
 		const flux = new Flux(
 			`flux-${this.nextId++}`,
@@ -127,7 +132,7 @@ export class FluxManager implements IManager {
 			destinationId,
 			flowType,
 			distance,
-			capacity,
+			config.capacity,
 		);
 
 		this.fluxes.set(flux.id, flux);
@@ -164,226 +169,35 @@ export class FluxManager implements IManager {
 	}
 
 	/**
-	 * Fill flux from source based on flow type
+	 * Fill flux from source using registered handler
 	 */
 	private fillFlux(flux: Flux): number {
 		const source = this.placeRegistry.getById(flux.sourceId);
 		if (!source) return 0;
 
-		if (flux.flowType === 'food') {
-			return this.fillFoodFlux(flux, source);
-		} else if (flux.flowType === 'workers') {
-			return this.fillWorkerFlux(flux, source);
-		} else if (flux.flowType === 'local-jobs') {
-			return this.fillLocalJobsFlux(flux, source);
+		const handler = this.handlerRegistry.get(flux.flowType);
+		if (!handler) {
+			Logger.warn(`No handler registered for flowType: ${flux.flowType}`);
+			return 0;
 		}
 
-		return 0;
+		return handler.fill(flux, source, this.placeRegistry);
 	}
 
 	/**
-	 * Fill food flux from resource node
-	 */
-	private fillFoodFlux(flux: Flux, source: Place<PlaceState>): number {
-		if (source.placeType !== 'resource-node') return 0;
-
-		const nodeState = source.state as ResourceNodeState;
-		const production = Math.floor(nodeState.throughput * (nodeState.workerNeeds.supply / nodeState.workerNeeds.demand));
-
-		if (production <= 0) return 0;
-
-		// Query destination demand to cap filling
-		const destination = this.placeRegistry.getById(flux.destinationId);
-		if (!destination || destination.placeType !== 'district') return 0;
-
-		const districtState = destination.state as DistrictState;
-		const need = districtState.needs.food;
-
-		// Calculate target with surplus (10% buffer, minimum 1)
-		const surplus = Math.max(1, Math.ceil(need.demand * 0.1));
-		const targetSupply = need.demand + surplus;
-
-		// Stop if surplus is full (accounting for food already in transit)
-		if (need.supply + flux.content >= targetSupply) return 0;
-
-		// Cap filling to destination capacity (subtract both current supply and flux content)
-		const destinationCapacity = targetSupply - (need.supply + flux.content);
-		const toFill = Math.min(production, destinationCapacity);
-
-		return flux.addContent(toFill);
-	}
-
-	/**
-	 * Fill worker flux from district
-	 */
-	private fillWorkerFlux(flux: Flux, source: Place<PlaceState>): number {
-		if (source.placeType !== 'district') return 0;
-
-		const districtState = source.state as DistrictState;
-
-		// Available workers = current population - workers already busy
-		const availableWorkers = districtState.population.workers.current - districtState.population.workers.busy;
-
-		if (availableWorkers <= 0) return 0;
-
-		// Query destination demand to cap filling
-		const destination = this.placeRegistry.getById(flux.destinationId);
-		if (!destination || destination.placeType !== 'resource-node') return 0;
-
-		const nodeState = destination.state as ResourceNodeState;
-		const workerNeeds = nodeState.workerNeeds;
-
-		// Calculate target with surplus (10% buffer, minimum 1)
-		const surplus = Math.max(1, Math.ceil(workerNeeds.demand * 0.1));
-		const targetSupply = workerNeeds.demand + surplus;
-
-		// Stop if surplus is full (accounting for workers already in transit)
-		if (workerNeeds.supply + flux.content >= targetSupply) return 0;
-
-		// Cap filling to destination capacity (subtract both current supply and flux content)
-		const destinationCapacity = targetSupply - (workerNeeds.supply + flux.content);
-
-		// Flow rate: 10% of capacity per tick
-		const flowRate = Math.floor(DEFAULT_WORKER_FLUX_CAPACITY * 0.1);
-		const toAdd = Math.min(flowRate, availableWorkers, destinationCapacity);
-
-		// Mark workers as busy (assigned to flux)
-		districtState.population.workers.busy += toAdd;
-		const added = flux.addContent(toAdd);
-
-		if (added > 0) {
-			this.events.emit(EVENTS.SIMULATION_DISTRICTS_UPDATE, { district: districtState as DistrictState });
-		}
-
-		return added;
-	}
-
-	/**
-	 * Fill local jobs flux (self-flux for district internal employment)
-	 */
-	private fillLocalJobsFlux(flux: Flux, source: Place<PlaceState>): number {
-		if (source.placeType !== 'district') return 0;
-
-		const districtState = source.state as DistrictState;
-
-		// Available workers = current population - workers already busy
-		const availableWorkers = districtState.population.workers.current - districtState.population.workers.busy;
-
-		if (availableWorkers <= 0) return 0;
-
-		// Check how many local jobs still need to be filled (accounting for workers already in transit)
-		const jobsNeeded = districtState.jobs.workers.demand - (districtState.jobs.workers.supply + flux.content);
-		if (jobsNeeded <= 0) return 0;
-
-		// Flow rate: 20% of capacity per tick (faster than external since it's local)
-		const flowRate = Math.floor(DEFAULT_WORKER_FLUX_CAPACITY * 0.2);
-		const toAdd = Math.min(flowRate, availableWorkers, jobsNeeded);
-
-		// Mark workers as busy (assigned to local jobs flux)
-		districtState.population.workers.busy += toAdd;
-		const added = flux.addContent(toAdd);
-
-		if (added > 0) {
-			this.events.emit(EVENTS.SIMULATION_DISTRICTS_UPDATE, { district: districtState as DistrictState });
-		}
-
-		return added;
-	}
-
-	/**
-	 * Deliver flux content to destination
+	 * Deliver flux content to destination using registered handler
 	 */
 	private deliverFlux(flux: Flux): number {
 		const destination = this.placeRegistry.getById(flux.destinationId);
 		if (!destination) return 0;
 
-		if (flux.flowType === 'food') {
-			return this.deliverFood(flux, destination);
-		} else if (flux.flowType === 'workers') {
-			return this.deliverWorkers(flux, destination);
-		} else if (flux.flowType === 'local-jobs') {
-			return this.deliverLocalJobs(flux, destination);
+		const handler = this.handlerRegistry.get(flux.flowType);
+		if (!handler) {
+			Logger.warn(`No handler registered for flowType: ${flux.flowType}`);
+			return 0;
 		}
 
-		return 0;
-	}
-
-	/**
-	 * Deliver food to district
-	 */
-	private deliverFood(flux: Flux, destination: Place<PlaceState>): number {
-		if (destination.placeType !== 'district') return 0;
-
-		const districtState = destination.state as DistrictState;
-		const need = districtState.needs.food;
-
-		// Check if destination has capacity
-		if (need.supply >= need.demand) return 0;
-
-		// Deliver content
-		const toDeliver = flux.content;
-		const available = need.demand - need.supply;
-		const delivered = Math.min(toDeliver, available);
-		need.supply += delivered;
-		flux.removeContent(delivered);
-
-		if (delivered > 0) {
-			this.events.emit(EVENTS.SIMULATION_DISTRICTS_UPDATE, { district: districtState as DistrictState });
-		}
-
-		return delivered;
-	}
-
-	/**
-	 * Deliver workers to resource node
-	 */
-	private deliverWorkers(flux: Flux, destination: Place<PlaceState>): number {
-		if (destination.placeType !== 'resource-node') return 0;
-
-		const nodeState = destination.state as ResourceNodeState;
-		const workerNeeds = nodeState.workerNeeds;
-
-		// Check if node has capacity for more workers
-		if (workerNeeds.supply >= workerNeeds.demand) return 0;
-
-		// Deliver workers
-		const toDeliver = flux.content;
-		const available = workerNeeds.demand - workerNeeds.supply;
-		const delivered = Math.min(toDeliver, available);
-		workerNeeds.supply += delivered;
-		flux.removeContent(delivered);
-
-		if (delivered > 0) {
-			this.events.emit(EVENTS.SIMULATION_RESOURCE_NODE_UPDATE, { resourceNode: nodeState as ResourceNodeState });
-		}
-
-		return delivered;
-	}
-
-	/**
-	 * Deliver workers to district local jobs (self-flux)
-	 */
-	private deliverLocalJobs(flux: Flux, destination: Place<PlaceState>): number {
-		if (destination.placeType !== 'district') return 0;
-
-		const districtState = destination.state as DistrictState;
-		const jobs = districtState.jobs.workers;
-
-		// Check if district has capacity for more local jobs
-		if (jobs.supply >= jobs.demand) return 0;
-
-		// Deliver workers to local jobs
-		const toDeliver = flux.content;
-		const available = jobs.demand - jobs.supply;
-		const delivered = Math.min(toDeliver, available);
-		jobs.supply += delivered;
-		flux.removeContent(delivered);
-
-		if (delivered > 0) {
-			this.events.emit(EVENTS.SIMULATION_DISTRICTS_UPDATE, { district: districtState as DistrictState });
-		}
-
-		return delivered;
+		return handler.deliver(flux, destination);
 	}
 
 	getAll(): readonly Flux[] {

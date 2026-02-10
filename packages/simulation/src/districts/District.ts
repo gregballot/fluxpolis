@@ -9,7 +9,6 @@ export class District extends Place<DistrictState> {
 			id,
 			x,
 			y,
-			age: 0,
 			placeType: 'district',
 			radius: PLACE_RADIUS['district'],
 			needs: {
@@ -24,14 +23,6 @@ export class District extends Place<DistrictState> {
 				workers: { ...DEFAULT_DISTRICT_JOBS.workers },
 			},
 		});
-	}
-
-	get age() {
-		return this.state.age;
-	}
-
-	set age(value: number) {
-		this.state.age = value;
 	}
 
 	get population() {

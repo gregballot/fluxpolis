@@ -1,14 +1,9 @@
 import type { Commodity, ResourceType, Population } from '@fluxpolis/types';
 
 /**
- * Default configuration values for the Flux system
+ * Default configuration values for districts and resource nodes.
+ * Flux-specific configuration is in FluxTypeConfig.ts.
  */
-
-/** Default capacity for flux connections (units) */
-export const DEFAULT_FLUX_CAPACITY = 100;
-
-/** Default capacity for worker flux connections (units) */
-export const DEFAULT_WORKER_FLUX_CAPACITY = 50;
 
 /** Default resource production rate (units per tick) */
 export const DEFAULT_RESOURCE_THROUGHPUT = 10;

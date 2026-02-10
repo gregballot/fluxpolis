@@ -4,7 +4,8 @@ import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/Entit
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
 import { worldToRender } from '@fluxpolis/types';
 
-import type { DistrictState } from './components/DistrictState';
+import type { DistrictComponent } from './components/DistrictComponent';
+import { DISTRICT_COMPONENT } from './components/DistrictComponent';
 
 export class DistrictRenderSystem implements ISystem {
   private graphics: Phaser.GameObjects.Graphics;
@@ -22,10 +23,16 @@ export class DistrictRenderSystem implements ISystem {
   update(): void {
     this.graphics.clear();
 
-    const entities = this.entitiesManager.query('DistrictState');
+    const entities = this.entitiesManager.query(DISTRICT_COMPONENT);
     for (const entity of entities) {
-      const district = entity.getComponent<DistrictState>('DistrictState');
+      const district = entity.getComponent<DistrictComponent>(DISTRICT_COMPONENT);
       if (!district) continue;
+
+      // Defensive guard - skip if essential fields missing
+      if (district.x === undefined || district.y === undefined || district.radius === undefined) {
+        console.warn(`District ${district.id} missing essential fields, skipping render`);
+        continue;
+      }
 
       const renderX = worldToRender(district.x);
       const renderY = worldToRender(district.y);
@@ -39,7 +46,7 @@ export class DistrictRenderSystem implements ISystem {
         label = this.scene.add.text(0, 0, '').setOrigin(0.5, 0.5);
         this.labels.set(district.id, label);
       }
-      label.setText(String(district.age));
+      label.setText(district.id);
       label.setPosition(renderX, renderY);
     }
   }

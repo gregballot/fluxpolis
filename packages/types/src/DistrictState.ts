@@ -16,7 +16,6 @@ export interface Population {
 
 export interface DistrictState extends PlaceState {
 	placeType: 'district';
-	age: number;
 	needs: Record<ResourceType, Commodity>;
 	population: Population;
 	jobs: {

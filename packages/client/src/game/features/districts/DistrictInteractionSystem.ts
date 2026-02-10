@@ -4,7 +4,8 @@ import { renderToWorld } from '@fluxpolis/types';
 
 import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
-import type { DistrictState } from './components/DistrictState';
+import type { DistrictComponent } from './components/DistrictComponent';
+import { DISTRICT_COMPONENT } from './components/DistrictComponent';
 
 export class DistrictInteractionSystem implements ISystem {
   private buildModeActive: boolean = false;
@@ -42,11 +43,11 @@ export class DistrictInteractionSystem implements ISystem {
     });
   }
 
-  private findDistrictAtPoint(x: number, y: number): DistrictState | null {
-    const districts = this.entitiesManager.query('DistrictState');
+  private findDistrictAtPoint(x: number, y: number): DistrictComponent | null {
+    const districts = this.entitiesManager.query(DISTRICT_COMPONENT);
 
     for (const entity of districts) {
-      const district = entity.getComponent<DistrictState>('DistrictState');
+      const district = entity.getComponent<DistrictComponent>(DISTRICT_COMPONENT);
       if (!district) continue;
 
       const dx = district.x - x;

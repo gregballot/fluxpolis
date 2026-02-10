@@ -210,6 +210,97 @@ EntitiesManager.ts   (class)
 init.ts              (utility)
 ```
 
+### ECS Component Naming
+
+**Client ECS components MUST use the `*Component` suffix**, not `*State`.
+
+```typescript
+// ✅ CORRECT - Client ECS components
+export interface DistrictComponent { /* ... */ }
+export const DISTRICT_COMPONENT = 'DistrictComponent';
+
+export interface FluxComponent extends Omit<FluxState, 'distance'> { /* ... */ }
+export const FLUX_COMPONENT = 'FluxComponent';
+
+// ❌ WRONG - Don't use *State for client components
+export interface DistrictState { /* ... */ }  // Conflicts with simulation type
+```
+
+**Rationale:**
+- **Avoids naming conflicts**: Simulation types in `@fluxpolis/types` use `*State` (DistrictState, FluxState, ResourceNodeState)
+- **Clear distinction**: `*Component` is obviously an ECS component, `*State` is simulation domain model
+- **Prevents confusion**: No need for import aliases like `as SimulationFluxState`
+
+**Pattern:**
+```typescript
+// Simulation domain model (in @fluxpolis/types)
+export interface FluxState {
+  id: string;
+  sourceId: string;
+  destinationId: string;
+  flowType: FlowType;
+  capacity: number;
+  content: number;
+  distance: number;
+}
+
+// Client ECS component (in @fluxpolis/client)
+export interface FluxComponent extends Omit<FluxState, 'distance'> {
+  sourceX: number;  // Denormalized for rendering
+  sourceY: number;
+  destX: number;
+  destY: number;
+}
+```
+
+See [Flux System Documentation](architecture/simulation/flux-system.md#fluxstate-vs-fluxcomponent) for detailed example.
+
+### ECS Component Extension Pattern
+
+**Client ECS components MUST extend their simulation state types when a simulation equivalent exists:**
+
+```typescript
+// ✅ CORRECT - Component extends simulation state + adds rendering properties
+import type { DistrictState } from '@fluxpolis/types';
+
+export interface DistrictComponent extends DistrictState {
+  // Add rendering-specific properties not in simulation
+  color: number;
+  alpha: number;
+}
+
+// ✅ CORRECT - Component with no simulation equivalent
+export interface MapGridComponent {
+  width: number;
+  height: number;
+  gridColor: number;
+  gridAlpha: number;
+}
+```
+
+**Rationale:**
+- **TypeScript enforces alignment**: Simulation field changes cause compile errors in client
+- **Prevents drift**: Client and simulation types stay synchronized
+- **Enables visual feedback**: Simulation state available for rendering (population density, worker status, production rates)
+- **Deep copy required**: Always use `structuredClone()` when updating from simulation events to prevent shared references
+
+**Pattern for all entity components:**
+1. Extend simulation state type
+2. Add rendering-only fields (colors, alphas, scales, etc.)
+3. **Use `structuredClone()` when updating** to prevent mutation leaks
+4. Preserve rendering fields when updating from simulation events
+
+**Critical:**
+```typescript
+// ❌ WRONG - Shallow copy causes mutation leaks
+Object.assign(component, data.district);
+
+// ✅ CORRECT - Deep clone prevents shared references
+Object.assign(component, structuredClone(data.district));
+```
+
+See `FluxComponent`, `DistrictComponent`, and `ResourceNodeComponent` for examples.
+
 ## Comments
 
 Only comment when logic isn't self-evident. Document architectural decisions in markdown, not code.

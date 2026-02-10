@@ -26,9 +26,11 @@ export class Simulation {
 			events,
 			this.placeRegistry,
 		);
+
+		// Tick order matters: FluxManager mutates district/node state first
+		this.addManager(new FluxManager(events, this.placeRegistry));
 		this.addManager(this.resourceNodeManager);
 		this.addManager(new DistrictManager(events, this.placeRegistry));
-		this.addManager(new FluxManager(events, this.placeRegistry));
 
     events.on(EVENTS.GAME_SIMULATION_TICK, () => this.tick());
 

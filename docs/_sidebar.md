@@ -14,3 +14,4 @@
     - [Vue + Phaser](architecture/client/vue-phaser-integration.md)
   - **Simulation Layer**
     - [Overview](architecture/simulation/overview.md)
+    - [Flux System](architecture/simulation/flux-system.md)

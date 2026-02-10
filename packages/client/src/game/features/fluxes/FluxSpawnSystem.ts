@@ -4,15 +4,17 @@ import { EVENTS } from '@fluxpolis/events';
 import type { EntitiesManager } from '@fluxpolis/client/game/core/entities/EntitiesManager';
 import type { GameEntity } from '@fluxpolis/client/game/core/entities/GameEntity';
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
-import type { FluxState as SimulationFluxState } from '@fluxpolis/types';
-import type { DistrictState } from '../districts/components/DistrictState';
-import type { ResourceNodeState } from '../resources/components/ResourceNodeState';
-import type { FluxState } from './components/FluxState';
-import { FLUX_STATE } from './components/FluxState';
+import type { FluxState } from '@fluxpolis/types';
+import type { DistrictComponent } from '../districts/components/DistrictComponent';
+import { DISTRICT_COMPONENT } from '../districts/components/DistrictComponent';
+import type { ResourceNodeComponent } from '../resources/components/ResourceNodeComponent';
+import { RESOURCE_NODE_COMPONENT } from '../resources/components/ResourceNodeComponent';
+import type { FluxComponent } from './components/FluxComponent';
+import { FLUX_COMPONENT } from './components/FluxComponent';
 
 export class FluxSpawnSystem implements ISystem {
 	private entities = new Map<string, GameEntity>();
-	private pendingFluxes = new Map<string, SimulationFluxState>();
+	private pendingFluxes = new Map<string, FluxState>();
 
 	constructor(private entitiesManager: EntitiesManager) {}
 
@@ -31,7 +33,7 @@ export class FluxSpawnSystem implements ISystem {
 			const entity = this.entities.get(data.flux.id);
 			if (!entity) return;
 
-			const state = entity.getComponent<FluxState>(FLUX_STATE);
+			const state = entity.getComponent<FluxComponent>(FLUX_COMPONENT);
 			if (!state) return;
 
 			// Update content (capacity and positions don't change)
@@ -53,7 +55,7 @@ export class FluxSpawnSystem implements ISystem {
 		}
 	}
 
-	private createFlux(flux: SimulationFluxState): GameEntity | null {
+	private createFlux(flux: FluxState): GameEntity | null {
 		// Look up source and destination positions
 		const sourcePos = this.findPlacePosition(flux.sourceId);
 		const destPos = this.findPlacePosition(flux.destinationId);
@@ -63,9 +65,9 @@ export class FluxSpawnSystem implements ISystem {
 			return null;
 		}
 
-		// Create entity with FluxState component
+		// Create entity with FluxComponent component
 		const entity = this.entitiesManager.createEntity();
-		entity.addComponent<FluxState>(FLUX_STATE, {
+		entity.addComponent<FluxComponent>(FLUX_COMPONENT, {
 			id: flux.id,
 			sourceId: flux.sourceId,
 			destinationId: flux.destinationId,
@@ -85,20 +87,20 @@ export class FluxSpawnSystem implements ISystem {
 		placeId: string,
 	): { x: number; y: number } | null {
 		// Check districts
-		const districts = this.entitiesManager.query('DistrictState');
+		const districts = this.entitiesManager.query(DISTRICT_COMPONENT);
 		for (const entity of districts) {
-			const state = entity.getComponent<DistrictState>('DistrictState');
-			if (state?.id === placeId) {
-				return { x: state.x, y: state.y };
+			const component = entity.getComponent<DistrictComponent>(DISTRICT_COMPONENT);
+			if (component?.id === placeId) {
+				return { x: component.x, y: component.y };
 			}
 		}
 
 		// Check resource nodes
-		const nodes = this.entitiesManager.query('ResourceNodeState');
+		const nodes = this.entitiesManager.query(RESOURCE_NODE_COMPONENT);
 		for (const entity of nodes) {
-			const state = entity.getComponent<ResourceNodeState>('ResourceNodeState');
-			if (state?.id === placeId) {
-				return { x: state.x, y: state.y };
+			const component = entity.getComponent<ResourceNodeComponent>(RESOURCE_NODE_COMPONENT);
+			if (component?.id === placeId) {
+				return { x: component.x, y: component.y };
 			}
 		}
 
