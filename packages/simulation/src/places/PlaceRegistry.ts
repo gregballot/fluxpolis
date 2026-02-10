@@ -1,4 +1,5 @@
-import type { PlaceState } from '@fluxpolis/types';
+import type { PlaceState, WorldCoordinate } from '@fluxpolis/types';
+import { checkCircleCollision } from '@fluxpolis/types';
 import { Place } from './Place';
 
 /**
@@ -64,22 +65,16 @@ export class PlaceRegistry {
 	}
 
 	/**
-	 * Check if a circle at (x, y) with given radius collides with any registered place.
+	 * Check if a circle at given position with given radius collides with any registered place.
 	 * Uses proper circle-circle collision: distance < radius1 + radius2
 	 *
-	 * @param x - X coordinate of new placement
-	 * @param y - Y coordinate of new placement
+	 * @param position - Position of new placement
 	 * @param radius - Radius of entity being placed
 	 * @returns true if collision detected, false if placement is valid
 	 */
-	checkCollisionStrict(x: number, y: number, radius: number): boolean {
+	checkCollisionStrict(position: WorldCoordinate, radius: number): boolean {
 		for (const place of this.places.values()) {
-			const dx = place.x - x;
-			const dy = place.y - y;
-			const distance = Math.round(Math.hypot(dx, dy));
-
-			// Proper circle-circle collision
-			if (distance < radius + place.radius) {
+			if (checkCircleCollision(position, radius, place.state, place.radius)) {
 				return true;
 			}
 		}

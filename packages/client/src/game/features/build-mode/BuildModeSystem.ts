@@ -2,7 +2,7 @@ import type { Scene } from 'phaser';
 
 import { EventBus } from '@fluxpolis/client/EventBus';
 import { EVENTS } from '@fluxpolis/events';
-import { PLACE_RADIUS, worldToRender, renderToWorld } from '@fluxpolis/types';
+import { PLACE_RADIUS, worldToRender, renderToWorld, worldCoord } from '@fluxpolis/types';
 
 import type { ISystem } from '@fluxpolis/client/game/core/systems/ISystem';
 
@@ -124,9 +124,10 @@ export class BuildModeSystem implements ISystem {
 	 * Checks against local spatial index (districts + resource nodes).
 	 */
 	private checkCollisionLocal(x: number, y: number): boolean {
+		const position = worldCoord(x, y);
 		for (const place of this.places.values()) {
-			const dx = place.x - x;
-			const dy = place.y - y;
+			const dx = place.x - position.x;
+			const dy = place.y - position.y;
 			const distance = Math.round(Math.hypot(dx, dy));
 
 			// Check if placement would collide

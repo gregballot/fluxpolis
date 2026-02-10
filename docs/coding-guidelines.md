@@ -144,6 +144,35 @@ calculateProduction(): number {
 const surplus = Math.max(1, Math.ceil(demand * 0.1));
 ```
 
+## Coordinate Types
+
+Use `WorldCoordinate` and `RenderCoordinate` from `@fluxpolis/types` for type signatures:
+
+```typescript
+import { worldCoord, type WorldCoordinate } from '@fluxpolis/types';
+
+function placeDistrict(position: WorldCoordinate): void {
+  // position is in meters (world space)
+}
+
+const pos = worldCoord(5000, 7500); // Self-documents coordinate space
+placeDistrict(pos);
+```
+
+**When to use coordinate types:**
+- Type signatures (parameters, return types)
+- Reusable abstractions (PlaceState extends WorldCoordinate)
+- Self-documenting intent (`worldCoord(x, y)` signals coordinate space)
+
+**When to use inline `{ x: number; y: number }`:**
+- Event payloads (transient data from Phaser)
+- Internal implementation (temporary variables)
+- Mixed coordinate contexts (handling both world/render)
+
+**Structural types:** Both types are structural interfaces (not branded). TypeScript won't prevent mixing world/render coordinates at compile time. Mitigation: layer separation + clear naming conventions.
+
+See [Coordinate System](architecture/coordinate-system.md) for utilities and conversion.
+
 ## Architecture Principles
 
 ### Barrel Exports

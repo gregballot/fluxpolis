@@ -1,14 +1,15 @@
 import type { ResourceNodeState, ResourceType } from '@fluxpolis/types';
-import { PLACE_RADIUS } from '@fluxpolis/types';
+import { PLACE_RADIUS, worldCoord } from '@fluxpolis/types';
 import { Place } from '../places/Place';
 import { DEFAULT_RESOURCE_THROUGHPUT, DEFAULT_WORKER_NEEDS } from '../flux/FluxConfig';
 
 export class ResourceNode extends Place<ResourceNodeState> {
 	constructor(id: string, x: number, y: number, type: ResourceType) {
+		const position = worldCoord(x, y);
+
 		super({
+			...position,
 			id,
-			x,
-			y,
 			type,
 			placeType: 'resource-node',
 			radius: PLACE_RADIUS['resource-node'],

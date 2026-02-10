@@ -1,14 +1,15 @@
 import type { DistrictState, ResourceType, Commodity } from '@fluxpolis/types';
-import { PLACE_RADIUS } from '@fluxpolis/types';
+import { PLACE_RADIUS, worldCoord } from '@fluxpolis/types';
 import { Place } from '../places/Place';
 import { DEFAULT_DISTRICT_NEEDS, DEFAULT_DISTRICT_POPULATION, DEFAULT_DISTRICT_JOBS } from '../flux/FluxConfig';
 
 export class District extends Place<DistrictState> {
 	constructor(id: string, x: number, y: number) {
+		const position = worldCoord(x, y);
+
 		super({
+			...position,
 			id,
-			x,
-			y,
 			placeType: 'district',
 			radius: PLACE_RADIUS['district'],
 			needs: {

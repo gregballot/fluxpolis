@@ -1,7 +1,7 @@
 import type { IManager } from '../types';
 import type { TypedEventBus } from '@fluxpolis/events';
 import { EVENTS } from '@fluxpolis/events';
-import { PLACE_RADIUS } from '@fluxpolis/types';
+import { PLACE_RADIUS, worldCoord } from '@fluxpolis/types';
 import { Logger } from '../Logger';
 
 import { District } from './District';
@@ -21,9 +21,9 @@ export class DistrictManager implements IManager {
 			EVENTS.GAME_BUILD_MODE_DISTRICT_PLACEMENT_REQUESTED,
 			(data) => {
 				// Validate collision using PlaceRegistry
+				const position = worldCoord(data.x, data.y);
 				const hasCollision = this.placeRegistry.checkCollisionStrict(
-					data.x,
-					data.y,
+					position,
 					PLACE_RADIUS['district'],
 				);
 

@@ -45,6 +45,7 @@ const ignoredEvents: (string | symbol)[] = [
   'game:camera:positionChanged',
 
   'simulation:districts:update',
+  'simulation:flux:update',
 ];
 
 const originalEmit = EventBusInstance.emit.bind(EventBusInstance);

@@ -13,3 +13,13 @@ export type { PlaceState } from './PlaceState';
 export type { PlaceType } from './PlaceType';
 export { PLACE_RADIUS } from './PlaceTypeConfig';
 export { METERS_TO_PIXELS, PIXELS_TO_METERS, MAP_SIZE_METERS, MAP_CENTER_METERS, worldToRender, renderToWorld } from './SpatialConfig';
+export type { WorldCoordinate, RenderCoordinate } from './Coordinates';
+export { worldCoord, renderCoord } from './Coordinates';
+export {
+  worldDistance,
+  checkCircleCollision,
+  worldToRenderCoord,
+  renderToWorldCoord,
+  toWorldCoord,
+  toRenderCoord,
+} from './CoordinateUtils';

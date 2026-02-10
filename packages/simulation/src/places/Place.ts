@@ -1,4 +1,5 @@
 import type { PlaceState, PlaceType } from '@fluxpolis/types';
+import { worldDistance } from '@fluxpolis/types';
 
 /**
  * Abstract base class for spatial entities that can be connected by Fluxes.
@@ -37,8 +38,6 @@ export abstract class Place<TState extends PlaceState = PlaceState> {
 	 * Calculate Euclidean distance to another place
 	 */
 	distanceTo(other: Place): number {
-		const dx = this.x - other.x;
-		const dy = this.y - other.y;
-		return Math.round(Math.hypot(dx, dy));
+		return worldDistance(this.state, other.state);
 	}
 }
