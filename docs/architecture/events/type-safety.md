@@ -36,7 +36,7 @@ EventBus.emit(EVENTS.GAME_INPUT_SPACE, {});
 
 ### Step 1: Define in EventMap
 
-Add your event to `/packages/eventbus/src/EventMap.ts`:
+Add your event to `/packages/events/src/EventMap.ts`:
 
 ```typescript
 export interface EventMap {
@@ -82,39 +82,6 @@ EventBus.on(EVENTS.GAME_MY_FEATURE_ACTION, (data) => {
 });
 ```
 
-## Event Listener Methods
-
-**`on(event, listener, context?)`** - Subscribe to event
-
-```typescript
-EventBus.on(EVENTS.GAME_CAMERA_POSITION_CHANGED, (data) => {
-  console.log(`Camera: ${data.x}, ${data.y}, zoom: ${data.zoom}`);
-});
-```
-
-**`once(event, listener, context?)`** - Listen once, then unsubscribe
-
-```typescript
-EventBus.once(EVENTS.CURRENT_SCENE_READY, (scene) => {
-  console.log('Scene loaded:', scene);
-});
-```
-
-**`off(event, listener?, context?)`** - Unsubscribe
-
-```typescript
-const handler = (data) => console.log(data);
-EventBus.on(EVENTS.GAME_INPUT_DRAG, handler);
-// Later:
-EventBus.off(EVENTS.GAME_INPUT_DRAG, handler);
-```
-
-**`removeAllListeners(event?)`** - Remove all listeners for event
-
-```typescript
-EventBus.removeAllListeners(EVENTS.GAME_INPUT_DRAG);
-```
-
 ## Usage Across Layers
 
 Both client and simulation layers use `TypedEventBus` for full type safety:
@@ -153,49 +120,6 @@ Both layers share the same EventBus instance and benefit from compile-time type 
 **Single Source of Truth** - EventMap is the definitive event registry
 **Refactor-Safe** - Renaming events or changing payloads updates all usages
 **Self-Documenting** - EventMap serves as API documentation
-
-## Common Patterns
-
-### Conditional Event Emission
-
-```typescript
-if (shouldNotify) {
-  EventBus.emit(EVENTS.SIMULATION_DISTRICTS_NEW, {
-    district: { id: '123', x: 100, y: 200 }
-  });
-}
-```
-
-### Event Forwarding
-
-```typescript
-EventBus.on(EVENTS.UI_MENU_BUILD_DISTRICT, () => {
-  // Handle UI event, then emit game event
-  EventBus.emit(EVENTS.GAME_BUILD_MODE_DISTRICT_PLACED, { x, y });
-});
-```
-
-### Cleanup in Vue Components
-
-```typescript
-<script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue';
-import { EventBus } from '@fluxpolis/client/EventBus';
-import { EVENTS } from '@fluxpolis/events';
-
-const handler = (data) => {
-  // Handle event
-};
-
-onMounted(() => {
-  EventBus.on(EVENTS.GAME_CAMERA_POSITION_CHANGED, handler);
-});
-
-onUnmounted(() => {
-  EventBus.off(EVENTS.GAME_CAMERA_POSITION_CHANGED, handler);
-});
-</script>
-```
 
 ## Debugging
 

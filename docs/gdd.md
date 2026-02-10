@@ -1,12 +1,21 @@
 # Technical Guidelines Document
 
-> **IMPORTANT:** This document describes the PLANNED architecture from January 2026.
-> The actual implementation evolved differently during development. See `docs/architecture/client/overview.md` for the CURRENT architecture.
+> **⚠️ ARCHIVED DOCUMENT**
+>
+> This is historical planning from early development (January 2026).
+> For current architecture, see [Architecture Overview](architecture/client/overview.md).
+>
+> **Known Outdated Sections:**
+> - **Section 3:** Now 3 layers (Client, Simulation, EventBus), not 5
+> - **Section 5:** Types package now exists at `@fluxpolis/types`
+> - **Sections 4-6:** Implementation evolved differently from original plan
+>
+> This document is preserved for historical context only.
 
 **Project:** Fluxpolis
 **Version:** 1.0
 **Date:** January 31, 2026
-**Status:** V1 Prototype Architecture (Historical Planning Document)
+**Status:** Historical Planning Document
 
 ---
 

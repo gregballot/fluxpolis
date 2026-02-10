@@ -146,32 +146,9 @@ const surplus = Math.max(1, Math.ceil(demand * 0.1));
 
 ## Coordinate Types
 
-Use `WorldCoordinate` and `RenderCoordinate` from `@fluxpolis/types` for type signatures:
+**Coordinate Types:** Use `WorldCoordinate` (meters) for simulation, `RenderCoordinate` (pixels) for rendering. Scale: 50m = 1px.
 
-```typescript
-import { worldCoord, type WorldCoordinate } from '@fluxpolis/types';
-
-function placeDistrict(position: WorldCoordinate): void {
-  // position is in meters (world space)
-}
-
-const pos = worldCoord(5000, 7500); // Self-documents coordinate space
-placeDistrict(pos);
-```
-
-**When to use coordinate types:**
-- Type signatures (parameters, return types)
-- Reusable abstractions (PlaceState extends WorldCoordinate)
-- Self-documenting intent (`worldCoord(x, y)` signals coordinate space)
-
-**When to use inline `{ x: number; y: number }`:**
-- Event payloads (transient data from Phaser)
-- Internal implementation (temporary variables)
-- Mixed coordinate contexts (handling both world/render)
-
-**Structural types:** Both types are structural interfaces (not branded). TypeScript won't prevent mixing world/render coordinates at compile time. Mitigation: layer separation + clear naming conventions.
-
-See [Coordinate System](architecture/coordinate-system.md) for utilities and conversion.
+See [Coordinate System](architecture/coordinate-system.md) for conversion utilities, usage patterns, and full details.
 
 ## Architecture Principles
 
@@ -225,9 +202,7 @@ EventBus.on(EVENTS.SIMULATION_DISTRICT_RESPONSE, (data) => {
 });
 ```
 
-**Event naming convention:** `layer:domain:event`
-- UI queries: `ui:query:{entity}` (e.g., `ui:query:district`)
-- Simulation responses: `simulation:{entity}:response` (e.g., `simulation:district:response`)
+**Event naming convention:** Events follow `layer:feature:action` pattern. See [EventBus Overview](architecture/events/overview.md#event-naming-convention) for details.
 
 ## File Naming
 

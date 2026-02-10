@@ -11,7 +11,10 @@
     - [Overview](architecture/client/overview.md)
     - [ECS Pattern](architecture/client/ecs-pattern.md)
     - [Systems & Components](architecture/client/systems-and-components.md)
+    - [System Patterns](architecture/client/system-patterns.md)
     - [Vue + Phaser](architecture/client/vue-phaser-integration.md)
   - **Simulation Layer**
     - [Overview](architecture/simulation/overview.md)
     - [Flux System](architecture/simulation/flux-system.md)
+    - [Flux Handlers](architecture/simulation/flux-handlers.md)
+    - [Flux Configuration](architecture/simulation/flux-configuration.md)

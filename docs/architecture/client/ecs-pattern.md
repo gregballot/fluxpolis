@@ -126,22 +126,7 @@ export class MapGrid {
 
 ## System Pattern
 
-**Location:** Systems implement `ISystem` interface defined in `packages/client/src/game/core/systems/ISystem.ts`
-
-```typescript
-export interface ISystem {
-  init(): void; // Called once on system creation
-  update?(delta: number): void; // Called every frame (optional)
-  render?(): void; // Called for rendering (optional)
-}
-```
-
-**System Lifecycle:**
-
-1. **Constructor**: Receive dependencies (EntitiesManager, Scene, etc.)
-2. **init()**: Set up event listeners, perform one-time setup
-3. **update(delta)**: Process entity state changes every frame
-4. **render()**: Render visual representation
+Systems implement the `ISystem` interface. See [Systems & Components](systems-and-components.md#isystem-interface) for the interface definition and lifecycle details.
 
 **Example System:**
 

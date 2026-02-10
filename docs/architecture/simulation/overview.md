@@ -45,7 +45,7 @@ class DistrictManager {
 
 The client passes its `EventBus` singleton to `new Simulation(EventBus)` - no adapter needed.
 
-See **[EventBus Architecture](../eventbus/overview.md)** for details on event naming, type safety, and adding new events.
+See **[EventBus Architecture](../events/overview.md)** for details on event naming, type safety, and adding new events.
 
 ## Simulation (orchestrator)
 
@@ -104,9 +104,9 @@ const nearby = this.placeRegistry.getNearbyPlaces(district, DEFAULT_INFLUENCE_RA
 **Flux** represents a flow connection between two places. The system uses a handler-based architecture to support multiple flow types (food, workers, etc.) with minimal coupling.
 
 **Key Architecture:**
-- **Handler pattern**: `IFluxHandler` implementations define type-specific fill/delivery logic
-- **Registry dispatch**: `FluxHandlerRegistry` provides O(1) handler lookup
-- **Three-layer config**: Simulation (capacity), client (colors), and creation rules (place-type pairs)
+- **Handler pattern**: Type-specific fill/delivery logic via `IFluxHandler` (see [Flux Handlers](flux-handlers.md))
+- **Registry dispatch**: O(1) handler lookup
+- **Three-layer config**: Simulation, client, and creation rules (see [Flux Configuration](flux-configuration.md))
 - **Event-driven**: Complete separation between simulation and client layers
 
 **Example flow types:**
@@ -116,7 +116,7 @@ FlowType = 'food' | 'workers'
 // Workers: District → ResourceNode (and District → District for local jobs)
 ```
 
-See **[Flux System Documentation](./flux-system.md)** for complete architecture, handler implementation, and how to add new flow types.
+See **[Flux System](./flux-system.md)** for architecture overview and tick lifecycle.
 
 ## Districts and Population
 

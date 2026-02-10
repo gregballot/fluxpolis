@@ -42,8 +42,8 @@ packages/client/src/
 │   │   │   └── BuildModeSystem.ts      # Transient placement mode
 │   │   ├── districts/
 │   │   │   ├── components/
-│   │   │   │   ├── DistrictState.ts    # Domain component
-│   │   │   │   └── DistrictFactory.ts  # Entity creation helper
+│   │   │   │   ├── DistrictComponent.ts # Domain component
+│   │   │   │   └── DistrictFactory.ts   # Entity creation helper
 │   │   │   ├── DistrictSpawnSystem.ts  # Simulation bridge (event → entity)
 │   │   │   └── DistrictRenderSystem.ts # Pure ECS query renderer
 │   │   └── ...
@@ -164,7 +164,7 @@ EventBus.on(EVENTS.GAME_INPUT_DRAG, (data) => {
 });
 ```
 
-See **[EventBus Architecture](../eventbus/overview.md)** for:
+See **[EventBus Architecture](../events/overview.md)** for:
 
 - Event naming conventions
 - Type-safe event patterns

@@ -21,6 +21,8 @@ The integration is centered around `PhaserGame.vue`, which bootstraps the engine
 
 ## Communication Patterns
 
+For EventBus fundamentals and type-safe event patterns, see [EventBus Overview](../events/overview.md).
+
 ### Game → UI (State Display)
 
 Systems emit state changes that Vue components listen to and display.
