@@ -52,14 +52,18 @@ onUnmounted(() => {
 <style scoped>
 .debug-panel {
   position: fixed;
-  bottom: 10px;
+  top: 10px;
   right: 10px;
-  background: rgba(0, 0, 0, 0.7);
-  color: #ff00dd;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 14px;
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-border-pink);
+  color: var(--color-text-pink);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-primary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.3px;
   pointer-events: none;
+  backdrop-filter: var(--blur-glass);
 }
 </style>

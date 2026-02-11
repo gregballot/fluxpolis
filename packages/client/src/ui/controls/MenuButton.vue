@@ -42,28 +42,28 @@ onUnmounted(() => {
 
 <style scoped>
 .menu-btn {
-  padding: 10px 10px;
-  font-size: 14px;
+  padding: 10px;
+  font-size: var(--text-base);
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-primary);
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.2s ease;
-  background: #4f345e55;
-  color: white;
-  border: 1px solid #b842aa55;
-  border-radius: 4px;
+  transition: all var(--transition-normal);
+  background: var(--color-bg-purple);
+  color: var(--color-text-white);
+  border: 1px solid var(--color-border-pink);
+  border-radius: var(--radius-sm);
 }
 
 .menu-btn:hover {
-  background: #4f345ecc;
-  border-color: #b842aacc;
+  background: var(--color-hover-overlay);
+  border-color: var(--color-border-pink-bright);
 }
 
 .menu-btn.is-selected {
-  background: #a72d98;
-  border-color: white;
-  color: #e3e3e3;
+  background: var(--color-active-overlay);
+  border-color: var(--color-text-white);
+  color: var(--color-text-white);
   cursor: default;
 }
 </style>

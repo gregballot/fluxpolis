@@ -97,6 +97,17 @@ const eventMap = {
     reason: string;
   }>(),
 
+  // Time control events
+  'ui:controls:play': payload<void>(),
+  'ui:controls:pause': payload<void>(),
+  'ui:controls:speed': payload<{ speed: number }>(),
+  'simulation:time:update': payload<{
+    year: number;
+    day: number;
+    hour: number;
+    totalHours: number;
+  }>(),
+
   // Scene events (using unknown to avoid Phaser dependency)
   'current-scene-ready': payload<unknown>(),
 } as const;

@@ -1,0 +1,47 @@
+/**
+ * Fluxpolis Cyberpunk Theme
+ * Shared design tokens for consistent UI styling
+ */
+
+:root {
+  /* Color Palette - Cyberpunk Pink/Purple */
+  --color-bg-dark: rgba(10, 10, 15, 0.9);
+  --color-bg-purple: rgba(35, 25, 45, 0.85);
+  --color-border-pink: rgba(184, 66, 170, 0.4);
+  --color-border-pink-bright: rgba(184, 66, 170, 0.7);
+  --color-text-pink: #ff00dd;
+  --color-text-pink-muted: #e0c4e8;
+  --color-text-white: #e3e3e3;
+
+  /* Interactive States */
+  --color-hover-overlay: rgba(167, 45, 152, 0.3);
+  --color-active-overlay: rgba(167, 45, 152, 0.6);
+  --color-separator: rgba(184, 66, 170, 0.2);
+
+  /* Typography */
+  --font-primary: 'Inter', sans-serif;
+  --font-mono: 'Courier New', monospace;
+  --font-display: 'Tahoma', sans-serif;
+
+  /* Font Sizes */
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-lg: 18px;
+  --text-xl: 24px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 20px;
+
+  /* Effects */
+  --blur-glass: blur(4px);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.2s ease;
+}

@@ -107,7 +107,9 @@ features/
 - UI components listen to EventBus events (e.g., `game:camera:moved`)
 - UI components emit events to game layer (e.g., `ui:button:clicked`)
 
-**Example:** CameraInfo.vue listens to camera events and displays current zoom/position.
+**Examples:**
+- CameraInfo.vue listens to camera events and displays current zoom/position
+- SimulationControls.vue provides play/pause, speed control, and displays simulation time
 
 ### Scenes Layer (`scenes/`)
 

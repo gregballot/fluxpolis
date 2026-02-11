@@ -33,18 +33,18 @@ const appVersion = __APP_VERSION__;
   position: fixed;
   top: 0px;
   left: 0px;
-
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px;
+  padding: var(--space-lg);
 }
 
 .headline {
-  font-family: Tahoma, sans-serif;
-  color: #b373a3;
-  font-size: 24px;
+  font-family: var(--font-display);
+  color: var(--color-text-pink);
+  font-size: var(--text-xl);
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-lg);
+  text-shadow: 0 0 10px rgba(255, 0, 221, 0.5);
 }
 </style>

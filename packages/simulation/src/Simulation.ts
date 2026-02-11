@@ -10,6 +10,7 @@ import { MapGenerator } from './map/MapGenerator';
 import { DEFAULT_MAP_CONFIG } from './map/MapConfig';
 import type { MapConfig } from './map/MapConfig';
 import { PlaceRegistry } from './places/PlaceRegistry';
+import { TimeManager } from './time/TimeManager';
 
 export class Simulation {
 	private managers: IManager[] = [];
@@ -28,6 +29,7 @@ export class Simulation {
 		);
 
 		// Tick order matters: FluxManager mutates district/node state first
+		this.addManager(new TimeManager(events)); // Time tracking first
 		this.addManager(new FluxManager(events, this.placeRegistry));
 		this.addManager(this.resourceNodeManager);
 		this.addManager(new DistrictManager(events, this.placeRegistry));

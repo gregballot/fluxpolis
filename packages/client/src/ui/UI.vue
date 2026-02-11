@@ -2,11 +2,13 @@
 import CameraInfo from './CameraInfo.vue';
 import DebugPanel from './DebugPanel.vue';
 import ControlsMenu from './controls/ControlsMenu.vue';
+import SimulationControls from './controls/SimulationControls.vue';
 import EntityInfo from './EntityInfo.vue';
 </script>
 
 <template>
   <ControlsMenu />
+  <SimulationControls />
   <CameraInfo />
   <DebugPanel />
   <EntityInfo />

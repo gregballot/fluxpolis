@@ -118,6 +118,31 @@ FlowType = 'food' | 'workers'
 
 See **[Flux System](./flux-system.md)** for architecture overview and tick lifecycle.
 
+## Time System
+
+**TimeManager** tracks simulation time progression.
+
+**Time Structure:**
+```typescript
+interface SimulationTime {
+  year: number;       // Years elapsed since start (Year 0)
+  day: number;        // 0-364 (365 days per year)
+  hour: number;       // 0-23 (24 hours per day)
+  totalHours: number; // Total hours elapsed since start
+}
+```
+
+**Tick Progression:** Each simulation tick advances time by 1 hour. Time automatically rolls over days and years using standard calendar rules (24 hours/day, 365 days/year).
+
+**Event Broadcasting:** TimeManager emits `simulation:time:update` on every tick with the current time state. The UI listens to this event to display the current simulation date/time.
+
+**Control Flow:**
+1. SimulationSystem emits `game:simulation-tick` (controlled by play/pause and speed settings)
+2. TimeManager increments time and emits `simulation:time:update`
+3. UI components receive time updates and display formatted time
+
+See **[Client Systems](../client/systems-and-components.md)** for SimulationSystem implementation details.
+
 ## Districts and Population
 
 **District** represents a settlement with population and economic activity.
