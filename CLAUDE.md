@@ -84,6 +84,7 @@ When making architectural changes:
 - Update relevant docs in `docs/architecture/` to reflect new patterns
 - Keep code examples in docs consistent with actual implementation
 - Document significant decisions for future context
+- **IMPORTANT:** Update `docs/features.md` when adding new features
 
 **Critical:** Architecture changes must be documented. Code and docs must stay synchronized.
 
