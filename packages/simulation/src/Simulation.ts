@@ -4,6 +4,7 @@ import { EVENTS } from '@fluxpolis/events';
 import type { IManager } from './types';
 
 import { DistrictManager } from './districts/DistrictManager';
+import { DistrictGrowthManager } from './districts/growth/DistrictGrowthManager';
 import { ResourceNodeManager } from './resources/ResourceNodeManager';
 import { FluxManager } from './flux/FluxManager';
 import { MapGenerator } from './map/MapGenerator';
@@ -16,6 +17,7 @@ export class Simulation {
 	private managers: IManager[] = [];
 	private mapConfig: MapConfig;
 	private resourceNodeManager: ResourceNodeManager;
+	private districtManager: DistrictManager;
 	private placeRegistry: PlaceRegistry;
 
 	constructor(events: TypedEventBus) {
@@ -28,11 +30,14 @@ export class Simulation {
 			this.placeRegistry,
 		);
 
+		this.districtManager = new DistrictManager(events, this.placeRegistry);
+
 		// Tick order matters: FluxManager mutates district/node state first
 		this.addManager(new TimeManager(events)); // Time tracking first
 		this.addManager(new FluxManager(events, this.placeRegistry));
 		this.addManager(this.resourceNodeManager);
-		this.addManager(new DistrictManager(events, this.placeRegistry));
+		this.addManager(this.districtManager);
+		this.addManager(new DistrictGrowthManager(events, this.districtManager, this.placeRegistry));
 
     events.on(EVENTS.GAME_SIMULATION_TICK, () => this.tick());
 

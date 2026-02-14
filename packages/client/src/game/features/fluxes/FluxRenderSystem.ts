@@ -6,6 +6,10 @@ import { worldToRender } from '@fluxpolis/types';
 
 import type { FluxComponent } from './components/FluxComponent';
 import { FLUX_COMPONENT } from './components/FluxComponent';
+import type { DistrictComponent } from '../districts/components/DistrictComponent';
+import { DISTRICT_COMPONENT } from '../districts/components/DistrictComponent';
+import type { ResourceNodeComponent } from '../resources/components/ResourceNodeComponent';
+import { RESOURCE_NODE_COMPONENT } from '../resources/components/ResourceNodeComponent';
 import { getFluxTypeDisplayConfig } from './FluxTypeDisplayConfig';
 
 // Visual constants for flux rendering
@@ -32,11 +36,17 @@ export class FluxRenderSystem implements ISystem {
 			const flux = entity.getComponent<FluxComponent>(FLUX_COMPONENT);
 			if (!flux) continue;
 
+			// Query current place positions dynamically (supports moving/growing districts)
+			const sourcePos = this.findPlacePosition(flux.sourceId);
+			const destPos = this.findPlacePosition(flux.destinationId);
+
+			if (!sourcePos || !destPos) continue; // Skip if places not found
+
 			// Convert world coordinates to render coordinates
-			const renderSourceX = worldToRender(flux.sourceX);
-			const renderSourceY = worldToRender(flux.sourceY);
-			const renderDestX = worldToRender(flux.destX);
-			const renderDestY = worldToRender(flux.destY);
+			const renderSourceX = worldToRender(sourcePos.x);
+			const renderSourceY = worldToRender(sourcePos.y);
+			const renderDestX = worldToRender(destPos.x);
+			const renderDestY = worldToRender(destPos.y);
 
 			// Set line style based on flow type using display config
 			const displayConfig = getFluxTypeDisplayConfig(flux.flowType);
@@ -50,5 +60,31 @@ export class FluxRenderSystem implements ISystem {
 				renderDestY,
 			);
 		}
+	}
+
+	/**
+	 * Find current position of a place by ID (districts or resource nodes)
+	 * Queries entities dynamically to support moving/growing places
+	 */
+	private findPlacePosition(placeId: string): { x: number; y: number } | null {
+		// Check districts
+		const districts = this.entitiesManager.query(DISTRICT_COMPONENT);
+		for (const entity of districts) {
+			const component = entity.getComponent<DistrictComponent>(DISTRICT_COMPONENT);
+			if (component?.id === placeId) {
+				return { x: component.x, y: component.y };
+			}
+		}
+
+		// Check resource nodes
+		const nodes = this.entitiesManager.query(RESOURCE_NODE_COMPONENT);
+		for (const entity of nodes) {
+			const component = entity.getComponent<ResourceNodeComponent>(RESOURCE_NODE_COMPONENT);
+			if (component?.id === placeId) {
+				return { x: component.x, y: component.y };
+			}
+		}
+
+		return null;
 	}
 }

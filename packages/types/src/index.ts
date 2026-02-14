@@ -23,3 +23,21 @@ export {
   toWorldCoord,
   toRenderCoord,
 } from './CoordinateUtils';
+export type { PolygonVertex, Polygon } from './PolygonGeometry';
+export {
+  calculatePolygonArea,
+  calculateCentroid,
+  calculateBoundingRadius,
+  calculateOutwardNormal,
+  calculateAngle,
+  vertexDistance,
+  distanceToEdge,
+  areEdgesParallel,
+  calculateEdgeMidline,
+} from './PolygonUtils';
+export {
+  isPointInPolygon,
+  checkPolygonCollision,
+  findNearestVertex,
+  lineSegmentsIntersect,
+} from './PolygonCollision';
