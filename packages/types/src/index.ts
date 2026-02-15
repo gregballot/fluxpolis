@@ -40,4 +40,5 @@ export {
   checkPolygonCollision,
   findNearestVertex,
   lineSegmentsIntersect,
+  isSimplePolygon,
 } from './PolygonCollision';

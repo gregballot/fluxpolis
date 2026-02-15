@@ -1,10 +1,10 @@
 /**
  * Coordinates district growth each tick.
  *
- * Per district, two-step approach:
+ * Per district, three-step approach:
  * 1. Attempt spatial growth (push vertices outward into free space)
- * 2. If spatial growth failed, attempt border snap toward neighbors
- * 3. If both failed, fall back to density growth
+ * 2. Always attempt border snap toward neighbors (independent of spatial growth)
+ * 3. If neither worked, fall back to density growth
  */
 
 import type { IManager } from '../../types';
@@ -36,12 +36,11 @@ export class DistrictGrowthManager implements IManager {
 			// Step 1: spatial growth
 			let changed = attemptSpatialGrowth(district, this.placeRegistry);
 
-			// Step 2: border snap (if spatial growth found no free space)
-			if (!changed) {
-				changed = attemptBorderSnap(district, this.placeRegistry);
-			}
+			// Step 2: border snap (always — independent of spatial growth)
+			const snapped = attemptBorderSnap(district, this.placeRegistry);
+			changed = changed || snapped;
 
-			// Step 3: density fallback
+			// Step 3: density fallback (only if nothing else worked)
 			if (!changed) {
 				changed = attemptDensityGrowth(district);
 			}

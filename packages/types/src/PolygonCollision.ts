@@ -189,3 +189,24 @@ export function lineSegmentsIntersect(
 
   return lambda > 0 && lambda < 1 && gamma > 0 && gamma < 1;
 }
+
+/**
+ * Check if a polygon is simple (no self-intersecting edges).
+ * Tests all non-adjacent edge pairs for intersection.
+ */
+export function isSimplePolygon(polygon: Polygon): boolean {
+  const n = polygon.length;
+  if (n < 4) return true; // triangles can't self-intersect
+
+  for (let i = 0; i < n; i++) {
+    const a1 = polygon[i]!;
+    const a2 = polygon[(i + 1) % n]!;
+    for (let j = i + 2; j < n; j++) {
+      if (i === 0 && j === n - 1) continue; // first and last edge share a vertex
+      const b1 = polygon[j]!;
+      const b2 = polygon[(j + 1) % n]!;
+      if (lineSegmentsIntersect(a1, a2, b1, b2)) return false;
+    }
+  }
+  return true;
+}
